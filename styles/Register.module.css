@@ -1,0 +1,27 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato&display=swap");
+
+
+.registerContainer {
+  max-width: 100vw;
+  height: 100vh;
+  background-size: cover;
+}
+
+.registerBox {
+  background-color: white;
+  padding: 1.5rem 3rem;
+  border-radius: 25px;
+}
+
+.registerBox h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.registerBox p {
+  font-size: 1rem;
+  font-weight: 400;
+  font-family: "Lato", sans-serif;
+}
+

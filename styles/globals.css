@@ -1,0 +1,19 @@
+a {
+  color: #55b328;
+}
+
+a:hover{
+    color: #40881f !important;
+    text-decoration-color: #40881f !important;
+    transition: ease 0.5s;
+}
+
+
+button{
+    background-color: #55b328 !important;
+}
+
+button:hover{
+    background-color: #40881f !important;
+    transition: ease 0.5s;
+}
