@@ -3,7 +3,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import RegisterForm from "./RegisterForm";
+import RegisterForm from "@/components/features/RegisterForm";
 import styles from "@/styles/Register.module.css";
 import bg from "@/public/assets/images/register-bg.png";
 import Image from "next/image";

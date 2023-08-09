@@ -6,6 +6,9 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import Link from "@mui/material/Link";
+import PasswordForgot from "./PasswordForgot";
+import { PASSWORD_MIN_LENGTH } from "@/config/constants";
 
 function RegisterForm() {
   const [firstName, setFirstName] = useState("");
@@ -13,6 +16,7 @@ function RegisterForm() {
   const [pasword, setPasword] = useState("");
   const [email, setEmail] = useState("");
   const [termsAndConditions, setTermsAndConditions] = useState(false);
+  const [open, setOpen] = React.useState(false);
 
   const handleFirstNameChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -32,6 +36,12 @@ function RegisterForm() {
     setEmail(event.target.value);
   };
 
+  const handlePasswordForgot = (
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+  ) => {
+    setOpen(!open);
+  };
+
   const handleTermsAndConditionsChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -40,7 +50,6 @@ function RegisterForm() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
     const userData = {
       firstName: firstName,
       lastName: lastName,
@@ -48,71 +57,90 @@ function RegisterForm() {
       email: email,
     };
     if (termsAndConditions) {
-      console.log({
-        firstName: data.get("firstName"),
-        lastName: data.get("lastName"),
-        password: data.get("password"),
-        email: data.get("email"),
-      });
+      console.log(userData);
     }
   };
 
   return (
     <div>
-      <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+      <PasswordForgot
+        open={open}
+        handlePasswordForgot={handlePasswordForgot}
+        setOpen={setOpen}
+      />
+      <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
             <TextField
               onChange={handleFirstNameChange}
               autoComplete="given-name"
               name="firstName"
-              required
+              required = {true}
               fullWidth
               id="firstName"
               label="Nombres"
               autoFocus
               size="small"
+              type="text"
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
               onChange={handleLastNameChange}
-              required
+              required = {true}
               fullWidth
               id="lastName"
               label="Apellidos"
               name="lastName"
               autoComplete="family-name"
               size="small"
+              type="text"
             />
           </Grid>
           <Grid item xs={12}>
             <TextField
               onChange={handleEmailChange}
-              required
+              required = {true}
               fullWidth
               id="email"
               label="Correo"
               name="email"
               autoComplete="email"
               size="small"
+              type="email"
             />
           </Grid>
           <Grid item xs={12}>
             <TextField
               onChange={handlePasswordChange}
-              required
+              required = {true}
               fullWidth
               name="password"
-              label="Contraseña"
+              label="Contraseña (mínimo 8 caracteres)"
               type="password"
               id="password"
               autoComplete="new-password"
-              size="small"
+              size="small"     
+              inputProps={{minlength: PASSWORD_MIN_LENGTH}}     
             />
+            <Link
+              href="#"
+              onClick={handlePasswordForgot}
+              underline="hover"
+              color={""}
+              variant="caption"
+            >
+              Olvidé mi contraseña →
+            </Link>
           </Grid>
-          <Grid item xs={12}>
+          <Grid
+            item
+            xs={12}
+            id="termsAndConditionsContainer"
+            style={{ paddingTop: 1 }}
+          >
             <FormControlLabel
+            required = {true}
               control={
                 <Checkbox
                   value="termsAndConditions"
@@ -123,13 +151,13 @@ function RegisterForm() {
               label={
                 <p>
                   He leído y acepto los{" "}
-                  <a href="#" target="_blank">
+                  <Link href="#" target="_blank" underline="hover" color={""}>
                     Términos de uso
-                  </a>{" "}
+                  </Link>{" "}
                   y la{" "}
-                  <a href="#" target="_blank">
+                  <Link href="#" target="_blank" underline="hover" color={""}>
                     Aviso de privacidad
-                  </a>{" "}
+                  </Link>{" "}
                   de Minerva.*
                 </p>
               }
