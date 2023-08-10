@@ -8,7 +8,7 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import PasswordForgot from "./PasswordForgot";
-import { PASSWORD_MIN_LENGTH } from "@/config/constants";
+import { API_ENDPOINTS, PASSWORD_MIN_LENGTH } from "@/config/constants";
 
 // This functional component is the form for the register page.
 // It contains the PasswordForgot component.
@@ -54,16 +54,40 @@ function RegisterForm() {
     setTermsAndConditions(event.target.checked);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const userData = {
-      firstName: firstName,
-      lastName: lastName,
+      first_name: firstName,
+      last_name: lastName,
       password: pasword,
       email: email,
     };
     if (termsAndConditions) {
-      console.log(userData);
+      try {
+        let config = {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userData),
+        };
+
+        let response = await fetch(API_ENDPOINTS.REGISTER, config)
+          .then((res) => {
+            if (res.status === 200) {
+              console.log("Success");
+            } else {
+              console.log("Error");
+            }
+            res.json();
+          })
+          .then((data) => {
+            console.log(data);
+          });
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
