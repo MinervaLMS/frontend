@@ -10,14 +10,20 @@ import Link from "@mui/material/Link";
 import PasswordForgot from "./PasswordForgot";
 import { PASSWORD_MIN_LENGTH } from "@/config/constants";
 
+// This functional component is the form for the register page.
+// It contains the PasswordForgot component.
 function RegisterForm() {
+  // States related to the user data
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [pasword, setPasword] = useState("");
   const [email, setEmail] = useState("");
   const [termsAndConditions, setTermsAndConditions] = useState(false);
+
+  // States related to the PasswordForgot component
   const [open, setOpen] = React.useState(false);
 
+  // Event handlers
   const handleFirstNameChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -61,8 +67,9 @@ function RegisterForm() {
     }
   };
 
+  // Render the form for user registration.
   return (
-    <div>
+    <>
       <PasswordForgot
         open={open}
         handlePasswordForgot={handlePasswordForgot}
@@ -75,7 +82,7 @@ function RegisterForm() {
               onChange={handleFirstNameChange}
               autoComplete="given-name"
               name="firstName"
-              required = {true}
+              required={true}
               fullWidth
               id="firstName"
               label="Nombres"
@@ -87,7 +94,7 @@ function RegisterForm() {
           <Grid item xs={12} sm={6}>
             <TextField
               onChange={handleLastNameChange}
-              required = {true}
+              required={true}
               fullWidth
               id="lastName"
               label="Apellidos"
@@ -100,7 +107,7 @@ function RegisterForm() {
           <Grid item xs={12}>
             <TextField
               onChange={handleEmailChange}
-              required = {true}
+              required={true}
               fullWidth
               id="email"
               label="Correo"
@@ -113,15 +120,15 @@ function RegisterForm() {
           <Grid item xs={12}>
             <TextField
               onChange={handlePasswordChange}
-              required = {true}
+              required={true}
               fullWidth
               name="password"
               label="Contraseña (mínimo 8 caracteres)"
               type="password"
               id="password"
               autoComplete="new-password"
-              size="small"     
-              inputProps={{minlength: PASSWORD_MIN_LENGTH}}     
+              size="small"
+              inputProps={{ minlength: PASSWORD_MIN_LENGTH }}
             />
             <Link
               href="#"
@@ -140,7 +147,7 @@ function RegisterForm() {
             style={{ paddingTop: 1 }}
           >
             <FormControlLabel
-            required = {true}
+              required={true}
               control={
                 <Checkbox
                   value="termsAndConditions"
@@ -158,7 +165,7 @@ function RegisterForm() {
                   <Link href="#" target="_blank" underline="hover" color={""}>
                     Aviso de privacidad
                   </Link>{" "}
-                  de Minerva.*
+                  de Minerva.
                 </p>
               }
             />
@@ -174,7 +181,7 @@ function RegisterForm() {
           Registrarse
         </Button>
       </Box>
-    </div>
+    </>
   );
 }
 

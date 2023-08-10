@@ -8,7 +8,13 @@ import styles from "@/styles/Register.module.css";
 import bg from "@/public/assets/images/register-bg.png";
 import Image from "next/image";
 
+// This functional component is the index page for the /register rute.
+// It contains the RegisterForm component.
+
 export default function SignUp() {
+  
+
+  // Render the principal container for the register page.
   return (
     <main
       className={styles.registerContainer}
@@ -31,16 +37,7 @@ export default function SignUp() {
           height={100}
           priority
         />
-        <Box
-          className={styles.registerBox}
-          maxWidth="45%"
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-          marginTop={"1rem"}
-        >
+        <Box className={styles.registerBox}>
           <Typography component="h1" variant="inherit">
             Regístrate
           </Typography>
