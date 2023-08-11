@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { useState } from "react";
 import Modal from "@mui/material/Modal";
@@ -8,6 +9,7 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import styles from "@/styles/Register.module.css";
 
+// This interface defines the types of the props object.
 interface PasswordForgotProps {
   open: boolean;
   handlePasswordForgot: (
@@ -16,13 +18,20 @@ interface PasswordForgotProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+// This functional component allow the user to reset his password via a given email.
+// It is recives the following props:
+// open: boolean value that indicates if the modal is open or not.
+// handlePasswordForgot: function that handles the open/close state of the modal.
+// setOpen: function that sets the open/close state of the modal.
 function PasswordForgot({
   open,
   handlePasswordForgot,
   setOpen,
 }: PasswordForgotProps) {
+  // State related to the user email.
   const [email, setEmail] = useState("");
 
+  // Event handlers
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
   };
@@ -37,6 +46,7 @@ function PasswordForgot({
     setOpen(false);
   };
 
+  // Render the modal for password reset.
   return (
     <Modal
       open={open}
@@ -44,11 +54,7 @@ function PasswordForgot({
       aria-labelledby="passwordForgotModal"
       aria-describedby="modalDescription"
     >
-      <Box
-        className={styles.modalBox}
-        component="form"
-        onSubmit={handleSubmit}
-      >
+      <Box className={styles.modalBox} component="form" onSubmit={handleSubmit}>
         <Typography
           id="passwordForgotModal"
           component="h4"
