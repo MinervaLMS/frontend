@@ -1,13 +1,13 @@
 "use client";
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-import styles from "@/styles/Register.module.css";
+import styles from "@/styles/Login.module.css";
+import { API_ENDPOINTS, API_ForgotMyPasswordRequest } from '@/config/constants';
 
 // This interface defines the types of the props object.
 interface PasswordForgotProps {
@@ -31,19 +31,42 @@ function PasswordForgot({
   // State related to the user email.
   const [email, setEmail] = useState("");
 
-  // Event handlers
-  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
-  };
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     const data = new FormData(event.currentTarget);
-    const userData = {
-      email: email,
-    };
-    console.log(userData);
+    const email = data.get('emailPasswordForgot')?.toString() ?? '';
+    const forgotPasswordRequest: API_ForgotMyPasswordRequest = {
+        email
+    }
+    
     setOpen(false);
+
+    try {
+      let config = {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(forgotPasswordRequest),
+      };
+
+      let response = await fetch(API_ENDPOINTS.FORGOT_MY_PASSWORD, config)
+        .then((res) => {
+          if (res.status === 200) {
+            console.log("Success");
+          } else {
+            console.log("Error");
+          }
+          res.json();
+        })
+        .then((data) => {
+          console.log(data);
+        });
+      } catch (error) {
+        console.log(error);
+      }
   };
 
   // Render the modal for password reset.
@@ -69,15 +92,15 @@ function PasswordForgot({
         </Typography>
         <Grid item xs={12} paddingTop={2}>
           <TextField
-            onChange={handleEmailChange}
-            type="email"
             required={true}
-            fullWidth
             id="emailPasswordForgot"
             label="Correo"
             name="emailPasswordForgot"
+            type="email"
             autoComplete="email"
             size="small"
+            autoFocus
+            fullWidth
           />
         </Grid>
         <Button
