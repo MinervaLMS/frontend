@@ -1,7 +1,16 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato&display=swap");
 
+body,
+main {
+  margin: 0;
+  padding: 0px;
+  width: 100vw;
+  height: 100vh;
+}
+
 a {
-  color: #55b328;
+  color: #55b328 !important;
+  text-decoration: none !important;
 }
 
 a:hover {
