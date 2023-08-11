@@ -10,15 +10,49 @@ import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
+import '../../styles/globals.css'
+import { API_ENDPOINTS, API_LoginRequest } from '@/config/constants';
 
 export default function LoginForm() {
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         console.log({
             email: data.get('email'),
             password: data.get('password'),
         });
+
+        const email = data.get('email')?.toString() ?? '';
+        const password = data.get('password')?.toString() ?? '';
+        const loginRequest: API_LoginRequest = {
+            email,
+            password
+        }
+        try {
+            let config = {
+              method: "POST",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(loginRequest),
+            };
+    
+            let response = await fetch(API_ENDPOINTS.LOGIN, config)
+              .then((res) => {
+                if (res.status === 200) {
+                  console.log("Success");
+                } else {
+                  console.log("Error");
+                }
+                res.json();
+              })
+              .then((data) => {
+                console.log(data);
+              });
+          } catch (error) {
+            console.log(error);
+          }
     };
 
     return(
@@ -28,10 +62,11 @@ export default function LoginForm() {
                 required
                 fullWidth
                 id="email"
-                label="Correo Electrónico"
+                label="Correo electrónico"
                 name="email"
                 autoComplete="email"
                 autoFocus
+                size='small'
             />
             <TextField
                 margin="normal"
@@ -42,6 +77,7 @@ export default function LoginForm() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                size='small'
             />
             <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
