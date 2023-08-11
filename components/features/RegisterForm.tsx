@@ -7,7 +7,6 @@ import Checkbox from "@mui/material/Checkbox";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import PasswordForgot from "./PasswordForgot";
 import { API_ENDPOINTS, PASSWORD_MIN_LENGTH } from "@/config/constants";
 
 // This functional component is the form for the register page.
@@ -19,9 +18,6 @@ function RegisterForm() {
   const [pasword, setPasword] = useState("");
   const [email, setEmail] = useState("");
   const [termsAndConditions, setTermsAndConditions] = useState(false);
-
-  // States related to the PasswordForgot component
-  const [open, setOpen] = React.useState(false);
 
   // Event handlers
   const handleFirstNameChange = (
@@ -40,12 +36,6 @@ function RegisterForm() {
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
-  };
-
-  const handlePasswordForgot = (
-    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-  ) => {
-    setOpen(!open);
   };
 
   const handleTermsAndConditionsChange = (
@@ -94,11 +84,6 @@ function RegisterForm() {
   // Render the form for user registration.
   return (
     <>
-      <PasswordForgot
-        open={open}
-        handlePasswordForgot={handlePasswordForgot}
-        setOpen={setOpen}
-      />
       <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
@@ -154,15 +139,6 @@ function RegisterForm() {
               size="small"
               inputProps={{ minlength: PASSWORD_MIN_LENGTH }}
             />
-            <Link
-              href="#"
-              onClick={handlePasswordForgot}
-              underline="hover"
-              color={""}
-              variant="caption"
-            >
-              Olvidé mi contraseña →
-            </Link>
           </Grid>
           <Grid
             item
