@@ -6,8 +6,9 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-import styles from "@/styles/Login.module.css";
-import { API_ENDPOINTS, API_ForgotMyPasswordRequest } from '@/config/constants';
+import styles from "@/styles/RegisterLogin.module.css";
+import { API_ENDPOINTS } from '@/config/api-connections';
+import { API_ForgotMyPasswordRequest } from "@/config/interfaces";
 
 // This interface defines the types of the props object.
 interface PasswordForgotProps {
@@ -28,9 +29,7 @@ function PasswordForgot({
   handlePasswordForgot,
   setOpen,
 }: PasswordForgotProps) {
-  // State related to the user email.
-  const [email, setEmail] = useState("");
-
+  // Event handlers.
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 

@@ -7,6 +7,7 @@ import Checkbox from "@mui/material/Checkbox";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
+import Typography from "@mui/material/Typography";
 import { API_ENDPOINTS } from "@/config/api-connections";
 import { PASSWORD_MIN_LENGTH } from "@/config/constants";
 
@@ -157,7 +158,7 @@ function RegisterForm() {
                 />
               }
               label={
-                <p>
+                <Typography component="p" >
                   He leído y acepto los{" "}
                   <Link href="#" target="_blank" underline="hover" color={""}>
                     Términos de uso
@@ -167,7 +168,7 @@ function RegisterForm() {
                     Aviso de privacidad
                   </Link>{" "}
                   de Minerva.
-                </p>
+                </Typography>
               }
             />
           </Grid>
