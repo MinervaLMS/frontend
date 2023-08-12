@@ -175,7 +175,6 @@ function RegisterForm() {
           type="submit"
           fullWidth
           variant="contained"
-          color="success"
           sx={{ mt: 1, mb: 2 }}
         >
           Registrarse

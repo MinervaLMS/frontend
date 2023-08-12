@@ -23,7 +23,7 @@ export default function Login() {
           width={100} height={100} priority
         />
         <Box className={ styles.loginBox }>
-          <Typography component="h2" variant="inherit" align='center'>
+          <Typography component="h1" variant="inherit" align='center'>
             Bienvenido
           </Typography>
           <Typography component="p" variant="inherit" align='center'>
