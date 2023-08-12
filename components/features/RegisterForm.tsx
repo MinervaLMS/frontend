@@ -7,7 +7,8 @@ import Checkbox from "@mui/material/Checkbox";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import { API_ENDPOINTS, PASSWORD_MIN_LENGTH } from "@/config/constants";
+import { API_ENDPOINTS } from "@/config/api-connections";
+import { PASSWORD_MIN_LENGTH } from "@/config/constants";
 
 // This functional component is the form for the register page.
 // It contains the PasswordForgot component.

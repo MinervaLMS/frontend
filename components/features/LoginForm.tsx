@@ -9,7 +9,8 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import PasswordForgot from "./PasswordForgot";
-import { API_ENDPOINTS, API_LoginRequest } from '@/config/constants';
+import { API_LoginRequest } from "@/config/interfaces";
+import { API_ENDPOINTS } from "@/config/api-connections";
 
 export default function LoginForm() {
 
