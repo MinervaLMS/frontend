@@ -43,31 +43,35 @@ function RegisterForm() {
       password
     };
 
-    try {
-      let config = {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(registerRequest)
-      };
+    if (termsAndConditions){
 
-      let response = await fetch(API_ENDPOINTS.REGISTER, config)
-          .then((res) => {
-            if (res.status === 200) {
-              console.log("Success");
-            } else {
-              console.log("Error");
-            }
-            res.json();
-          })
-          .then((data) => {
-            console.log(data);
-          });
+      try {
+        let config = {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(registerRequest)
+        };
+  
+        let response = await fetch(API_ENDPOINTS.REGISTER, config)
+            .then((res) => {
+              if (res.status === 200) {
+                console.log("Success");
+              } else {
+                console.log("Error");
+              }
+              res.json();
+            })
+            .then((data) => {
+              console.log(data);
+            });
+  
+      } catch (error) {
+        console.log(error);
+      }
 
-    } catch (error) {
-      console.log(error);
     }
 
   };
