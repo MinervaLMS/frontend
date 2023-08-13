@@ -1,8 +1,8 @@
 export interface API_RegisterRequest {
     firstName: string;
     lastName: string;
-    password: string;
     email: string;
+    password: string;
 }
 
 export interface API_LoginRequest {
