@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
+import Snackbar, { SnackbarOrigin, SnackbarProps } from '@mui/material/Snackbar';
 import MuiAlert, { AlertColor, AlertProps } from '@mui/material/Alert';
 
 
@@ -11,17 +11,11 @@ interface PositionedSnackbarProps {
     horizontal: SnackbarOrigin["horizontal"];
     autoHideDuration: number
 }
-
-interface State extends SnackbarOrigin {
-    open: boolean;
-  }
   
 
-const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
-  props,
-  ref,
-) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
+    function Alert(props,ref) {
+        return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
 function PositionedSnackbar ({
@@ -48,7 +42,8 @@ function PositionedSnackbar ({
         open={open}
         onClose={handleClose}
         autoHideDuration={autoHideDuration}
-        key={vertical + horizontal}>
+        key={vertical + horizontal}
+        >
             <Alert onClose={handleClose} severity={severity} sx={{ width: '100%' }}>
                 {message}
             </Alert>
