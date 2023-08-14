@@ -1,27 +1,40 @@
-.registerContainer {
-  max-width: 100vw;
-  height: 100vh;
-  background-size: cover;
+.mainContainer {
+  padding-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.registerBox {
+.formBox {
   background-color: white;
   padding: 1.5rem 3rem;
   border-radius: 25px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  margin-top: 1rem;
+
+  /* max-width: calc(100vw - 20px); */
   max-width: 45%;
-  margin-top: "1rem";
+
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box; /* Firefox, other Gecko */
+  box-sizing: border-box;
 }
 
-.registerBox h1 {
+.formBox h1 {
   margin-bottom: 0.5rem;
 }
 
-.registerBox p {
-  font-size: 1rem;
+.formBox p {
   font-weight: 400;
+}
+
+
+.contact {
+  color: #fff;
+  margin-top: 2rem;
 }
 
 .modalBox {
