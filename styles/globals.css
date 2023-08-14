@@ -19,11 +19,11 @@ a:hover {
   transition: ease 0.5s;
 }
 
-button {
+.btn-primary {
   background-color: #55b328 !important;
 }
 
-button:hover {
+.btn-primary:hover {
   background-color: #40881f !important;
   transition: ease 0.5s;
 }

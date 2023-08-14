@@ -7,7 +7,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import styles from "@/styles/RegisterLogin.module.css";
-import { API_ENDPOINTS } from '@/config/api-connections';
+import { API_ENDPOINTS } from "@/config/api-connections";
 import { API_ForgotMyPasswordRequest } from "@/config/interfaces";
 
 // This interface defines the types of the props object.
@@ -34,11 +34,11 @@ function PasswordForgot({
     event.preventDefault();
 
     const data = new FormData(event.currentTarget);
-    const email = data.get('emailPasswordForgot')?.toString() ?? '';
+    const email = data.get("emailPasswordForgot")?.toString() ?? "";
     const forgotPasswordRequest: API_ForgotMyPasswordRequest = {
-        email
-    }
-    
+      email,
+    };
+
     setOpen(false);
 
     try {
@@ -63,9 +63,9 @@ function PasswordForgot({
         .then((data) => {
           console.log(data);
         });
-      } catch (error) {
-        console.log(error);
-      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // Render the modal for password reset.
@@ -103,6 +103,7 @@ function PasswordForgot({
           />
         </Grid>
         <Button
+          className="btn btn-primary"
           type="submit"
           fullWidth
           variant="contained"

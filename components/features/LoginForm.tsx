@@ -105,6 +105,7 @@ export default function LoginForm() {
           </Grid>
         </Grid>
         <Button
+          className="btn btn-primary"
           type="submit"
           fullWidth
           variant="contained"

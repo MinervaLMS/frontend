@@ -40,11 +40,10 @@ function RegisterForm() {
       firstName,
       lastName,
       email,
-      password
+      password,
     };
 
-    if (termsAndConditions){
-
+    if (termsAndConditions) {
       try {
         let config = {
           method: "POST",
@@ -52,28 +51,25 @@ function RegisterForm() {
             Accept: "application/json",
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(registerRequest)
+          body: JSON.stringify(registerRequest),
         };
-  
+
         let response = await fetch(API_ENDPOINTS.REGISTER, config)
-            .then((res) => {
-              if (res.status === 200) {
-                console.log("Success");
-              } else {
-                console.log("Error");
-              }
-              res.json();
-            })
-            .then((data) => {
-              console.log(data);
-            });
-  
+          .then((res) => {
+            if (res.status === 200) {
+              console.log("Success");
+            } else {
+              console.log("Error");
+            }
+            res.json();
+          })
+          .then((data) => {
+            console.log(data);
+          });
       } catch (error) {
         console.log(error);
       }
-
     }
-
   };
 
   // Render the form for user registration.
@@ -147,7 +143,7 @@ function RegisterForm() {
                 />
               }
               label={
-                <Typography component="p" >
+                <Typography component="p">
                   He leído y acepto los{" "}
                   <Link href="#" target="_blank" underline="hover" color={""}>
                     Términos de uso
@@ -163,6 +159,7 @@ function RegisterForm() {
           </Grid>
         </Grid>
         <Button
+          className="btn btn-primary"
           type="submit"
           fullWidth
           variant="contained"
