@@ -13,3 +13,7 @@ export interface API_LoginRequest {
 export interface API_ForgotMyPasswordRequest {
     email: string;
 }
+
+export interface API_PassworReset{
+    password: string;
+}
