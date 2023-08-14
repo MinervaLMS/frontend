@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -8,6 +9,7 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
+import { API_RegisterRequest } from "@/config/interfaces";
 import { API_ENDPOINTS } from "@/config/api-connections";
 import { PASSWORD_MIN_LENGTH } from "@/config/constants";
 
@@ -15,30 +17,9 @@ import { PASSWORD_MIN_LENGTH } from "@/config/constants";
 // It contains the PasswordForgot component.
 function RegisterForm() {
   // States related to the user data
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [pasword, setPasword] = useState("");
-  const [email, setEmail] = useState("");
   const [termsAndConditions, setTermsAndConditions] = useState(false);
 
   // Event handlers
-  const handleFirstNameChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setFirstName(event.target.value);
-  };
-
-  const handleLastNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setLastName(event.target.value);
-  };
-
-  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPasword(event.target.value);
-  };
-
-  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
-  };
 
   const handleTermsAndConditionsChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -48,13 +29,22 @@ function RegisterForm() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const userData = {
-      first_name: firstName,
-      last_name: lastName,
-      password: pasword,
-      email: email,
+
+    const data = new FormData(event.currentTarget);
+    const firstName = data.get("firstName")?.toString() ?? "";
+    const lastName = data.get("lastName")?.toString() ?? "";
+    const email = data.get("email")?.toString() ?? "";
+    const password = data.get("password")?.toString() ?? "";
+
+    const registerRequest: API_RegisterRequest = {
+      firstName,
+      lastName,
+      email,
+      password
     };
-    if (termsAndConditions) {
+
+    if (termsAndConditions){
+
       try {
         let config = {
           method: "POST",
@@ -62,25 +52,28 @@ function RegisterForm() {
             Accept: "application/json",
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(userData),
+          body: JSON.stringify(registerRequest)
         };
-
+  
         let response = await fetch(API_ENDPOINTS.REGISTER, config)
-          .then((res) => {
-            if (res.status === 200) {
-              console.log("Success");
-            } else {
-              console.log("Error");
-            }
-            res.json();
-          })
-          .then((data) => {
-            console.log(data);
-          });
+            .then((res) => {
+              if (res.status === 200) {
+                console.log("Success");
+              } else {
+                console.log("Error");
+              }
+              res.json();
+            })
+            .then((data) => {
+              console.log(data);
+            });
+  
       } catch (error) {
         console.log(error);
       }
+
     }
+
   };
 
   // Render the form for user registration.
@@ -90,7 +83,6 @@ function RegisterForm() {
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
             <TextField
-              onChange={handleFirstNameChange}
               autoComplete="given-name"
               name="firstName"
               required={true}
@@ -104,7 +96,6 @@ function RegisterForm() {
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
-              onChange={handleLastNameChange}
               required={true}
               fullWidth
               id="lastName"
@@ -117,7 +108,6 @@ function RegisterForm() {
           </Grid>
           <Grid item xs={12}>
             <TextField
-              onChange={handleEmailChange}
               required={true}
               fullWidth
               id="email"
@@ -130,7 +120,6 @@ function RegisterForm() {
           </Grid>
           <Grid item xs={12}>
             <TextField
-              onChange={handlePasswordChange}
               required={true}
               fullWidth
               name="password"
