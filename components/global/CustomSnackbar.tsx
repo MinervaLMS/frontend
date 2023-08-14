@@ -49,7 +49,6 @@ const CustomSnackbar: React.FC<CustomSnackbarProps> = ({
       <div>
         <Alert 
         onClose={onClose} 
-        color={severity}
         severity={severity}>
           {message}
         </Alert>

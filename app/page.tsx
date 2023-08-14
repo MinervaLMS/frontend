@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import styles from '@/styles/Home.module.css'
 
-import CustomSnackbar from '@/components/features/CustomSnackbar'
+import CustomSnackbar from '@/components/global/CustomSnackbar'
 import { Button } from '@mui/material'
 import * as React from 'react';
 
@@ -27,7 +27,7 @@ export default function Home() {
           <code className={styles.code}>app/page.tsx</code>
         </p>
         <div>
-          <a
+        <a
             href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
             target="_blank"
             rel="noopener noreferrer"
@@ -117,7 +117,7 @@ export default function Home() {
         {/* Snackbar */}
         <CustomSnackbar
           message="Este es un mensaje de ejemplo"
-          severity="info"
+          severity="warning"
           vertical="top"
           horizontal="center"
           autoHideDuration={3000}
