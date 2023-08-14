@@ -1,7 +1,24 @@
+"use client"
+
 import Image from 'next/image'
 import styles from '@/styles/Home.module.css'
 
+import CustomSnackbar from '@/components/global/CustomSnackbar'
+import { Button } from '@mui/material'
+import * as React from 'react';
+
 export default function Home() {
+
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+
+  const handleSnackbarClick = () => {
+    setSnackbarOpen(true);
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
   return (
     <main className={styles.main}>
       <div className={styles.description}>
@@ -10,7 +27,7 @@ export default function Home() {
           <code className={styles.code}>app/page.tsx</code>
         </p>
         <div>
-          <a
+        <a
             href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
             target="_blank"
             rel="noopener noreferrer"
@@ -89,7 +106,28 @@ export default function Home() {
             Instantly deploy your Next.js site to a shareable URL with Vercel.
           </p>
         </a>
+
+        {/* Sección de pruebas */}
+      <section>
+        {/* Botón para abrir el Snackbar */}
+        <Button variant="contained" color="primary" onClick={handleSnackbarClick}>
+          Mostrar Snackbar
+        </Button>
+
+        {/* Snackbar */}
+        <CustomSnackbar
+          message="Este es un mensaje de ejemplo"
+          severity="warning"
+          vertical="top"
+          horizontal="center"
+          autoHideDuration={3000}
+          open={snackbarOpen}
+          onClose={handleSnackbarClose}
+        />
+      </section>
+
       </div>
+    
     </main>
   )
 }
