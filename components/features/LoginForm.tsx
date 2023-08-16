@@ -11,10 +11,48 @@ import Divider from "@mui/material/Divider";
 import PasswordForgot from "./PasswordForgot";
 import { API_LoginRequest } from "@/config/interfaces";
 import { API_ENDPOINTS } from "@/config/api-connections";
+import { Backdrop, CircularProgress, FormControl, FormHelperText, IconButton, InputAdornment, InputLabel, OutlinedInput } from "@mui/material";
+import { VisibilityOff, Visibility } from "@mui/icons-material";
 
 export default function LoginForm() {
+  // Validate email and password
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState(false)
+  const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState(false)
+
+  const requiredText: string = "Este campo es obligatorio";
+  const validateFilledInput = (): boolean => {
+    if(!email) {
+      setEmailError(true)
+    }
+
+    if(!password) {      
+      setPasswordError(true)
+    }
+
+    // return (passwordError || emailError) ? true : false
+    return (!email || !password) ? true : false
+  }
+
   // States related to the PasswordForgot component
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+
+  // Show/cover password
+  const [showPassword, setShowPassword] = useState(false);
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+  };
+
+  // Loader
+  const [openBackDrop, setOpenBackDrop] = React.useState(false);
+  const handleClose = () => {
+    setOpenBackDrop(false);
+  };
+  const handleOpen = () => {
+    setOpenBackDrop(true);
+  };
 
   const handlePasswordForgot = (
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
@@ -23,10 +61,17 @@ export default function LoginForm() {
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const email = data.get("email")?.toString() ?? "";
-    const password = data.get("password")?.toString() ?? "";
+    event.preventDefault();    
+
+    if(validateFilledInput()) {
+      return
+    }    
+
+    handleOpen();
+
+    // const data = new FormData(event.currentTarget);
+    // const emailA = data.get("email")?.toString() ?? "";
+    // const passwordA = data.get("password")?.toString() ?? "";
     const loginRequest: API_LoginRequest = {
       email,
       password,
@@ -51,46 +96,107 @@ export default function LoginForm() {
           res.json();
         })
         .then((data) => {
+          handleClose()
           console.log(data);
         });
     } catch (error) {
+      handleClose();
       console.log(error);
     }
   };
 
   return (
     <>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={openBackDrop}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+
       <PasswordForgot
         open={open}
         handlePasswordForgot={handlePasswordForgot}
         setOpen={setOpen}
       />
-      <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+      <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }} noValidate>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextField
-              required={true}
               fullWidth
+              required
               id="email"
               label="Correo"
               name="email"
               type="email"
               autoComplete="email"
-              autoFocus
               size="small"
+              value={email}
+              onChange={
+                (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                  setEmail(event.target.value)
+                  setEmailError(false)
+                }
+              }
+              error={emailError}
+              helperText={emailError ? requiredText: ""}
             />
           </Grid>
           <Grid item xs={12}>
-            <TextField
-              required={true}
+            {/* <TextField
               fullWidth
+              required
               name="password"
               label="Contraseña"
               type="password"
               id="password"
               autoComplete="current-password"
               size="small"
-            />
+              value={password}
+              onChange={
+                (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                  setPassword(event.target.value);
+                  setPasswordError(false)
+                }
+              }
+              error={passwordError}
+              helperText={passwordError ? requiredText: ""}
+            /> */}
+
+            <FormControl 
+              variant="outlined" 
+              size="small" 
+              fullWidth
+              required
+              error={passwordError}
+            >
+              <InputLabel htmlFor="outlined-adornment-password" >Contraseña</InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-password"
+                type={showPassword ? 'text' : 'password'}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="Password"
+                value={password}
+                onChange={
+                  (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                    setPassword(event.target.value);
+                    setPasswordError(false)
+                  }
+                }
+              />
+              <FormHelperText>{passwordError ? requiredText: ""}</FormHelperText>
+            </FormControl>
           </Grid>
           <Grid item xs={12}>
             <Link
