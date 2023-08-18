@@ -39,50 +39,55 @@ function RegisterForm() {
   const requiredText: string = "Este campo es obligatorio";
   const invalidEmailText: string = "Introduzca un correo válido";
   const invalidPasswordText: string = "Contraseña de mínimo 8 caracteres";
-  const termsAndConditionsText: string = "Acepte los términos y condiciones para registrarse";
-  
+  const termsAndConditionsText: string =
+    "Acepte los términos y condiciones para registrarse";
+
   const validateFilledInputsError = (): boolean => {
-    if(!firstName) {
+    if (!firstName) {
       setFirstNameError(true);
     }
-    if(!lastName) {
+    if (!lastName) {
       setLastNameError(true);
     }
-    if(!email) {
+    if (!email) {
       setEmailError(true);
-      setEmailHelperText(requiredText)
+      setEmailHelperText(requiredText);
     }
-    if(!password){
+    if (!password) {
       setPasswordError(true);
-      setPasswordHelperText(requiredText)
+      setPasswordHelperText(requiredText);
     }
 
-    if(!termsAndConditions){
+    if (!termsAndConditions) {
       setTermsAndConditionsError(true);
     }
 
-    return (!firstName || !lastName || !email || !password || !termsAndConditions) ? true : false;
-  }
+    return !firstName || !lastName || !email || !password || !termsAndConditions
+      ? true
+      : false;
+  };
 
-  const regexValidEmail = new RegExp("^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$");
+  const regexValidEmail = new RegExp(
+    "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$"
+  );
 
   const validateEmailError = (): boolean => {
-    if(!regexValidEmail.test(email)) {
-      setEmailError(true)
-      setEmailHelperText(invalidEmailText)
+    if (!regexValidEmail.test(email)) {
+      setEmailError(true);
+      setEmailHelperText(invalidEmailText);
       return true;
-    };
+    }
     return false;
-  }
+  };
 
   const validatePasswordError = (): boolean => {
-    if(password.length < PASSWORD_MIN_LENGTH) {
-      setPasswordError(true)
-      setPasswordHelperText(invalidPasswordText)
+    if (password.length < PASSWORD_MIN_LENGTH) {
+      setPasswordError(true);
+      setPasswordHelperText(invalidPasswordText);
       return true;
-    };
+    }
     return false;
-  }
+  };
 
   // Loader
   const [openBackdrop, setOpenBackdrop] = useState(false);
@@ -94,7 +99,9 @@ function RegisterForm() {
   };
 
   // Event handlers
-  const handleFirstNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFirstNameChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setFirstName(event.target.value);
     setFirstNameError(false);
   };
@@ -107,16 +114,18 @@ function RegisterForm() {
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
     setEmailError(false);
-    setEmailHelperText("")
+    setEmailHelperText("");
   };
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
     setPasswordError(false);
-    setPasswordHelperText("")
+    setPasswordHelperText("");
   };
 
-  const handleTermsAndConditionsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTermsAndConditionsChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setTermsAndConditions(event.target.checked);
     setTermsAndConditionsError(false);
   };
@@ -128,8 +137,12 @@ function RegisterForm() {
     validatePasswordError();
     validateFilledInputsError();
 
-    if(validateFilledInputsError() || validateEmailError() || validatePasswordError()) {
-      return
+    if (
+      validateFilledInputsError() ||
+      validateEmailError() ||
+      validatePasswordError()
+    ) {
+      return;
     }
 
     handleOpenLoader();
@@ -158,21 +171,12 @@ function RegisterForm() {
       };
 
       let response = await fetch(API_ENDPOINTS.REGISTER, config)
-        .then((res) => {
-          if (res.status === 200) {
-            console.log("Success");
-          } else {
-            console.log("Error");
-          }
-          res.json();
-        })
-        .then((data) => {
-          console.log(data);
-        });
+      let data = await response.json()  
+      console.log(data)
     } catch (error) {
       console.log(error);
     } finally {
-      handleCloseLoader()
+      handleCloseLoader();
     }
   };
 
@@ -180,7 +184,7 @@ function RegisterForm() {
   return (
     <>
       <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={openBackdrop}
       >
         <CircularProgress color="inherit" />
@@ -190,7 +194,6 @@ function RegisterForm() {
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
             <TextField
-              
               fullWidth
               required
               id="firstName"
@@ -253,14 +256,9 @@ function RegisterForm() {
               helperText={passwordError ? passwordHelperText : ""}
             />
           </Grid>
-          <Grid
-            item
-            xs={12}
-            id="termsAndConditionsContainer"
-            sx={{ my: 1 }}
-          >
-            <FormControl 
-              size="small" 
+          <Grid item xs={12} id="termsAndConditionsContainer" sx={{ my: 1 }}>
+            <FormControl
+              size="small"
               fullWidth
               required
               error={termsAndConditionsError}
@@ -288,7 +286,9 @@ function RegisterForm() {
                   </Typography>
                 }
               />
-              <FormHelperText>{termsAndConditionsError ? termsAndConditionsText : ""}</FormHelperText>
+              <FormHelperText>
+                {termsAndConditionsError ? termsAndConditionsText : ""}
+              </FormHelperText>
             </FormControl>
           </Grid>
         </Grid>
