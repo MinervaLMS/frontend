@@ -6,9 +6,11 @@ export const API_ENDPOINTS = {
   LOGIN: `${API_URL}/login/`,
   FORGOT_MY_PASSWORD: `${API_URL}/forgot-my-password/`,
   PASSWORD_RESET: `${API_URL}/password-reset/`,
+  CONFIRM_ACCOUNT: `${API_URL}/register/confirm/`,
 };
 
 export const API_STATUS_CODE = {
   SUCCESS: 200,
+  CREATED: 201,
   BAD_REQUEST: 400,
 };

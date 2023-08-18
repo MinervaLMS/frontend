@@ -8,14 +8,17 @@ import Checkbox from "@mui/material/Checkbox";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import Backdrop from "@mui/material/Backdrop";
-import CircularProgress from "@mui/material/CircularProgress";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 import Typography from "@mui/material/Typography";
 import { API_RegisterRequest } from "@/config/interfaces";
-import { API_ENDPOINTS } from "@/config/api-connections";
-import { PASSWORD_MIN_LENGTH } from "@/config/constants";
+import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
+import {
+  AUTOHIDE_ALERT_DURATION,
+  PASSWORD_MIN_LENGTH,
+} from "@/config/constants";
+import CircularSpinner from "../global/CircularSpinner";
+import CustomSnackbar from "../global/CustomSnackbar";
 
 // This functional component is the form for the register page.
 // It contains the PasswordForgot component.
@@ -26,6 +29,9 @@ function RegisterForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [termsAndConditions, setTermsAndConditions] = useState(false);
+  // States related to the alert component
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
 
   // To validate user data
   const [firstNameError, setFirstNameError] = useState(false);
@@ -36,65 +42,95 @@ function RegisterForm() {
   const [passwordHelperText, setPasswordHelperText] = useState("");
   const [termsAndConditionsError, setTermsAndConditionsError] = useState(false);
 
+  // Loader state
+  const [openBackdrop, setOpenBackdrop] = useState(false);
+
+  // Texts for the form helper
   const requiredText: string = "Este campo es obligatorio";
   const invalidEmailText: string = "Introduzca un correo válido";
   const invalidPasswordText: string = "Contraseña de mínimo 8 caracteres";
-  const termsAndConditionsText: string = "Acepte los términos y condiciones para registrarse";
-  
+  const termsAndConditionsText: string =
+    "Acepte los términos y condiciones para registrarse";
+
   const validateFilledInputsError = (): boolean => {
-    if(!firstName) {
+    if (!firstName) {
       setFirstNameError(true);
     }
-    if(!lastName) {
+    if (!lastName) {
       setLastNameError(true);
     }
-    if(!email) {
+    if (!email) {
       setEmailError(true);
-      setEmailHelperText(requiredText)
+      setEmailHelperText(requiredText);
     }
-    if(!password){
+    if (!password) {
       setPasswordError(true);
-      setPasswordHelperText(requiredText)
+      setPasswordHelperText(requiredText);
     }
 
-    if(!termsAndConditions){
+    if (!termsAndConditions) {
       setTermsAndConditionsError(true);
     }
 
-    return (!firstName || !lastName || !email || !password || !termsAndConditions) ? true : false;
-  }
+    return !firstName || !lastName || !email || !password || !termsAndConditions
+      ? true
+      : false;
+  };
 
-  const regexValidEmail = new RegExp("^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$");
+  const regexValidEmail = new RegExp(
+    "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$"
+  );
 
   const validateEmailError = (): boolean => {
-    if(!regexValidEmail.test(email)) {
-      setEmailError(true)
-      setEmailHelperText(invalidEmailText)
+    if (!regexValidEmail.test(email)) {
+      setEmailError(true);
+      setEmailHelperText(invalidEmailText);
       return true;
-    };
+    }
     return false;
-  }
+  };
 
   const validatePasswordError = (): boolean => {
-    if(password.length < PASSWORD_MIN_LENGTH) {
-      setPasswordError(true)
-      setPasswordHelperText(invalidPasswordText)
+    if (password.length < PASSWORD_MIN_LENGTH) {
+      setPasswordError(true);
+      setPasswordHelperText(invalidPasswordText);
       return true;
-    };
+    }
     return false;
-  }
-
-  // Loader
-  const [openBackdrop, setOpenBackdrop] = useState(false);
-  const handleCloseLoader = () => {
-    setOpenBackdrop(false);
-  };
-  const handleOpenLoader = () => {
-    setOpenBackdrop(true);
   };
 
   // Event handlers
-  const handleFirstNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAlertOpen = (status: number) => {
+    if (status === API_STATUS_CODE.CREATED) {
+      setAlertConfig({
+        message:
+          "El registro fue exitoso. Revisa tu correo para activar tu cuenta.",
+        severity: "success",
+      });
+    } else {
+      setAlertConfig({
+        message:
+          "El correo ya está registrado. Intenta con otro correo o inicia sesión.",
+        severity: "error",
+      });
+    }
+
+    setAlertOpen(true);
+  };
+
+  const handleAlertClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setAlertOpen(false);
+  };
+
+  const handleFirstNameChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setFirstName(event.target.value);
     setFirstNameError(false);
   };
@@ -107,20 +143,31 @@ function RegisterForm() {
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
     setEmailError(false);
-    setEmailHelperText("")
+    setEmailHelperText("");
   };
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
     setPasswordError(false);
-    setPasswordHelperText("")
+    setPasswordHelperText("");
   };
 
-  const handleTermsAndConditionsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTermsAndConditionsChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setTermsAndConditions(event.target.checked);
     setTermsAndConditionsError(false);
   };
 
+  // Loader handlers
+  const handleCloseLoader = () => {
+    setOpenBackdrop(false);
+  };
+  const handleOpenLoader = () => {
+    setOpenBackdrop(true);
+  };
+
+  // Handle submit event for the form. It sends the user data to the API.
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -128,17 +175,13 @@ function RegisterForm() {
     validatePasswordError();
     validateFilledInputsError();
 
-    if(validateFilledInputsError() || validateEmailError() || validatePasswordError()) {
-      return
+    if (
+      validateFilledInputsError() ||
+      validateEmailError() ||
+      validatePasswordError()
+    ) {
+      return;
     }
-
-    handleOpenLoader();
-
-    // const data = new FormData(event.currentTarget);
-    // const firstName = data.get("firstName")?.toString() ?? "";
-    // const lastName = data.get("lastName")?.toString() ?? "";
-    // const email = data.get("email")?.toString() ?? "";
-    // const password = data.get("password")?.toString() ?? "";
 
     const registerRequest: API_RegisterRequest = {
       first_name: firstName,
@@ -148,6 +191,7 @@ function RegisterForm() {
     };
 
     try {
+      handleOpenLoader();
       let config = {
         method: "POST",
         headers: {
@@ -157,40 +201,41 @@ function RegisterForm() {
         body: JSON.stringify(registerRequest),
       };
 
-      let response = await fetch(API_ENDPOINTS.REGISTER, config)
-        .then((res) => {
-          if (res.status === 200) {
-            console.log("Success");
-          } else {
-            console.log("Error");
-          }
-          res.json();
-        })
-        .then((data) => {
-          console.log(data);
-        });
+      let response = await fetch(API_ENDPOINTS.REGISTER, config);
+      let data = await response.json();
+      handleCloseLoader();
+      handleAlertOpen(response.status);
+      console.log(data);
     } catch (error) {
+      handleCloseLoader();
+
+      setAlertConfig({
+        message: "Hubo un error. Intentalo de nuevo más tarde",
+        severity: "error",
+      });
+      setAlertOpen(true);
       console.log(error);
-    } finally {
-      handleCloseLoader()
     }
   };
 
   // Render the form for user registration.
   return (
     <>
-      <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={openBackdrop}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
+      <CircularSpinner openBackdrop={openBackdrop} />
+      <CustomSnackbar
+        message={alertConfig.message}
+        severity={alertConfig.severity}
+        vertical="top"
+        horizontal="center"
+        autoHideDuration={AUTOHIDE_ALERT_DURATION}
+        open={alertOpen}
+        onClose={handleAlertClose}
+      />
 
       <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }} noValidate>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
             <TextField
-              
               fullWidth
               required
               id="firstName"
@@ -253,14 +298,9 @@ function RegisterForm() {
               helperText={passwordError ? passwordHelperText : ""}
             />
           </Grid>
-          <Grid
-            item
-            xs={12}
-            id="termsAndConditionsContainer"
-            sx={{ my: 1 }}
-          >
-            <FormControl 
-              size="small" 
+          <Grid item xs={12} id="termsAndConditionsContainer" sx={{ my: 1 }}>
+            <FormControl
+              size="small"
               fullWidth
               required
               error={termsAndConditionsError}
@@ -288,7 +328,9 @@ function RegisterForm() {
                   </Typography>
                 }
               />
-              <FormHelperText>{termsAndConditionsError ? termsAndConditionsText : ""}</FormHelperText>
+              <FormHelperText>
+                {termsAndConditionsError ? termsAndConditionsText : ""}
+              </FormHelperText>
             </FormControl>
           </Grid>
         </Grid>
