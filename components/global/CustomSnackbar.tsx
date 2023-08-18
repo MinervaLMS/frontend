@@ -10,6 +10,9 @@ function Alert(props: AlertProps) {
 interface CustomSnackbarProps {
   message: string;
   severity: string;
+  vertical: "top" | "bottom";
+  horizontal: "left" | "center" | "right";
+  autoHideDuration: number;
   open: boolean;
   onClose: () => void;
 }
@@ -17,14 +20,17 @@ interface CustomSnackbarProps {
 const CustomSnackbar: React.FC<CustomSnackbarProps> = ({
   message,
   severity,
+  vertical,
+  horizontal,
+  autoHideDuration,
   open,
   onClose,
 }) => {
   return (
     <Snackbar
       open={open}
-      autoHideDuration={AUTOHIDE_ALERT_DURATION}
-      anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      autoHideDuration={autoHideDuration}
+      anchorOrigin={{ vertical, horizontal }}
     >
       <div>
         <Alert
