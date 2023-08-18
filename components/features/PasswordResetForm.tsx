@@ -16,7 +16,7 @@ import CustomSnackbar from "../global/CustomSnackbar";
 import CircularSpinner from "../global/CircularSpinner";
 
 // This functional component is the form for the reset password page.
-// It recives the following props:
+// It recives the following parameters:
 // userId: string value that represents the user id.
 // token: string value that represents the active section token of an user.
 export default function ResetPasswordForm({
@@ -105,6 +105,7 @@ export default function ResetPasswordForm({
       handleCloseLoader();
       handleAlertOpen(response.status);
     } catch (error) {
+      handleCloseLoader();
       setAlertConfig({
         message: "Hubo un error. Intentalo de nuevo más tarde",
         severity: "error",

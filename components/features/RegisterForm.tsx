@@ -8,8 +8,6 @@ import Checkbox from "@mui/material/Checkbox";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import Backdrop from "@mui/material/Backdrop";
-import CircularProgress from "@mui/material/CircularProgress";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 import Typography from "@mui/material/Typography";
@@ -209,6 +207,8 @@ function RegisterForm() {
       handleAlertOpen(response.status);
       console.log(data);
     } catch (error) {
+      handleCloseLoader();
+
       setAlertConfig({
         message: "Hubo un error. Intentalo de nuevo más tarde",
         severity: "error",
