@@ -14,8 +14,13 @@ import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 import Typography from "@mui/material/Typography";
 import { API_RegisterRequest } from "@/config/interfaces";
-import { API_ENDPOINTS } from "@/config/api-connections";
-import { PASSWORD_MIN_LENGTH } from "@/config/constants";
+import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
+import {
+  AUTOHIDE_ALERT_DURATION,
+  PASSWORD_MIN_LENGTH,
+} from "@/config/constants";
+import CircularSpinner from "../global/CircularSpinner";
+import CustomSnackbar from "../global/CustomSnackbar";
 
 // This functional component is the form for the register page.
 // It contains the PasswordForgot component.
@@ -26,6 +31,9 @@ function RegisterForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [termsAndConditions, setTermsAndConditions] = useState(false);
+  // States related to the alert component
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
 
   // To validate user data
   const [firstNameError, setFirstNameError] = useState(false);
@@ -36,6 +44,10 @@ function RegisterForm() {
   const [passwordHelperText, setPasswordHelperText] = useState("");
   const [termsAndConditionsError, setTermsAndConditionsError] = useState(false);
 
+  // Loader state
+  const [openBackdrop, setOpenBackdrop] = useState(false);
+
+  // Texts for the form helper
   const requiredText: string = "Este campo es obligatorio";
   const invalidEmailText: string = "Introduzca un correo válido";
   const invalidPasswordText: string = "Contraseña de mínimo 8 caracteres";
@@ -89,16 +101,35 @@ function RegisterForm() {
     return false;
   };
 
-  // Loader
-  const [openBackdrop, setOpenBackdrop] = useState(false);
-  const handleCloseLoader = () => {
-    setOpenBackdrop(false);
-  };
-  const handleOpenLoader = () => {
-    setOpenBackdrop(true);
+  // Event handlers
+  const handleAlertOpen = (status: number) => {
+    if (status === API_STATUS_CODE.CREATED) {
+      setAlertConfig({
+        message:
+          "El registro fue exitoso. Revisa tu correo para activar tu cuenta.",
+        severity: "success",
+      });
+    } else {
+      setAlertConfig({
+        message:
+          "El correo ya está registrado. Intenta con otro correo o inicia sesión.",
+        severity: "error",
+      });
+    }
+
+    setAlertOpen(true);
   };
 
-  // Event handlers
+  const handleAlertClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setAlertOpen(false);
+  };
+
   const handleFirstNameChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -130,6 +161,15 @@ function RegisterForm() {
     setTermsAndConditionsError(false);
   };
 
+  // Loader handlers
+  const handleCloseLoader = () => {
+    setOpenBackdrop(false);
+  };
+  const handleOpenLoader = () => {
+    setOpenBackdrop(true);
+  };
+
+  // Handle submit event for the form. It sends the user data to the API.
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -145,14 +185,6 @@ function RegisterForm() {
       return;
     }
 
-    handleOpenLoader();
-
-    // const data = new FormData(event.currentTarget);
-    // const firstName = data.get("firstName")?.toString() ?? "";
-    // const lastName = data.get("lastName")?.toString() ?? "";
-    // const email = data.get("email")?.toString() ?? "";
-    // const password = data.get("password")?.toString() ?? "";
-
     const registerRequest: API_RegisterRequest = {
       first_name: firstName,
       last_name: lastName,
@@ -161,6 +193,7 @@ function RegisterForm() {
     };
 
     try {
+      handleOpenLoader();
       let config = {
         method: "POST",
         headers: {
@@ -170,25 +203,34 @@ function RegisterForm() {
         body: JSON.stringify(registerRequest),
       };
 
-      let response = await fetch(API_ENDPOINTS.REGISTER, config)
-      let data = await response.json()  
-      console.log(data)
-    } catch (error) {
-      console.log(error);
-    } finally {
+      let response = await fetch(API_ENDPOINTS.REGISTER, config);
+      let data = await response.json();
       handleCloseLoader();
+      handleAlertOpen(response.status);
+      console.log(data);
+    } catch (error) {
+      setAlertConfig({
+        message: "Hubo un error. Intentalo de nuevo más tarde",
+        severity: "error",
+      });
+      setAlertOpen(true);
+      console.log(error);
     }
   };
 
   // Render the form for user registration.
   return (
     <>
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={openBackdrop}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
+      <CircularSpinner openBackdrop={openBackdrop} />
+      <CustomSnackbar
+        message={alertConfig.message}
+        severity={alertConfig.severity}
+        vertical="top"
+        horizontal="center"
+        autoHideDuration={AUTOHIDE_ALERT_DURATION}
+        open={alertOpen}
+        onClose={handleAlertClose}
+      />
 
       <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }} noValidate>
         <Grid container spacing={2}>

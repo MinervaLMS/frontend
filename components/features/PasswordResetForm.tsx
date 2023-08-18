@@ -114,13 +114,14 @@ export default function ResetPasswordForm({
     }
   };
 
+  // Render the form for password reset.
   return (
     <>
       <CircularSpinner openBackdrop={openBackdrop} />
       <CustomSnackbar
         message={alertConfig.message}
         severity={alertConfig.severity}
-        vertical="bottom"
+        vertical="top"
         horizontal="center"
         autoHideDuration={AUTOHIDE_ALERT_DURATION}
         open={alertOpen}
