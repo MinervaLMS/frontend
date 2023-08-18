@@ -9,28 +9,95 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import PasswordForgot from "./PasswordForgot";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import InputLabel from "@mui/material/InputLabel";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import Visibility from "@mui/icons-material/Visibility";
 import { API_LoginRequest } from "@/config/interfaces";
 import { API_ENDPOINTS } from "@/config/api-connections";
 
 export default function LoginForm() {
-  // States related to the PasswordForgot component
-  const [open, setOpen] = React.useState(false);
+  // States related to the user data
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
+  // To validate user data
+  const [emailError, setEmailError] = useState(false)
+  const [passwordError, setPasswordError] = useState(false)
+
+  const requiredText: string = "Este campo es obligatorio";
+  const validateFilledInputsError = (): boolean => {
+    if(!email) {
+      setEmailError(true)
+    }
+
+    if(!password) {      
+      setPasswordError(true)
+    }
+
+    // return (passwordError || emailError) ? true : false
+    return (!email || !password) ? true : false
+  }
+
+  // States related to the PasswordForgot component
+  const [openPasswordForgot, setOpenPasswordForgot] = useState(false);
+
+  // Show/cover password
+  const [showPassword, setShowPassword] = useState(false);
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+  };
+
+  // Loader
+  const [openBackdrop, setOpenBackdrop] = useState(false);
+  const handleCloseLoader = () => {
+    setOpenBackdrop(false);
+  };
+  const handleOpenLoader = () => {
+    setOpenBackdrop(true);
+  };
+
+  // Event handlers
   const handlePasswordForgot = (
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
   ) => {
-    setOpen(!open);
+    setOpenPasswordForgot(!openPasswordForgot);
+  };
+
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value);
+    setEmailError(false);
+  };
+
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.target.value);
+    setPasswordError(false);
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const email = data.get("email")?.toString() ?? "";
-    const password = data.get("password")?.toString() ?? "";
+
+    if(validateFilledInputsError()) {
+      return
+    }    
+
+    handleOpenLoader();
+
+    // const data = new FormData(event.currentTarget);
+    // const emailA = data.get("email")?.toString() ?? "";
+    // const passwordA = data.get("password")?.toString() ?? "";
     const loginRequest: API_LoginRequest = {
       email,
       password,
     };
+
     try {
       let config = {
         method: "POST",
@@ -55,42 +122,94 @@ export default function LoginForm() {
         });
     } catch (error) {
       console.log(error);
+    } finally {
+      handleCloseLoader()
     }
   };
 
   return (
     <>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={openBackdrop}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+
       <PasswordForgot
-        open={open}
+        open={openPasswordForgot}
         handlePasswordForgot={handlePasswordForgot}
-        setOpen={setOpen}
+        setOpen={setOpenPasswordForgot}
       />
-      <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+      <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }} noValidate>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextField
-              required={true}
               fullWidth
+              required
               id="email"
               label="Correo"
               name="email"
               type="email"
               autoComplete="email"
-              autoFocus
               size="small"
+              value={email}
+              onChange={handleEmailChange}
+              error={emailError}
+              helperText={emailError ? requiredText : ""}
             />
           </Grid>
           <Grid item xs={12}>
-            <TextField
+            {/*<TextField
               required={true}
               fullWidth
+              required
               name="password"
               label="Contraseña"
               type="password"
               id="password"
               autoComplete="current-password"
               size="small"
-            />
+              value={password}
+              onChange={
+                (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                  setPassword(event.target.value);
+                  setPasswordError(false)
+                }
+              }
+              error={passwordError}
+              helperText={passwordError ? requiredText: ""}
+            /> */}
+
+            <FormControl 
+              variant="outlined" 
+              size="small" 
+              fullWidth
+              required
+              error={passwordError}
+            >
+              <InputLabel htmlFor="outlined-adornment-password" >Contraseña</InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-password"
+                type={showPassword ? 'text' : 'password'}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="Password"
+                value={password}
+                onChange={handlePasswordChange}
+              />
+              <FormHelperText>{passwordError ? requiredText : ""}</FormHelperText>
+            </FormControl>
           </Grid>
           <Grid item xs={12}>
             <Link
@@ -105,6 +224,7 @@ export default function LoginForm() {
           </Grid>
         </Grid>
         <Button
+          className="btn btn-primary"
           type="submit"
           fullWidth
           variant="contained"
