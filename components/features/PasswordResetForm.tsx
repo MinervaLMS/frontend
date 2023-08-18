@@ -1,19 +1,38 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import { API_PassworReset } from "@/config/interfaces";
-import { API_ENDPOINTS } from "@/config/api-connections";
+import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
 import { PASSWORD_MIN_LENGTH } from "@/config/constants";
+import CustomSnackbar from "../global/CustomSnackbar";
 
 export default function ResetPasswordForm({
   params,
 }: {
   params: { userId: string; token: string };
 }) {
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertConfig, setAlertConfig] = useState({ message: "", severity: 0 });
+
+  const handleAlertOpen = (
+    status: number,
+    data: { message: string; severity: number }
+  ) => {
+    setAlertConfig({
+      message: data.message,
+      severity: status,
+    });
+    setAlertOpen(true);
+  };
+
+  const handleAlertClose = () => {
+    setAlertOpen(false);
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -23,7 +42,7 @@ export default function ResetPasswordForm({
     if (password !== password_confirm) {
       console.log("Passwords don't match");
       return;
-    } 
+    }
 
     const resetPasswordRequest: API_PassworReset = {
       password,
@@ -39,25 +58,30 @@ export default function ResetPasswordForm({
         body: JSON.stringify(resetPasswordRequest),
       };
 
-      let response = await fetch(`${API_ENDPOINTS.PASSWORD_RESET}${params.userId}/${params.token}`, config)
-        .then((res) => {
-          if (res.status === 200) {
-            console.log("Success");
-          } else {
-            console.log("Error");
-          }
-          res.json();
-        })
-        .then((data) => {
-          console.log(data);
-        });
+      let response = await fetch(
+        `${API_ENDPOINTS.PASSWORD_RESET}${params.userId}/${params.token}`,
+        config
+      );
+      let respData = await response.json();
+      console.log(respData);
+      handleAlertOpen(response.status, respData);
     } catch (error) {
+      handleAlertOpen(0, {
+        message: "Hubo un error. Intentalo de nuevo más tarde",
+        severity: 0,
+      });
       console.log(error);
     }
   };
 
   return (
     <>
+      <CustomSnackbar
+        message={alertConfig.message}
+        severity={alertConfig.severity}
+        open={alertOpen}
+        onClose={handleAlertClose}
+      />
       <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
@@ -87,10 +111,12 @@ export default function ResetPasswordForm({
           </Grid>
         </Grid>
         <Button
+          className="btn btn-primary"
           type="submit"
           fullWidth
           variant="contained"
-          sx={{ mt: 1, mb: 2 }}
+          color="success"
+          sx={{ mt: 2, mb: 2 }}
         >
           Cambiar contraseña
         </Button>

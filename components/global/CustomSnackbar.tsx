@@ -1,6 +1,8 @@
-import React from 'react';
-import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
-import MuiAlert, { AlertColor, AlertProps } from '@mui/material/Alert';
+import React from "react";
+import Snackbar, { SnackbarOrigin } from "@mui/material/Snackbar";
+import MuiAlert, { AlertColor, AlertProps } from "@mui/material/Alert";
+import { AUTOHIDE_ALERT_DURATION } from "@/config/constants";
+import { API_STATUS_CODE } from "@/config/api-connections";
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -8,10 +10,7 @@ function Alert(props: AlertProps) {
 
 interface CustomSnackbarProps {
   message: string;
-  severity: AlertColor;
-  vertical: SnackbarOrigin["vertical"];
-  horizontal: SnackbarOrigin["horizontal"];
-  autoHideDuration: number;
+  severity: number;
   open: boolean;
   onClose: () => void;
 }
@@ -19,37 +18,16 @@ interface CustomSnackbarProps {
 const CustomSnackbar: React.FC<CustomSnackbarProps> = ({
   message,
   severity,
-  vertical,
-  horizontal,
-  autoHideDuration,
   open,
   onClose,
 }) => {
-
-  /*const [open, setOpen] = React.useState(true);*/
-
-  /*
-
-  const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpen(false);
-  };*/
-
   return (
-    <Snackbar
-      anchorOrigin={{ vertical, horizontal }}
-      open={open}
-      autoHideDuration={autoHideDuration}
-      onClose={onClose}
-      key={vertical + horizontal}
-    >
+    <Snackbar open={open} autoHideDuration={AUTOHIDE_ALERT_DURATION} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
       <div>
-        <Alert 
-        onClose={onClose} 
-        severity={severity}>
+        <Alert
+          onClose={onClose}
+          severity={severity == API_STATUS_CODE.SUCCESS ? "success": "error"}
+        >
           {message}
         </Alert>
       </div>
