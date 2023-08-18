@@ -7,7 +7,10 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import { API_PassworReset } from "@/config/interfaces";
 import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
-import { PASSWORD_MIN_LENGTH } from "@/config/constants";
+import {
+  AUTOHIDE_ALERT_DURATION,
+  PASSWORD_MIN_LENGTH,
+} from "@/config/constants";
 import CustomSnackbar from "../global/CustomSnackbar";
 import CircularSpinner from "../global/CircularSpinner";
 
@@ -17,7 +20,7 @@ export default function ResetPasswordForm({
   params: { userId: string; token: string };
 }) {
   const [alertOpen, setAlertOpen] = useState(false);
-  const [alertConfig, setAlertConfig] = useState({ message: "", severity: 0 });
+  const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
   const [openBackdrop, setOpenBackdrop] = useState(false);
 
   const handleCloseLoader = () => {
@@ -29,18 +32,18 @@ export default function ResetPasswordForm({
 
   const handleAlertOpen = (
     status: number,
-    data: { message: string; severity: number }
+    data: { message: string; severity: string }
   ) => {
     if (status === API_STATUS_CODE.SUCCESS) {
       setAlertConfig({
         message: data.message,
-        severity: status,
+        severity: "success",
       });
     } else {
       setAlertConfig({
         message:
           "El token ha fallado. Solicita un nuevo correo de recuperación",
-        severity: status,
+        severity: "error",
       });
     }
 
@@ -87,7 +90,7 @@ export default function ResetPasswordForm({
     } catch (error) {
       handleAlertOpen(0, {
         message: "Hubo un error. Intentalo de nuevo más tarde",
-        severity: 0,
+        severity: "error",
       });
       console.log(error);
     }
@@ -99,6 +102,9 @@ export default function ResetPasswordForm({
       <CustomSnackbar
         message={alertConfig.message}
         severity={alertConfig.severity}
+        vertical="bottom"
+        horizontal="center"
+        autoHideDuration={AUTOHIDE_ALERT_DURATION}
         open={alertOpen}
         onClose={handleAlertClose}
       />
