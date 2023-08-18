@@ -9,6 +9,7 @@ import { API_PassworReset } from "@/config/interfaces";
 import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
 import { PASSWORD_MIN_LENGTH } from "@/config/constants";
 import CustomSnackbar from "../global/CustomSnackbar";
+import CircularSpinner from "../global/CircularSpinner";
 
 export default function ResetPasswordForm({
   params,
@@ -17,15 +18,32 @@ export default function ResetPasswordForm({
 }) {
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertConfig, setAlertConfig] = useState({ message: "", severity: 0 });
+  const [openBackdrop, setOpenBackdrop] = useState(false);
+
+  const handleCloseLoader = () => {
+    setOpenBackdrop(false);
+  };
+  const handleOpenLoader = () => {
+    setOpenBackdrop(true);
+  };
 
   const handleAlertOpen = (
     status: number,
     data: { message: string; severity: number }
   ) => {
-    setAlertConfig({
-      message: data.message,
-      severity: status,
-    });
+    if (status === API_STATUS_CODE.SUCCESS) {
+      setAlertConfig({
+        message: data.message,
+        severity: status,
+      });
+    } else {
+      setAlertConfig({
+        message:
+          "El token ha fallado. Solicita un nuevo correo de recuperación",
+        severity: status,
+      });
+    }
+
     setAlertOpen(true);
   };
 
@@ -49,6 +67,7 @@ export default function ResetPasswordForm({
     };
 
     try {
+      handleOpenLoader();
       let config = {
         method: "PATCH",
         headers: {
@@ -63,7 +82,7 @@ export default function ResetPasswordForm({
         config
       );
       let respData = await response.json();
-      console.log(respData);
+      handleCloseLoader();
       handleAlertOpen(response.status, respData);
     } catch (error) {
       handleAlertOpen(0, {
@@ -76,6 +95,7 @@ export default function ResetPasswordForm({
 
   return (
     <>
+      <CircularSpinner openBackdrop={openBackdrop} />
       <CustomSnackbar
         message={alertConfig.message}
         severity={alertConfig.severity}
@@ -94,7 +114,7 @@ export default function ResetPasswordForm({
               id="password"
               autoComplete="new-password"
               size="small"
-              inputProps={{ minlength: PASSWORD_MIN_LENGTH }}
+              inputProps={{ minLength: PASSWORD_MIN_LENGTH }}
             />
           </Grid>
           <Grid item xs={12}>
@@ -106,7 +126,7 @@ export default function ResetPasswordForm({
               type="password"
               id="password-confirm"
               size="small"
-              inputProps={{ minlength: PASSWORD_MIN_LENGTH }}
+              inputProps={{ minLength: PASSWORD_MIN_LENGTH }}
             />
           </Grid>
         </Grid>
