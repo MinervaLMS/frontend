@@ -20,7 +20,7 @@ interface PasswordForgotProps {
 }
 
 // This functional component allow the user to reset his password via a given email.
-// It is recives the following props:
+// It recives the following props:
 // open: boolean value that indicates if the modal is open or not.
 // handlePasswordForgot: function that handles the open/close state of the modal.
 // setOpen: function that sets the open/close state of the modal.

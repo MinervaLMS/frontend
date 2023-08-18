@@ -15,17 +15,25 @@ import {
 import CustomSnackbar from "../global/CustomSnackbar";
 import CircularSpinner from "../global/CircularSpinner";
 
+// This functional component is the form for the reset password page.
+// It recives the following props:
+// userId: string value that represents the user id.
+// token: string value that represents the active section token of an user.
 export default function ResetPasswordForm({
   params,
 }: {
   params: { userId: string; token: string };
 }) {
+  // Router
   const router = useRouter();
-
+  
+  // States related to the alert component
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
+  // States related to the loader component
   const [openBackdrop, setOpenBackdrop] = useState(false);
 
+  // Event handlers
   const handleCloseLoader = () => {
     setOpenBackdrop(false);
   };
@@ -63,6 +71,7 @@ export default function ResetPasswordForm({
     setAlertOpen(false);
   };
 
+  // This function handles the submit event of the form and sends the data to the API.
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
