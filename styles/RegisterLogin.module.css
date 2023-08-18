@@ -14,10 +14,7 @@
   align-items: center;
   border: 1px solid rgba(0, 0, 0, 0.5);
   margin-top: 1rem;
-
-  /* max-width: calc(100vw - 20px); */
   max-width: 45%;
-
   -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
   -moz-box-sizing: border-box; /* Firefox, other Gecko */
   box-sizing: border-box;
