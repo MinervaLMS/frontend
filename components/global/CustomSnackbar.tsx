@@ -1,8 +1,7 @@
 import React from "react";
-import Snackbar, { SnackbarOrigin } from "@mui/material/Snackbar";
-import MuiAlert, { AlertColor, AlertProps } from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import { AUTOHIDE_ALERT_DURATION } from "@/config/constants";
-import { API_STATUS_CODE } from "@/config/api-connections";
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -10,7 +9,7 @@ function Alert(props: AlertProps) {
 
 interface CustomSnackbarProps {
   message: string;
-  severity: number;
+  severity: string;
   open: boolean;
   onClose: () => void;
 }
@@ -22,11 +21,15 @@ const CustomSnackbar: React.FC<CustomSnackbarProps> = ({
   onClose,
 }) => {
   return (
-    <Snackbar open={open} autoHideDuration={AUTOHIDE_ALERT_DURATION} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+    <Snackbar
+      open={open}
+      autoHideDuration={AUTOHIDE_ALERT_DURATION}
+      anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+    >
       <div>
         <Alert
           onClose={onClose}
-          severity={severity == API_STATUS_CODE.SUCCESS ? "success": "error"}
+          severity={severity == "success" ? "success" : "error"}
         >
           {message}
         </Alert>
