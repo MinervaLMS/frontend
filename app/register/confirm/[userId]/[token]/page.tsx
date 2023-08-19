@@ -1,6 +1,6 @@
 "use client";
 
-import CustomSnackbar from "@/components/global/CustomSnackbar";
+import CustomSnackbar from "@/components/common/CustomSnackbar";
 import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
 import { AUTOHIDE_ALERT_DURATION } from "@/config/constants";
 import Image from "next/image";

@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import styles from '@/styles/Home.module.css';
 
-import CustomSnackbar from '@/components/global/CustomSnackbar';
+import CustomSnackbar from '@/components/common/CustomSnackbar';
 import Button from '@mui/material/Button';
 import * as React from 'react';
 

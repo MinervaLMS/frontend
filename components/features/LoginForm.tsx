@@ -160,26 +160,6 @@ export default function LoginForm() {
             />
           </Grid>
           <Grid item xs={12}>
-            {/*<TextField
-              required={true}
-              fullWidth
-              required
-              name="password"
-              label="Contraseña"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              size="small"
-              value={password}
-              onChange={
-                (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-                  setPassword(event.target.value);
-                  setPasswordError(false)
-                }
-              }
-              error={passwordError}
-              helperText={passwordError ? requiredText: ""}
-            /> */}
 
             <FormControl 
               variant="outlined" 

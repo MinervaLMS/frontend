@@ -17,8 +17,8 @@ import {
   AUTOHIDE_ALERT_DURATION,
   PASSWORD_MIN_LENGTH,
 } from "@/config/constants";
-import CircularSpinner from "../global/CircularSpinner";
-import CustomSnackbar from "../global/CustomSnackbar";
+import CircularSpinner from "../common/CircularSpinner";
+import CustomSnackbar from "../common/CustomSnackbar";
 
 // This functional component is the form for the register page.
 // It contains the PasswordForgot component.
@@ -171,10 +171,6 @@ function RegisterForm() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    validateEmailError();
-    validatePasswordError();
-    validateFilledInputsError();
-
     if (
       validateFilledInputsError() ||
       validateEmailError() ||
@@ -298,7 +294,7 @@ function RegisterForm() {
               helperText={passwordError ? passwordHelperText : ""}
             />
           </Grid>
-          <Grid item xs={12} id="termsAndConditionsContainer" sx={{ my: 1 }}>
+          <Grid item xs={12} >
             <FormControl
               size="small"
               fullWidth

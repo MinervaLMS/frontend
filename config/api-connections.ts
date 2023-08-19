@@ -7,6 +7,7 @@ export const API_ENDPOINTS = {
   FORGOT_MY_PASSWORD: `${API_URL}/forgot-my-password/`,
   PASSWORD_RESET: `${API_URL}/password-reset/`,
   CONFIRM_ACCOUNT: `${API_URL}/register/confirm/`,
+  CONTACT: `${API_URL}/contact/`,
 };
 
 export const API_STATUS_CODE = {

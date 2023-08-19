@@ -1,7 +1,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato&display=swap");
 
+* {
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box; /* Firefox, other Gecko */
+  box-sizing: border-box; /* Opera/IE 8+ */
+}
+
 body,
-main {
+html {
   margin: 0;
   padding: 0px;
   width: 100vw;
