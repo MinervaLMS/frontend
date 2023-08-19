@@ -28,26 +28,28 @@ export default function MainHeader() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar className={styles.mainHeader}>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
+          <div className={styles.topBarArea}>
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+            >
+              <MenuIcon />
+            </IconButton>
 
-          <Image
-            src="/vercel.svg"
-            alt="Vercel Logo"
-            className={styles.logo}
-            width={50}
-            height={50}
-            priority
-          />
+            <Image
+              src="/vercel.svg"
+              alt="Vercel Logo"
+              className={styles.logo}
+              width={50}
+              height={50}
+              priority
+            />
+          </div>
 
-          <div className={styles.userArea}>
+          <div className={styles.topBarArea}>
             <Typography
               variant="h6"
               component="p"

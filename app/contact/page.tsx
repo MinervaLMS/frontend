@@ -1,10 +1,13 @@
 "use client";
 
-import MainHeader from "@/components/global/MainHeader";
-import React, { use } from "react";
+import MainHeader from "@/components/layout/MainHeader";
+import React from "react";
 import styles from "@/styles/Contact.module.css";
 import { Box, IconButton, Typography } from "@mui/material";
-import { Facebook, Instagram } from "@mui/icons-material";
+import { Facebook, GitHub, Instagram } from "@mui/icons-material";
+import ContactForm from "@/components/features/ContactForm";
+import FrequentlyAskedQuestions from "@/components/common/FrequentlyAskedQuestions";
+import { FAQS } from "@/config/constants";
 
 function page() {
   return (
@@ -17,13 +20,24 @@ function page() {
             className={`${styles.contactSection} ${styles.contactFormSection}`}
           >
             <Typography component="h1">Contáctanos</Typography>
+            <Typography component="p">
+              Escribenos y cuentanos cuál es tu dificultad
+            </Typography>
+            <Box component="div" className={styles.formBox}>
+              <ContactForm />
+            </Box>
           </Box>
+
           <Box
             component="div"
             className={`${styles.contactSection} ${styles.contactInfoSection}`}
           >
+            <Typography component="h1">Preguntas frecuentes</Typography>
+            <Box component="div">
+              <FrequentlyAskedQuestions FAQs={FAQS}/>
+            </Box>
             <Typography component="h1">Siguenos</Typography>
-            <Box component='div'>
+            <Box component="div">
               <IconButton
                 size="large"
                 aria-label="account of current user"
@@ -55,11 +69,8 @@ function page() {
                 href="#"
                 target="_blank"
               >
-                <Instagram />
+                <GitHub />
               </IconButton>
-            </Box>
-            <Box component='div'>
-              <Typography component="h1">Preguntas frecuentes</Typography>
             </Box>
           </Box>
         </Box>

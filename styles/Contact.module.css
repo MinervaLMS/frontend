@@ -1,20 +1,30 @@
 .mainContainer {
   display: flex;
   flex-wrap: wrap;
-
 }
 
 .contactSection {
   display: flex;
   flex-direction: column;
-  align-items: center;
+
 }
 
 .contactFormSection {
   flex: 2 1;
+  padding: 0 5rem;
 }
 
 .contactInfoSection {
   background-color: #4348a7;
   flex: 1 1;
+  padding: 0 2rem;
+}
+
+.contactInfoSection h1 {
+  color: white;
+}
+
+.formBox {
+  display: flex;
+  flex-direction: column;
 }
