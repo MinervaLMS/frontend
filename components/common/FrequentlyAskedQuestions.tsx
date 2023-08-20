@@ -14,7 +14,7 @@ interface FAQProps {
 
 const FrequentlyAskedQuestions: React.FC<FAQProps> = ({ FAQs }) => {
   return (
-    <div>
+    <>
       {FAQs.map((FAQ, index) => (
         <Accordion key={`FAQ-${index}`}>
           <AccordionSummary
@@ -22,14 +22,14 @@ const FrequentlyAskedQuestions: React.FC<FAQProps> = ({ FAQs }) => {
             aria-controls="panel1a-content"
             id="panel1a-header"
           >
-            <Typography>{FAQ.question}</Typography>
+            <Typography color={"#55b328"} >{FAQ.question}</Typography>
           </AccordionSummary>
           <AccordionDetails>
             <Typography>{FAQ.answer}</Typography>
           </AccordionDetails>
         </Accordion>
       ))}
-    </div>
+    </>
   );
 };
 

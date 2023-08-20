@@ -9,7 +9,7 @@
 body,
 html {
   margin: 0;
-  padding: 0px;
+  padding: 0;
   width: 100vw;
   height: 100vh;
 }
@@ -17,6 +17,8 @@ html {
 a {
   color: #55b328 !important;
   text-decoration: none !important;
+  font-family: "Lato", sans-serif !important;
+  text-transform: none !important;
 }
 
 a:hover {
@@ -27,11 +29,25 @@ a:hover {
 
 .btn-primary {
   background-color: #55b328 !important;
+  color: #fff !important;
 }
 
 .btn-primary:hover {
   background-color: #40881f !important;
+  color: #fff !important;
   transition: ease 0.5s;
+}
+
+.btn-secondary {
+  background-color: #fff !important;
+  color: #55b328 !important;
+
+  transition: ease 0.5s;
+}
+
+.btn-secondary:hover {
+  color: #40881f !important;
+  background-color: #e8e8e8 !important;
 }
 
 h1 {
@@ -46,4 +62,8 @@ h4 {
 
 p {
   font-family: "Lato", sans-serif !important;
+}
+
+#header {
+  height: 9%;
 }

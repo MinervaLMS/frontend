@@ -12,9 +12,9 @@ import { FAQS } from "@/config/constants";
 function page() {
   return (
     <>
-      <main>
+      <Box component="main" width={"100vw"} height={"100vh"}>
         <MainHeader />
-        <Box component="section" className={styles.mainContainer}>
+        <Box component="section" className={styles.mainSection}>
           <Box
             component="div"
             className={`${styles.contactSection} ${styles.contactFormSection}`}
@@ -32,49 +32,27 @@ function page() {
             component="div"
             className={`${styles.contactSection} ${styles.contactInfoSection}`}
           >
-            <Typography component="h1">Preguntas frecuentes</Typography>
             <Box component="div">
-              <FrequentlyAskedQuestions FAQs={FAQS}/>
+              <Typography component="h1" marginBottom={"1rem"}>
+                Preguntas frecuentes
+              </Typography>
+              <FrequentlyAskedQuestions FAQs={FAQS} />
             </Box>
-            <Typography component="h1">Siguenos</Typography>
             <Box component="div">
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                color="inherit"
-                href="#"
-                target="_blank"
-              >
+              <Typography component="h1">Síguenos</Typography>
+              <IconButton size="medium" color="inherit" href="#" target="_blank">
+                <GitHub />
+              </IconButton>
+              <IconButton size="medium" color="inherit" href="#" target="_blank">
                 <Facebook />
               </IconButton>
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                color="inherit"
-                href="#"
-                target="_blank"
-              >
+              <IconButton size="medium" color="inherit" href="#" target="_blank">
                 <Instagram />
-              </IconButton>
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                color="inherit"
-                href="#"
-                target="_blank"
-              >
-                <GitHub />
               </IconButton>
             </Box>
           </Box>
         </Box>
-      </main>
+      </Box>
     </>
   );
 }

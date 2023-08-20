@@ -185,6 +185,7 @@ function RegisterForm() {
       email,
       password,
     };
+
     handleOpenLoader();
     try {
       let config = {
@@ -198,10 +199,9 @@ function RegisterForm() {
 
       let response = await fetch(API_ENDPOINTS.REGISTER, config);
       let data = await response.json();
-
       handleAlertOpen(response.status);
       console.log(data);
-    } catch (error) {
+    } catch (error) { 
       setAlertConfig({
         message: "Hubo un error. Intentalo de nuevo más tarde",
         severity: "error",
@@ -292,7 +292,7 @@ function RegisterForm() {
               helperText={passwordError ? passwordHelperText : ""}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} >
             <FormControl
               size="small"
               fullWidth
