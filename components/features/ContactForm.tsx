@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ReactNode, useState } from "react";
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
@@ -11,6 +11,7 @@ import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
 import { AUTOHIDE_ALERT_DURATION } from "@/config/constants";
 import CustomSnackbar from "../common/CustomSnackbar";
 import { InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import CircularSpinner from "../common/CircularSpinner";
 
 // This functional component is the form for the register page.
 // It contains the PasswordForgot component.
@@ -23,6 +24,9 @@ function ContactForm() {
   // States related to the alert component
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
+
+  // Loader state
+  const [openBackdrop, setOpenBackdrop] = useState(false);
 
   // To validate email input
   const [userNameError, setUserNameError] = useState(false);
@@ -72,7 +76,22 @@ function ContactForm() {
     return false;
   };
 
+  const resetInputs = () => {
+    setUserName("");
+    setUserEmail("");
+    setSubject("");
+    setEmailBody("");
+  };
+
   // Event handlers
+
+  const handleCloseLoader = () => {
+    setOpenBackdrop(false);
+  };
+  const handleOpenLoader = () => {
+    setOpenBackdrop(true);
+  };
+
   const handleAlertOpen = (status: number) => {
     if (status === API_STATUS_CODE.SUCCESS) {
       setAlertConfig({
@@ -115,10 +134,7 @@ function ContactForm() {
     setUserEmailHelperText("");
   };
 
-  const handleSubjectChange = (
-    event: SelectChangeEvent<string>,
-    child: ReactNode
-  ) => {
+  const handleSubjectChange = (event: SelectChangeEvent<string>) => {
     setSubject(event.target.value);
     setSubjectError(false);
     setSubjectHelperText("");
@@ -141,12 +157,13 @@ function ContactForm() {
     }
 
     const registerRequest: API_Contact = {
-      user_name: userName,
-      user_email: userEmail,
+      sender_name: userName,
+      sender_email: userEmail,
       subject: subject,
       email_body: emailBody,
     };
 
+    handleOpenLoader();
     try {
       let config = {
         method: "POST",
@@ -160,7 +177,6 @@ function ContactForm() {
       let response = await fetch(API_ENDPOINTS.CONTACT, config);
       let data = await response.json();
       handleAlertOpen(response.status);
-      console.log(data);
     } catch (error) {
       setAlertConfig({
         message: "Hubo un error. Intentalo de nuevo más tarde",
@@ -169,11 +185,14 @@ function ContactForm() {
       setAlertOpen(true);
       console.log(error);
     }
+    handleCloseLoader();
+    resetInputs();
   };
 
   // Render the form for user registration.
   return (
     <>
+      <CircularSpinner openBackdrop={openBackdrop} />
       <CustomSnackbar
         message={alertConfig.message}
         severity={alertConfig.severity}

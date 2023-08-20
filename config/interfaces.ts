@@ -19,8 +19,8 @@ export interface API_PassworReset {
 }
 
 export interface API_Contact {
-  user_name: string;
-  user_email: string;
+  sender_email: string;
+  sender_name: string;
   subject: string;
   email_body: string;
 }

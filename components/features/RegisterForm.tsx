@@ -185,9 +185,8 @@ function RegisterForm() {
       email,
       password,
     };
-
+    handleOpenLoader();
     try {
-      handleOpenLoader();
       let config = {
         method: "POST",
         headers: {
@@ -199,12 +198,10 @@ function RegisterForm() {
 
       let response = await fetch(API_ENDPOINTS.REGISTER, config);
       let data = await response.json();
-      handleCloseLoader();
+
       handleAlertOpen(response.status);
       console.log(data);
     } catch (error) {
-      handleCloseLoader();
-
       setAlertConfig({
         message: "Hubo un error. Intentalo de nuevo más tarde",
         severity: "error",
@@ -212,6 +209,7 @@ function RegisterForm() {
       setAlertOpen(true);
       console.log(error);
     }
+    handleCloseLoader();
   };
 
   // Render the form for user registration.
@@ -294,7 +292,7 @@ function RegisterForm() {
               helperText={passwordError ? passwordHelperText : ""}
             />
           </Grid>
-          <Grid item xs={12} >
+          <Grid item xs={12}>
             <FormControl
               size="small"
               fullWidth
