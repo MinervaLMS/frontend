@@ -1,23 +1,24 @@
-.mainContainer {
+.mainSection {
   display: flex;
   flex-wrap: wrap;
+  height: 91%;
 }
 
 .contactSection {
   display: flex;
   flex-direction: column;
-
 }
 
 .contactFormSection {
-  flex: 2 1;
-  padding: 0 5rem;
+  flex: 1.5 1;
+  padding: 3rem 5rem;
 }
 
 .contactInfoSection {
   background-color: #4348a7;
   flex: 1 1;
-  padding: 0 2rem;
+  padding: 3rem 2rem;
+  justify-content: space-between;
 }
 
 .contactInfoSection h1 {

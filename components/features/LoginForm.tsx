@@ -21,6 +21,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
 import { API_LoginRequest } from "@/config/interfaces";
 import { API_ENDPOINTS } from "@/config/api-connections";
+import CircularSpinner from "../common/CircularSpinner";
 
 export default function LoginForm() {
   // States related to the user data
@@ -129,12 +130,7 @@ export default function LoginForm() {
 
   return (
     <>
-      <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={openBackdrop}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
+      <CircularSpinner openBackdrop={openBackdrop} />
 
       <PasswordForgot
         open={openPasswordForgot}

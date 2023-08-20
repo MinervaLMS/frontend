@@ -12,6 +12,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import styles from "@/styles/Header.module.css";
 import Image from "next/image";
+import { Button } from "@mui/material";
 
 export default function MainHeader() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -24,21 +25,72 @@ export default function MainHeader() {
     setAnchorEl(null);
   };
 
+  const logInUserOptions = (
+    <>
+      <Typography variant="h6" component="p">
+        User.name
+      </Typography>
+      <AccountCircle />
+      <IconButton
+        size="large"
+        aria-label="account of current user"
+        aria-controls="menu-appbar"
+        aria-haspopup="true"
+        onClick={handleMenu}
+        color="inherit"
+      >
+        <ArrowDropDown />
+      </IconButton>
+      <Menu
+        id="menu-appbar"
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        keepMounted
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        <MenuItem onClick={handleClose}>Mi perfil</MenuItem>
+        <MenuItem onClick={handleClose}>Mis cursos</MenuItem>
+        <MenuItem onClick={handleClose}>Cerrar sesión</MenuItem>
+      </Menu>
+    </>
+  );
+
+  const logOutUserOptions = (
+    <>
+      <Button
+        className="btn btn-secondary"
+        variant="contained"
+        sx={{ mx: 1 }}
+        href="/register"
+        type="button"
+      >
+        Registrarse
+      </Button>
+      <Button
+        className="btn btn-primary"
+        variant="contained"
+        sx={{ mx: 1 }}
+        href="/login"
+        type="button"
+      >
+        Ingresar
+      </Button>
+    </>
+  );
+
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box id="header">
       <AppBar position="static">
         <Toolbar className={styles.mainHeader}>
           <div className={styles.topBarArea}>
-            <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              sx={{ mr: 2 }}
-            >
-              <MenuIcon />
-            </IconButton>
-
             <Image
               src="/vercel.svg"
               alt="Vercel Logo"
@@ -49,45 +101,7 @@ export default function MainHeader() {
             />
           </div>
 
-          <div className={styles.topBarArea}>
-            <Typography
-              variant="h6"
-              component="p"
-              sx={{ flexGrow: 1, paddingRight: "0.5rem" }}
-            >
-              User.name
-            </Typography>
-            <AccountCircle />
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleMenu}
-              color="inherit"
-            >
-              <ArrowDropDown />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={handleClose}>Mi perfil</MenuItem>
-              <MenuItem onClick={handleClose}>Mis cursos</MenuItem>
-              <MenuItem onClick={handleClose}>Cerrar sesión</MenuItem>
-            </Menu>
-          </div>
+          <div className={styles.topBarArea}>{logOutUserOptions}</div>
         </Toolbar>
       </AppBar>
     </Box>
