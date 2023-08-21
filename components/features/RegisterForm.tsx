@@ -99,6 +99,13 @@ function RegisterForm() {
     return false;
   };
 
+  const resetInputs = () => {
+    setFirstName("");
+    setLastName("");
+    setEmail("");
+    setPassword("");
+  };
+
   // Event handlers
   const handleAlertOpen = (status: number) => {
     if (status === API_STATUS_CODE.CREATED) {
@@ -107,6 +114,7 @@ function RegisterForm() {
           "El registro fue exitoso. Revisa tu correo para activar tu cuenta.",
         severity: "success",
       });
+      resetInputs();
     } else {
       setAlertConfig({
         message:
@@ -201,7 +209,7 @@ function RegisterForm() {
       let data = await response.json();
       handleAlertOpen(response.status);
       console.log(data);
-    } catch (error) { 
+    } catch (error) {
       setAlertConfig({
         message: "Hubo un error. Intentalo de nuevo más tarde",
         severity: "error",
@@ -292,7 +300,7 @@ function RegisterForm() {
               helperText={passwordError ? passwordHelperText : ""}
             />
           </Grid>
-          <Grid item xs={12} >
+          <Grid item xs={12}>
             <FormControl
               size="small"
               fullWidth
