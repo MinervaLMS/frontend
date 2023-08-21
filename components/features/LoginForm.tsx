@@ -20,8 +20,10 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
 import { API_LoginRequest } from "@/config/interfaces";
-import { API_ENDPOINTS } from "@/config/api-connections";
+import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
 import CircularSpinner from "../common/CircularSpinner";
+import CustomSnackbar from "../common/CustomSnackbar";
+import { AUTOHIDE_ALERT_DURATION } from "@/config/constants";
 
 export default function LoginForm() {
   // States related to the user data
@@ -29,22 +31,26 @@ export default function LoginForm() {
   const [password, setPassword] = useState("");
 
   // To validate user data
-  const [emailError, setEmailError] = useState(false)
-  const [passwordError, setPasswordError] = useState(false)
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+
+  // States related to the alert component
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
 
   const requiredText: string = "Este campo es obligatorio";
   const validateFilledInputsError = (): boolean => {
-    if(!email) {
-      setEmailError(true)
+    if (!email) {
+      setEmailError(true);
     }
 
-    if(!password) {      
-      setPasswordError(true)
+    if (!password) {
+      setPasswordError(true);
     }
 
     // return (passwordError || emailError) ? true : false
-    return (!email || !password) ? true : false
-  }
+    return !email || !password ? true : false;
+  };
 
   // States related to the PasswordForgot component
   const [openPasswordForgot, setOpenPasswordForgot] = useState(false);
@@ -52,7 +58,9 @@ export default function LoginForm() {
   // Show/cover password
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
     event.preventDefault();
   };
 
@@ -64,8 +72,27 @@ export default function LoginForm() {
   const handleOpenLoader = () => {
     setOpenBackdrop(true);
   };
-
   // Event handlers
+  const handleAlertOpen = (status: number) => {
+    if (status === API_STATUS_CODE.BAD_REQUEST) {
+      setAlertConfig({
+        message:
+          "Los datos son incorrectos o la cuenta no ha sido verificada. Por favor, verifica los datos e intentalo de nuevo.",
+        severity: "error",
+      });
+      setAlertOpen(true);
+    }
+  };
+
+  const handleAlertClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setAlertOpen(false);
+  };
   const handlePasswordForgot = (
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
   ) => {
@@ -85,20 +112,16 @@ export default function LoginForm() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if(validateFilledInputsError()) {
-      return
-    }    
+    if (validateFilledInputsError()) {
+      return;
+    }
 
-    handleOpenLoader();
-
-    // const data = new FormData(event.currentTarget);
-    // const emailA = data.get("email")?.toString() ?? "";
-    // const passwordA = data.get("password")?.toString() ?? "";
     const loginRequest: API_LoginRequest = {
       email,
       password,
     };
 
+    handleOpenLoader();
     try {
       let config = {
         method: "POST",
@@ -109,33 +132,39 @@ export default function LoginForm() {
         body: JSON.stringify(loginRequest),
       };
 
-      let response = await fetch(API_ENDPOINTS.LOGIN, config)
-        .then((res) => {
-          if (res.status === 200) {
-            console.log("Success");
-          } else {
-            console.log("Error");
-          }
-          res.json();
-        })
-        .then((data) => {
-          console.log(data);
-        });
+      let response = await fetch(API_ENDPOINTS.LOGIN, config);
+      let data = await response.json();
+      handleAlertOpen(response.status);
+      console.log(data);
     } catch (error) {
+      setAlertConfig({
+        message: "Hubo un error. Intentalo de nuevo más tarde",
+        severity: "error",
+      });
+      setAlertOpen(true);
       console.log(error);
-    } finally {
-      handleCloseLoader()
     }
+    handleCloseLoader();
   };
 
   return (
     <>
       <CircularSpinner openBackdrop={openBackdrop} />
-
+      <CustomSnackbar
+        message={alertConfig.message}
+        severity={alertConfig.severity}
+        vertical="top"
+        horizontal="center"
+        autoHideDuration={AUTOHIDE_ALERT_DURATION}
+        open={alertOpen}
+        onClose={handleAlertClose}
+      />
       <PasswordForgot
         open={openPasswordForgot}
         handlePasswordForgot={handlePasswordForgot}
         setOpen={setOpenPasswordForgot}
+        handleOpenLoader={handleOpenLoader}
+        handleCloseLoader={handleCloseLoader}
       />
       <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }} noValidate>
         <Grid container spacing={2}>
@@ -156,18 +185,19 @@ export default function LoginForm() {
             />
           </Grid>
           <Grid item xs={12}>
-
-            <FormControl 
-              variant="outlined" 
-              size="small" 
+            <FormControl
+              variant="outlined"
+              size="small"
               fullWidth
               required
               error={passwordError}
             >
-              <InputLabel htmlFor="outlined-adornment-password" >Contraseña</InputLabel>
+              <InputLabel htmlFor="outlined-adornment-password">
+                Contraseña
+              </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                type={showPassword ? 'text' : 'password'}
+                type={showPassword ? "text" : "password"}
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
@@ -184,7 +214,9 @@ export default function LoginForm() {
                 value={password}
                 onChange={handlePasswordChange}
               />
-              <FormHelperText>{passwordError ? requiredText : ""}</FormHelperText>
+              <FormHelperText>
+                {passwordError ? requiredText : ""}
+              </FormHelperText>
             </FormControl>
           </Grid>
           <Grid item xs={12}>

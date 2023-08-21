@@ -253,8 +253,11 @@ function ContactForm() {
                 <MenuItem value={"Problemas de registro"}>
                   Problemas de registro
                 </MenuItem>
+                <MenuItem value={"Problemas de registro"}>
+                  Error al reiniciar contraseña
+                </MenuItem>
                 <MenuItem value={"Error de confirmación"}>
-                  Error de confirmación
+                  Error de verificación de la cuenta
                 </MenuItem>
                 <MenuItem value={"Problemas con curso o material"}>
                   Problemas con curso o material
