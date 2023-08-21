@@ -1,6 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
+import {
+  setFirstName,
+  setLastName,
+  setUserEmail,
+  setLogin,
+  setRol,
+  setTokens,
+} from "@/redux/features/userLoginSlice";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
@@ -9,8 +18,6 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import PasswordForgot from "./PasswordForgot";
-import Backdrop from "@mui/material/Backdrop";
-import CircularProgress from "@mui/material/CircularProgress";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 import IconButton from "@mui/material/IconButton";
@@ -24,8 +31,16 @@ import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
 import CircularSpinner from "../common/CircularSpinner";
 import CustomSnackbar from "../common/CustomSnackbar";
 import { AUTOHIDE_ALERT_DURATION } from "@/config/constants";
+import { ROLES } from "@/config/enums";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
+  // Router
+  const router = useRouter();
+
+  // Redux states
+  const dispatch = useAppDispatch();
+
   // States related to the user data
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -109,6 +124,18 @@ export default function LoginForm() {
     setPasswordError(false);
   };
 
+  const handleLoginSuccess = (status: number, data: any) => {
+    if (status === API_STATUS_CODE.SUCCESS) {
+      dispatch(setFirstName(data.first_name));
+      dispatch(setLastName(data.last_name));
+      dispatch(setUserEmail(data.email));
+      dispatch(setRol(ROLES.USER));
+      dispatch(setTokens(data.tokens));
+      dispatch(setLogin(true));
+      router.push("/");
+    }
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -135,6 +162,7 @@ export default function LoginForm() {
       let response = await fetch(API_ENDPOINTS.LOGIN, config);
       let data = await response.json();
       handleAlertOpen(response.status);
+      handleLoginSuccess(response.status, data);
       console.log(data);
     } catch (error) {
       setAlertConfig({
