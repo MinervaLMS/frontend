@@ -99,6 +99,7 @@ function ContactForm() {
           "Gracias por comunicarte con nosotros. Te responderemos lo más pronto posible.",
         severity: "success",
       });
+      resetInputs();
     } else {
       setAlertConfig({
         message:
@@ -186,7 +187,6 @@ function ContactForm() {
       console.log(error);
     }
     handleCloseLoader();
-    resetInputs();
   };
 
   // Render the form for user registration.
