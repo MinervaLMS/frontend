@@ -7,10 +7,13 @@ export const API_ENDPOINTS = {
   FORGOT_MY_PASSWORD: `${API_URL}/forgot-my-password/`,
   PASSWORD_RESET: `${API_URL}/password-reset/`,
   CONFIRM_ACCOUNT: `${API_URL}/register/confirm/`,
+  CONTACT: `${API_URL}/contact/`,
+  COURSE_READ: `${API_URL}/course/get/`,
 };
 
 export const API_STATUS_CODE = {
   SUCCESS: 200,
   CREATED: 201,
   BAD_REQUEST: 400,
+  NOT_FOUND: 404
 };

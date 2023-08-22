@@ -81,6 +81,18 @@ export default function LoginForm() {
     setPasswordError(false);
   };
 
+  const handleLoginSuccess = (status: number, data: any) => {
+    if (status === API_STATUS_CODE.SUCCESS) {
+      dispatch(setFirstName(data.first_name));
+      dispatch(setLastName(data.last_name));
+      dispatch(setUserEmail(data.email));
+      dispatch(setRol(ROLES.USER));
+      dispatch(setTokens(data.tokens));
+      dispatch(setLogin(true));
+      router.push("/course/tfe");
+    }
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
