@@ -4,6 +4,8 @@ export const PASSWORD_MIN_LENGTH: number = 8;
 // Constants for alert messages.
 export const AUTOHIDE_ALERT_DURATION: number = 3000;
 
+export const DRAWER_WIDTH: number = 240;
+
 // Constants for FAQs.
 export const FAQS: {
   question: string;
@@ -30,5 +32,3 @@ export const FAQS: {
       "Si estás teniendo dificultades al completar las evaluaciones en línea, asegúrate de seguir las instrucciones proporcionadas en el curso.Intenta actualizar la página o usar un navegador diferente. Si los problemas persisten, comunica al instructor o ponte en contacto con el soporte técnico para obtener ayuda adicional.",
   },
 ];
-
-export const DRAWER_WIDTH: number = 200;

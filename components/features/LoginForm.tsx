@@ -132,7 +132,7 @@ export default function LoginForm() {
       dispatch(setRol(ROLES.USER));
       dispatch(setTokens(data.tokens));
       dispatch(setLogin(true));
-      router.push("/");
+      router.push("/course/tfe");
     }
   };
 
