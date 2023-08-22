@@ -17,8 +17,8 @@ import {
   AUTOHIDE_ALERT_DURATION,
   PASSWORD_MIN_LENGTH,
 } from "@/config/constants";
-import CircularSpinner from "../global/CircularSpinner";
-import CustomSnackbar from "../global/CustomSnackbar";
+import CircularSpinner from "../common/CircularSpinner";
+import CustomSnackbar from "../common/CustomSnackbar";
 
 // This functional component is the form for the register page.
 // It contains the PasswordForgot component.
@@ -99,6 +99,13 @@ function RegisterForm() {
     return false;
   };
 
+  const resetInputs = () => {
+    setFirstName("");
+    setLastName("");
+    setEmail("");
+    setPassword("");
+  };
+
   // Event handlers
   const handleAlertOpen = (status: number) => {
     if (status === API_STATUS_CODE.CREATED) {
@@ -107,6 +114,7 @@ function RegisterForm() {
           "El registro fue exitoso. Revisa tu correo para activar tu cuenta.",
         severity: "success",
       });
+      resetInputs();
     } else {
       setAlertConfig({
         message:
@@ -171,10 +179,6 @@ function RegisterForm() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    validateEmailError();
-    validatePasswordError();
-    validateFilledInputsError();
-
     if (
       validateFilledInputsError() ||
       validateEmailError() ||
@@ -190,8 +194,8 @@ function RegisterForm() {
       password,
     };
 
+    handleOpenLoader();
     try {
-      handleOpenLoader();
       let config = {
         method: "POST",
         headers: {
@@ -203,12 +207,9 @@ function RegisterForm() {
 
       let response = await fetch(API_ENDPOINTS.REGISTER, config);
       let data = await response.json();
-      handleCloseLoader();
       handleAlertOpen(response.status);
       console.log(data);
     } catch (error) {
-      handleCloseLoader();
-
       setAlertConfig({
         message: "Hubo un error. Intentalo de nuevo más tarde",
         severity: "error",
@@ -216,6 +217,7 @@ function RegisterForm() {
       setAlertOpen(true);
       console.log(error);
     }
+    handleCloseLoader();
   };
 
   // Render the form for user registration.
@@ -298,7 +300,7 @@ function RegisterForm() {
               helperText={passwordError ? passwordHelperText : ""}
             />
           </Grid>
-          <Grid item xs={12} id="termsAndConditionsContainer" sx={{ my: 1 }}>
+          <Grid item xs={12}>
             <FormControl
               size="small"
               fullWidth

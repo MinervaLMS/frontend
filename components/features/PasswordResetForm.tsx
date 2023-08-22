@@ -12,8 +12,8 @@ import {
   AUTOHIDE_ALERT_DURATION,
   PASSWORD_MIN_LENGTH,
 } from "@/config/constants";
-import CustomSnackbar from "../global/CustomSnackbar";
-import CircularSpinner from "../global/CircularSpinner";
+import CustomSnackbar from "../common/CustomSnackbar";
+import CircularSpinner from "../common/CircularSpinner";
 
 // This functional component is the form for the reset password page.
 // It recives the following parameters:

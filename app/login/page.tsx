@@ -29,8 +29,9 @@ export default function Login() {
             Bienvenido
           </Typography>
           <Typography component="p" variant="inherit" align="center">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. <br />
-            Architecto exercitationem temporibus assumenda quos, dolore nemo?
+            Ingresa tus tus datos de inicio de sesión para acceder a tu
+            cuenta. <br />
+            ¡Estamos emocionados de verte de nuevo!
           </Typography>
           <LoginForm />
         </Box>

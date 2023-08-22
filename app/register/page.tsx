@@ -33,8 +33,9 @@ export default function Register() {
             Regístrate
           </Typography>
           <Typography component="p" variant="inherit" align="center">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. <br />
-            Architecto exercitationem temporibus assumenda quos, dolore nemo?
+            Completa el formulario a continuación para crear tu cuenta en
+            nuestra plataforma. <br /> ¡Es rápido y fácil! Solo necesitamos
+            algunos detalles para empezar.
           </Typography>
           <RegisterForm />
         </Box>

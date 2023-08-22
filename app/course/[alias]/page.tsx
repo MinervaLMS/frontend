@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useState, useEffect } from "react";
 
@@ -35,17 +35,17 @@ import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
 // This functional component is the index page for the /course rute.
 // It contains the CourseAppBar and CourseDrawerList components.
 
-const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
+const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
   open?: boolean;
 }>(({ theme, open }) => ({
-	flexGrow: 1,
-	transition: theme.transitions.create('margin', {
-		easing: theme.transitions.easing.sharp,
-		duration: theme.transitions.duration.leavingScreen,
-	}),
+  flexGrow: 1,
+  transition: theme.transitions.create("margin", {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
   marginLeft: `-${DRAWER_WIDTH}px`,
   ...(open && {
-    transition: theme.transitions.create('margin', {
+    transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
@@ -53,13 +53,13 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   }),
 }));
 
-const DrawerHeader = styled('div')(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-	padding: theme.spacing(0, 1),
+const DrawerHeader = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  padding: theme.spacing(0, 1),
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
-  justifyContent: 'flex-end',
+  justifyContent: "flex-end",
 }));
 
 function Course({ params }: { params: { alias: string } }) {
@@ -139,10 +139,9 @@ function Course({ params }: { params: { alias: string } }) {
     }
   };
 
-	const handleDrawerOpen = (event: React.MouseEvent<HTMLButtonElement>
-	) => {
-		setOpen(true);
-	};
+  const handleDrawerOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setOpen(true);
+  };
 
   const handleDrawerClose = (event: React.MouseEvent<HTMLButtonElement>) => {
     setOpen(false);
