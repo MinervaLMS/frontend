@@ -24,3 +24,12 @@ export interface API_Contact {
   subject: string;
   email_body: string;
 }
+
+export interface API_MaterialObject {
+  id: number,
+  name: string,
+  material_type: string,
+  is_extra: boolean,
+  order: number,
+  module_id: number
+}

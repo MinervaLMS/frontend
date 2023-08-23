@@ -15,6 +15,9 @@ import CourseDrawerList from "@/components/layout/CourseDrawerList";
 import CircularSpinner from "@/components/common/CircularSpinner";
 import CustomSnackbar from "@/components/common/CustomSnackbar";
 
+// Import features
+import CourseMaterial from "@/components/features/CourseMaterial";
+
 // Import styles
 import { styled, useTheme } from "@mui/material/styles";
 
@@ -203,6 +206,7 @@ function Course({ params }: { params: { alias: string } }) {
           <Typography component="p" variant="inherit">
             {courseData?.description}
           </Typography>
+          <CourseMaterial></CourseMaterial>
         </Main>
       </Box>
     );
