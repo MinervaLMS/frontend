@@ -268,17 +268,6 @@ export default function LoginForm() {
         >
           Ingresar
         </Button>
-        <Divider />
-        <Grid container sx={{ mt: 1 }}>
-          <Grid item xs={12}>
-            <Typography variant="inherit">
-              {"¿Aún no estás registrado? - "}
-              <Link href="/register" variant="body1">
-                {"Regístrate"}
-              </Link>
-            </Typography>
-          </Grid>
-        </Grid>
       </Box>
     </>
   );
