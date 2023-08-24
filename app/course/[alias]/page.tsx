@@ -34,6 +34,7 @@ import { useRouter } from "next/navigation";
 
 // Import API
 import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
+import CourseModule from "@/components/features/CourseModule";
 
 // This functional component is the index page for the /course rute.
 // It contains the CourseAppBar and CourseDrawerList components.
@@ -197,16 +198,16 @@ function Course({ params }: { params: { alias: string } }) {
         </Drawer>
         <Main
           open={open}
-          sx={{ padding: { xs: theme.spacing(10, 3), sm: theme.spacing(3) } }}
+          sx={{ 
+              padding: { xs: theme.spacing(10, 3), sm: theme.spacing(3) },
+              marginX: 12
+          }}
         >
           <DrawerHeader />
-          <Typography component="h4" variant="inherit">
-            {courseData?.name}
+          <Typography component="h1" variant="inherit">
+              {courseData?.name}
           </Typography>
-          <Typography component="p" variant="inherit">
-            {courseData?.description}
-          </Typography>
-          <CourseMaterial></CourseMaterial>
+          <CourseModule />
         </Main>
       </Box>
     );
