@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useAppDispatch, useAppSelector } from "@/redux/hook";
+import { useAppDispatch } from "@/redux/hook";
 import {
   setFirstName,
   setLastName,
