@@ -33,3 +33,18 @@ export interface API_MaterialObject {
   order: number,
   module_id: number
 }
+
+export interface API_CourseObject {
+  id: number,
+  name: string,
+  alias: string,
+  description: string | null,
+  modules?: API_ModuleObject[]
+}
+
+export interface API_ModuleObject {
+  id: number,
+  name: string,
+  course_id: string,
+  description: string
+}
