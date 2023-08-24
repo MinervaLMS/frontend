@@ -8,6 +8,10 @@ import Button from "@mui/material/Button";
 import * as React from "react";
 import { useAppSelector } from "@/redux/hook";
 
+// Theming
+import lightTheme from "@/styles/LightTheme"
+import { ThemeProvider } from "@mui/material";
+
 export default function Home() {
 
   const userLoginState = useAppSelector((state) => state.persistedReducer.userLoginState.email);
@@ -23,6 +27,8 @@ export default function Home() {
   };
 
   return (
+    <ThemeProvider theme={lightTheme}>
+    
     <main className={styles.main}>
       {/* Sección de pruebas */}
       <p>{userLoginState}</p>
@@ -49,5 +55,7 @@ export default function Home() {
         />
       </section>
     </main>
+
+    </ThemeProvider>
   );
 }
