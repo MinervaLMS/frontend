@@ -1,7 +1,13 @@
+"use client";
 import Providers from "@/redux/provider";
 import "../styles/globals.css";
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistStore } from "redux-persist";
+import { store } from "@/redux/store";
+
+const persistor = persistStore(store);
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 
@@ -18,7 +24,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={montserrat.className}>
-        <Providers> {children} </Providers>
+        <PersistGate persistor={persistor}>
+          <Providers> {children} </Providers>
+        </PersistGate>
       </body>
     </html>
   );

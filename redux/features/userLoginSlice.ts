@@ -6,7 +6,7 @@ const initialState = {
   last_name: "",
   email: "",
   login: false,
-  rol: ROLES.NONE,
+  rol: ROLES.USER,
   tokens: {
     refresh: "",
     access: "",

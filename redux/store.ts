@@ -1,10 +1,27 @@
-import userLoginSlice from "./features/userLoginSlice";
+import userLoginReducer from "./features/userLoginSlice";
 import { configureStore } from "@reduxjs/toolkit";
+import storage from "redux-persist/lib/storage";
+import { persistReducer } from "redux-persist";
+import { combineReducers } from "@reduxjs/toolkit";
+import thunk from "redux-thunk";
+
+const persistConfig = {
+  key: "root",
+  storage,
+  whitelist: ["userLoginState"],
+};
+
+const rootReducer = combineReducers({
+  userLoginState: userLoginReducer,
+});
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
   reducer: {
-    userLoginSlice,
+    persistedReducer,
   },
+  middleware: [thunk],
 });
 
 export type RootState = ReturnType<typeof store.getState>;
