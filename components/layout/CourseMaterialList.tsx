@@ -1,32 +1,34 @@
+"use client"
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, SetStateAction } from 'react';
 
 // Import MaterialUI components
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography'
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
 
 // Import own components
 import CircularSpinner from "@/components/common/CircularSpinner";
 import CustomSnackbar from "@/components/common/CustomSnackbar";
-import CourseMaterialList from "@/components/layout/CourseMaterialList";
+import CourseMaterial from "@/components/features/CourseMaterial";
 
 // Import constants
 import { AUTOHIDE_ALERT_DURATION } from "@/config/constants";
 
 // Import API
 import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
-import { API_ModuleObject } from '@/config/interfaces';
+import { API_MaterialObject } from "@/config/interfaces";
 
 // This interface defines the types of the props object.
-interface CourseModuleProps {
+interface CourseMaterialListProps {
 	moduleID: number;
   accessToken: string;
 }
 
-function CourseModule({
+function CourseMaterialList({
 	moduleID,
   accessToken,
-}: CourseModuleProps) {
+}: CourseMaterialListProps) {
 
   // States related to the alert component
   const [alertOpen, setAlertOpen] = useState(false);
@@ -35,9 +37,9 @@ function CourseModule({
   // States related to the API Fetch
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(true);
-  const [moduleData, setModuleData] = useState<API_ModuleObject>();
+  const [materialsList, setMaterialsList] = useState<Array<API_MaterialObject>>([]);
 
-  // Fetch function to obtain the data of the module
+  // Fetch function to obtain the materials of the module
   const handleFetch = async () => {
     try {
       let config = {
@@ -47,24 +49,27 @@ function CourseModule({
         },
       };
 
-      let responseModule = await fetch(`${API_ENDPOINTS.MODULE}${moduleID}/`, config);
-      console.log(responseModule);
-      handleAlertOpen(responseModule.status);
-      let dataModule = await responseModule.json();
-      setModuleData(dataModule);
+      let response = await fetch(`${API_ENDPOINTS.MODULE}${moduleID}${API_ENDPOINTS.MATERIALS}`, config);
+      console.log(response);
+      handleAlertOpen(response.status);
+      let data = await response.json();
+      // Order the list of materials according to their order property.
+      data.sort((a: API_MaterialObject, b: API_MaterialObject) => (a.order > b.order) ? 1 : -1); 
+      setMaterialsList(data);
     } catch (error) {
       setAlertConfig({
-        message: "No hay materiales en este módulo o hubo un error. Intentalo de nuevo más tarde",
+        message: "No hay materiales en este módulo o hubo un error. Inténtalo de nuevo más tarde",
         severity: "error",
       });
       setAlertOpen(true);
       console.log(error);
     }
+    setIsLoading(false);
   }
 
   useEffect(() => {
+    setIsLoading(true);
     handleFetch();
-    setIsLoading(false);
   }, [moduleID, accessToken]);
 
   // Event handlers
@@ -73,7 +78,7 @@ function CourseModule({
     if (status === API_STATUS_CODE.NOT_FOUND) {
       setAlertConfig({
         message:
-          "No hay materiales en este módulo.",
+          "Material no encontrado.",
         severity: "error",
       });
       setAlertOpen(true);
@@ -112,28 +117,15 @@ function CourseModule({
     );
   }
 
-  return(
-    <>
-      <Typography 
-        component="h4" 
-        variant='inherit'
-        sx={{ marginY: 4 }}
-      >
-        {moduleData?.name}
-      </Typography>
-      <Container 
-        disableGutters 
-        sx={{
-            marginY: 4,
-        }}
-      >
-        <Typography>
-          En la API los módulos no tienen descripción. Luego se comenta en la reunión.
-        </Typography>
-      </Container>
-      <CourseMaterialList moduleID={moduleID} accessToken={accessToken} />
-    </>
-  )
+	return(
+    <List>
+      {materialsList.map((material: API_MaterialObject) => (
+        <ListItem key={material.id}>
+          <CourseMaterial material={material} />
+        </ListItem>
+      ))}
+    </List>
+	);
 }
 
-export default CourseModule;
+export default CourseMaterialList;

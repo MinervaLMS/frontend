@@ -108,6 +108,7 @@ export default function LoginForm() {
     }
     setAlertOpen(false);
   };
+  
   const handlePasswordForgot = (
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
   ) => {
@@ -132,7 +133,7 @@ export default function LoginForm() {
       dispatch(setRol(ROLES.USER));
       dispatch(setTokens(data.tokens));
       dispatch(setLogin(true));
-      router.push("/course/tfe");
+      router.push("/");
     }
   };
 

@@ -28,7 +28,7 @@ import Image from "next/image";
 import { DRAWER_WIDTH } from "@/config/constants";
 
 // Import redux and router
-import { useAppDispatch, useAppSelector } from "@/redux/hook";
+import { useAppSelector } from "@/redux/hook";
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -56,16 +56,15 @@ interface CourseAppBarProps {
 	handleDrawerOpen: (
 		event: React.MouseEvent<HTMLButtonElement>
 	) => void;
+  userName: string;
 }
 
 function CourseAppBar({
 	open,
-	handleDrawerOpen
+	handleDrawerOpen,
+  userName
 }: CourseAppBarProps) {
 
-  // User and course data
-  const userName = useAppSelector(state => state.userLoginSlice.first_name);
-  const userTokens = useAppSelector(state => state.userLoginSlice.tokens);
   const userSettings = ['Cuenta', 'Cerrar sesión'];
 
 	const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);

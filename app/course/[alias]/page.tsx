@@ -8,15 +8,13 @@ import Drawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import CourseAppBar from "@/components/layout/CourseAppBar";
-import CourseDrawerList from "@/components/layout/CourseDrawerList";
 
-// Import common components
+// Import own components
 import CircularSpinner from "@/components/common/CircularSpinner";
 import CustomSnackbar from "@/components/common/CustomSnackbar";
-
-// Import features
-import CourseMaterial from "@/components/features/CourseMaterial";
+import CourseAppBar from "@/components/layout/CourseAppBar";
+import CourseDrawerList from "@/components/layout/CourseDrawerList";
+import CourseModule from "@/components/features/CourseModule";
 
 // Import styles
 import { styled, useTheme } from "@mui/material/styles";
@@ -29,12 +27,12 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { DRAWER_WIDTH, AUTOHIDE_ALERT_DURATION } from "@/config/constants";
 
 // Import redux and router
-import { useAppDispatch, useAppSelector } from "@/redux/hook";
+import { useAppSelector } from "@/redux/hook";
 import { useRouter } from "next/navigation";
 
 // Import API
 import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
-import CourseModule from "@/components/features/CourseModule";
+import { API_CourseObject } from "@/config/interfaces";
 
 // This functional component is the index page for the /course rute.
 // It contains the CourseAppBar and CourseDrawerList components.
@@ -71,21 +69,25 @@ function Course({ params }: { params: { alias: string } }) {
   // State related to the drawer
   const [open, setOpen] = useState(true);
 
+  // State related to the selected module in the drawer list
+  const [selectedModule, setSelectedModule] = useState<number>(0);
+
   // States related to the alert component
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
 
   // States related to the API Fetch
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const [courseData, setCourseData] = useState({ id: 0, name: "", alias: "", description: null });
+  const [error, setError] = useState(true);
+  const [courseData, setCourseData] = useState<API_CourseObject>();
 
   // For routing when user is not login of the course is not found
   const router = useRouter();
-  const isUserLogin =  useAppSelector(state => state.userLoginSlice.login);
+  const isUserLogin =  useAppSelector(state => state.persistedReducer.userLoginState.login);
 
-  // User token to auth in the API
-  const userTokens = useAppSelector(state => state.userLoginSlice.tokens);
+  // User token to auth in the API and first name to show in the app bar
+  const userTokens = useAppSelector(state => state.persistedReducer.userLoginState.tokens);
+  const userName =  useAppSelector(state => state.persistedReducer.userLoginState.first_name);
 
   // For using the theme predefined styles
   const theme = useTheme();
@@ -99,12 +101,11 @@ function Course({ params }: { params: { alias: string } }) {
         },
       };
 
-      let response = await fetch(`${API_ENDPOINTS.COURSE_READ}${params.alias}`, config);
+      let response = await fetch(`${API_ENDPOINTS.COURSE}${params.alias}`, config);
       console.log(response);
       handleAlertOpen(response.status);
       let data = await response.json();
       setCourseData(data);
-
     } catch (error) {
       setAlertConfig({
         message: "Hubo un error. Intentalo de nuevo más tarde",
@@ -112,7 +113,6 @@ function Course({ params }: { params: { alias: string } }) {
       });
       setAlertOpen(true);
       console.log(error);
-      setError(true);
     }
   }
 
@@ -139,7 +139,15 @@ function Course({ params }: { params: { alias: string } }) {
         severity: "error",
       });
       setAlertOpen(true);
-      setError(true);
+    } else if (status === API_STATUS_CODE.UNAUTHORIZED) {
+      setAlertConfig({
+        message:
+          "La sesión es inválida o ha expirado: Vuelve a iniciar sesión.",
+        severity: "error",
+      });
+      setAlertOpen(true);
+    } else if (status === API_STATUS_CODE.SUCCESS) {
+      setError(false);
     }
   };
 
@@ -157,18 +165,38 @@ function Course({ params }: { params: { alias: string } }) {
     router.push('/');
   };
 
+  const handleChangeModule = (moduleID: number) => {
+    setSelectedModule(moduleID);
+  };
+
   if (isLoading) {
     return(
       <CircularSpinner openBackdrop={isLoading} />
     );
   }
 
+  const Module = () => {
+    if (selectedModule > 0) {
+      return(
+        <CourseModule
+          moduleID={selectedModule} 
+          accessToken={userTokens.access}
+        />
+      );
+    }
+    return(<></>);
+  };
+
   if(isUserLogin && !error) {
     // Render the principal container for the course page.
     return (
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
-        <CourseAppBar open={open} handleDrawerOpen={handleDrawerOpen} />
+        <CourseAppBar 
+          open={open} 
+          handleDrawerOpen={handleDrawerOpen} 
+          userName={userName}
+        />
         <Drawer
           sx={{
             width: DRAWER_WIDTH,
@@ -184,7 +212,7 @@ function Course({ params }: { params: { alias: string } }) {
         >
           <DrawerHeader>
             <Typography variant="h6" noWrap component="div">
-              {courseData.name}
+              Navegación
             </Typography>
             <IconButton onClick={handleDrawerClose}>
               {theme.direction === "ltr" ? (
@@ -194,20 +222,22 @@ function Course({ params }: { params: { alias: string } }) {
               )}
             </IconButton>
           </DrawerHeader>
-          <CourseDrawerList params={params} />
+          <CourseDrawerList 
+            courseAlias={params.alias} 
+            accessToken={userTokens.access}
+            selectedModule={selectedModule}
+            changeSelectedModule={handleChangeModule}
+          />
         </Drawer>
         <Main
           open={open}
-          sx={{ 
-              padding: { xs: theme.spacing(10, 3), sm: theme.spacing(3) },
-              marginX: 12
-          }}
+          sx={{ padding: { xs: theme.spacing(10, 3), sm: theme.spacing(3, 12) } }}
         >
           <DrawerHeader />
           <Typography component="h1" variant="inherit">
               {courseData?.name}
           </Typography>
-          <CourseModule />
+          <Module />
         </Main>
       </Box>
     );
