@@ -8,14 +8,12 @@ import Drawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import CourseAppBar from "@/components/layout/CourseAppBar";
-import CourseDrawerList from "@/components/layout/CourseDrawerList";
 
-// Import common components
+// Import own components
 import CircularSpinner from "@/components/common/CircularSpinner";
 import CustomSnackbar from "@/components/common/CustomSnackbar";
-
-// Import features components
+import CourseAppBar from "@/components/layout/CourseAppBar";
+import CourseDrawerList from "@/components/layout/CourseDrawerList";
 import CourseModule from "@/components/features/CourseModule";
 
 // Import styles
@@ -71,6 +69,9 @@ function Course({ params }: { params: { alias: string } }) {
   // State related to the drawer
   const [open, setOpen] = useState(true);
 
+  // State related to the selected module in the drawer list
+  const [selectedModule, setSelectedModule] = useState<number>(0);
+
   // States related to the alert component
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
@@ -80,18 +81,13 @@ function Course({ params }: { params: { alias: string } }) {
   const [error, setError] = useState(true);
   const [courseData, setCourseData] = useState<API_CourseObject>();
 
-  // State related to the selected module in the drawer list
-  const [selectedModule, setSelectedModule] = useState(1);
-
   // For routing when user is not login of the course is not found
   const router = useRouter();
   const isUserLogin =  useAppSelector(state => state.persistedReducer.userLoginState.login);
-  
-  // For display the first name in the app bar
-  const userName = useAppSelector(state => state.persistedReducer.userLoginState.first_name);
 
-  // User token to auth in the API
+  // User token to auth in the API and first name to show in the app bar
   const userTokens = useAppSelector(state => state.persistedReducer.userLoginState.tokens);
+  const userName =  useAppSelector(state => state.persistedReducer.userLoginState.first_name);
 
   // For using the theme predefined styles
   const theme = useTheme();
@@ -169,11 +165,27 @@ function Course({ params }: { params: { alias: string } }) {
     router.push('/');
   };
 
+  const handleChangeModule = (moduleID: number) => {
+    setSelectedModule(moduleID);
+  };
+
   if (isLoading) {
     return(
       <CircularSpinner openBackdrop={isLoading} />
     );
   }
+
+  const Module = () => {
+    if (selectedModule > 0) {
+      return(
+        <CourseModule
+          moduleID={selectedModule} 
+          accessToken={userTokens.access}
+        />
+      );
+    }
+    return(<></>);
+  };
 
   if(isUserLogin && !error) {
     // Render the principal container for the course page.
@@ -213,7 +225,8 @@ function Course({ params }: { params: { alias: string } }) {
           <CourseDrawerList 
             courseAlias={params.alias} 
             accessToken={userTokens.access}
-            changeSelectedModule={setSelectedModule}
+            selectedModule={selectedModule}
+            changeSelectedModule={handleChangeModule}
           />
         </Drawer>
         <Main
@@ -224,10 +237,7 @@ function Course({ params }: { params: { alias: string } }) {
           <Typography component="h1" variant="inherit">
               {courseData?.name}
           </Typography>
-          <CourseModule
-            moduleID={selectedModule} 
-            accessToken={userTokens.access}
-          />
+          <Module />
         </Main>
       </Box>
     );

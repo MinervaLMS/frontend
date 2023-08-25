@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect, SetStateAction } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // Import MaterialUI components
 import List from '@mui/material/List';
@@ -10,7 +10,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography'
 
-// Import common components
+// Import own components
 import CircularSpinner from "@/components/common/CircularSpinner";
 import CustomSnackbar from "@/components/common/CustomSnackbar";
 
@@ -36,12 +36,14 @@ import { API_ModuleObject } from "@/config/interfaces";
 interface CourseDrawerListProps {
 	courseAlias: string;
   accessToken: string;
-	changeSelectedModule: React.Dispatch<SetStateAction<number>>;
+  selectedModule: number;
+	changeSelectedModule: (moduleID: number) => void;
 }
 
 function CourseDrawerList({
 	courseAlias,
   accessToken,
+  selectedModule,
   changeSelectedModule,
 }: CourseDrawerListProps) {
 
@@ -64,7 +66,6 @@ function CourseDrawerList({
       };
 
       let response = await fetch(`${API_ENDPOINTS.COURSE}${courseAlias}${API_ENDPOINTS.MODULES}`, config);
-      console.log(response);
       handleAlertOpen(response.status);
       const data = await response.json();
       // Order the list of modules according to their order property.
@@ -73,26 +74,24 @@ function CourseDrawerList({
       changeSelectedModule(data[0].id)
     } catch (error) {
       setAlertConfig({
-        message: "Hubo un error. Intentalo de nuevo más tarde",
+        message: "No hay módulos en este curso o hubo un error. Inténtalo de nuevo más tarde",
         severity: "error",
       });
       setAlertOpen(true);
-      console.log(error);
     }
+    setIsLoading(false);
   }
 
   useEffect(() => {
     handleFetch();
-    setIsLoading(false);
-  }, []);
+  }, [accessToken]);
 
   // Event handlers
 
   const handleAlertOpen = (status: number) => {
     if (status === API_STATUS_CODE.NOT_FOUND) {
       setAlertConfig({
-        message:
-          "No hay módulos en este curso.",
+        message: "No hay módulos en este curso.",
         severity: "error",
       });
       setAlertOpen(true);
@@ -109,17 +108,25 @@ function CourseDrawerList({
     setAlertOpen(false);
   };
 
-  const handleSelectModule = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    console.log(event.currentTarget)
-    event.currentTarget.toggleAttribute("selected");
-    //changeSelectedModule(moduleID);
-  };
-
   if (isLoading) {
     return(
       <CircularSpinner openBackdrop={isLoading} />
     );
   }
+
+  const options = [
+    "Posiciones",
+    "Calificaciones",
+    "Syllabus",
+    "Mensajes"
+  ];
+
+  const optionsIcons = [
+    <StarsIcon/>,
+    <FactCheckIcon/>,
+    <TableChartIcon/>,
+    <QuestionAnswerIcon/>
+  ];
 
 	return(
 		<>
@@ -135,7 +142,10 @@ function CourseDrawerList({
 			<List>
 				{modulesList.map((module: API_ModuleObject) => (
 					<ListItem key={module.id} disablePadding>
-						<ListItemButton onClick={handleSelectModule}>
+						<ListItemButton 
+              onClick={() => changeSelectedModule(module.id)} 
+              selected={selectedModule === module.id ? true : false}
+            >
               <RadioButtonUncheckedIcon />
 							<ListItemText className={styles.listItemText} disableTypography>
                 <Typography variant="body2">
@@ -148,49 +158,18 @@ function CourseDrawerList({
 			</List>
 			<Divider />
 			<List>
-				<ListItem key='posiciones' disablePadding>
+        {options.map((text, index) => (
+				<ListItem key={text} disablePadding>
           <ListItemButton>
-            <StarsIcon />
+            {optionsIcons[index]}
             <ListItemText className={styles.listItemText} disableTypography>
               <Typography variant="body2">
-                Posiciones
+                {text}
               </Typography>
             </ListItemText>
           </ListItemButton>
 				</ListItem>
-
-        <ListItem key='calificaciones' disablePadding>
-          <ListItemButton>
-            <FactCheckIcon />
-            <ListItemText className={styles.listItemText} disableTypography>
-              <Typography variant="body2">
-                Calificaciones
-              </Typography>
-            </ListItemText>
-          </ListItemButton>
-				</ListItem>
-
-        <ListItem key='syllabus' disablePadding>
-          <ListItemButton>
-            <TableChartIcon />
-            <ListItemText className={styles.listItemText} disableTypography>
-              <Typography variant="body2">
-                Syllabus
-              </Typography>
-            </ListItemText>
-          </ListItemButton>
-				</ListItem>
-
-        <ListItem key='mensajes' disablePadding>
-          <ListItemButton>
-            <QuestionAnswerIcon />
-            <ListItemText className={styles.listItemText} disableTypography>
-              <Typography variant="body2">
-                Mensajes
-              </Typography>
-            </ListItemText>
-          </ListItemButton>
-				</ListItem>
+        ))}
 			</List>
 		</>
 	);
