@@ -1,4 +1,5 @@
 import userLoginReducer from "./features/userLoginSlice";
+import drawerRecuder from "./features/drawerSlice";
 import { configureStore } from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
 import { persistReducer } from "redux-persist";
@@ -13,6 +14,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   userLoginState: userLoginReducer,
+  drawerState: drawerRecuder,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

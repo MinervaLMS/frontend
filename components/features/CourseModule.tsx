@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 
 // Import MaterialUI components
 import Container from '@mui/material/Container';
@@ -23,10 +23,10 @@ interface CourseModuleProps {
   accessToken: string;
 }
 
-function CourseModule({
+const  CourseModule = memo(({
 	moduleID,
   accessToken,
-}: CourseModuleProps) {
+}: CourseModuleProps) => {
 
   // States related to the alert component
   const [alertOpen, setAlertOpen] = useState(false);
@@ -138,6 +138,6 @@ function CourseModule({
       <CourseMaterialList moduleID={moduleID} accessToken={accessToken} />
     </>
   )
-}
+})
 
 export default CourseModule;
