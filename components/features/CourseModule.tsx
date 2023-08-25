@@ -117,20 +117,24 @@ function CourseModule({
       <Typography 
         component="h4" 
         variant='inherit'
-        sx={{ marginY: 4 }}
+        sx={{ marginTop: 4 }}
       >
         {moduleData?.name}
       </Typography>
       <Container 
         disableGutters 
-        sx={{
-            marginY: 4,
-        }}
       >
         <Typography>
           En la API los módulos no tienen descripción. Luego se comenta en la reunión.
         </Typography>
       </Container>
+      <Typography 
+        component="h4" 
+        variant='inherit'
+        sx={{ marginTop: 4 }}
+      >
+        Contenidos y evaluaciones
+      </Typography>
       <CourseMaterialList moduleID={moduleID} accessToken={accessToken} />
     </>
   )
