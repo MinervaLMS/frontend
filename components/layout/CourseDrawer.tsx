@@ -1,33 +1,57 @@
-import { DRAWER_WIDTH } from "@/config/constants";
-import {
-  Drawer,
-  IconButton,
-  Typography,
-  styled,
-  useTheme,
-} from "@mui/material";
 import React from "react";
+
+// Import MaterialUI Components
+import Drawer from "@mui/material/Drawer";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+
+// Import styles
+import { styled, useTheme } from "@mui/material/styles";
+
+// Import own components
+import CourseDrawerList from "./CourseDrawerList";
 
 // Import icons
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import CourseDrawerList from "./CourseDrawerList";
+
+// Import images
+import Image from "next/image";
+
+// Import constants
+import { DRAWER_WIDTH } from "@/config/constants";
+
+// Import redux
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
-import { setOpen } from "@/redux/features/drawerSlice";
+import { setOpen, setSelectedModule } from "@/redux/features/drawerSlice";
 
 interface CourseDrawerProps {
-  alias: string;
+  courseAlias: string;
 }
 
-export const CourseDrawer = ({ alias }: CourseDrawerProps) => {
+// Style for the drawer header
+export const DrawerHeader = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  padding: theme.spacing(0, 1),
+  // necessary for content to be below app bar
+  ...theme.mixins.toolbar,
+  justifyContent: "center",
+}));
+
+export const CourseDrawer = ({ courseAlias }: CourseDrawerProps) => {
+
   // Redux states
   const dispatch = useAppDispatch();
+
   const open = useAppSelector(
     (state) => state.persistedReducer.drawerState.open
   );
+
   const userTokens = useAppSelector(
     (state) => state.persistedReducer.userLoginState.tokens
   );
+
   const selectedModule = useAppSelector(
     (state) => state.persistedReducer.drawerState.selectedModule
   );
@@ -40,18 +64,8 @@ export const CourseDrawer = ({ alias }: CourseDrawerProps) => {
   };
 
   const handleChangeModule = (moduleID: number) => {
-    moduleID;
+    dispatch(setSelectedModule(moduleID));;
   };
-
-  // Style for the drawer header
-  const DrawerHeader = styled("div")(({ theme }) => ({
-    display: "flex",
-    alignItems: "center",
-    padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
-    ...theme.mixins.toolbar,
-    justifyContent: "flex-end",
-  }));
 
   // For using the theme predefined styles
   const theme = useTheme();
@@ -71,19 +85,16 @@ export const CourseDrawer = ({ alias }: CourseDrawerProps) => {
       open={open}
     >
       <DrawerHeader>
-        <IconButton onClick={handleDrawerOpenClose}>
-          {theme.direction === "ltr" ? (
-            <ChevronLeftIcon />
-          ) : (
-            <ChevronRightIcon />
-          )}
-        </IconButton>
-        <Typography variant="h6" noWrap component="div">
-          Logo
-        </Typography>
+        <Image
+          src="/vercel.svg"
+          alt="Vercel Logo"
+          width={100}
+          height={50}
+          priority
+        />
       </DrawerHeader>
       <CourseDrawerList
-        courseAlias={alias}
+        courseAlias={courseAlias}
         accessToken={userTokens.access}
         selectedModule={selectedModule}
         changeSelectedModule={handleChangeModule}

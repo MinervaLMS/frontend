@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 
 // Import MaterialUI Components
 import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
@@ -13,7 +12,7 @@ import IconButton from "@mui/material/IconButton";
 import CircularSpinner from "@/components/common/CircularSpinner";
 import CustomSnackbar from "@/components/common/CustomSnackbar";
 import CourseAppBar from "@/components/layout/CourseAppBar";
-import CourseDrawerList from "@/components/layout/CourseDrawerList";
+import { CourseDrawer, DrawerHeader } from "@/components/layout/CourseDrawer";
 import CourseModule from "@/components/features/CourseModule";
 
 // Import styles
@@ -29,7 +28,6 @@ import { useRouter } from "next/navigation";
 // Import API
 import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
 import { API_CourseObject } from "@/config/interfaces";
-import { CourseDrawer } from "@/components/layout/CourseDrawer";
 
 // This functional component is the index page for the /course rute.
 // It contains the CourseAppBar and CourseDrawerList components.
@@ -53,8 +51,6 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
 }));
 
 function Course({ params }: { params: { alias: string } }) {
-  // State related to the selected module in the drawer list
-  const [selectedModule, setSelectedModule] = useState<number>(0);
 
   // States related to the alert component
   const [alertOpen, setAlertOpen] = useState(false);
@@ -67,16 +63,26 @@ function Course({ params }: { params: { alias: string } }) {
 
   // For routing when user is not login of the course is not found
   const router = useRouter();
+
+  // Redux states:
   const isUserLogin = useAppSelector(
     (state) => state.persistedReducer.userLoginState.login
   );
 
-  // User token to auth in the API and first name to show in the app bar
   const userTokens = useAppSelector(
     (state) => state.persistedReducer.userLoginState.tokens
   );
+
   const userName = useAppSelector(
     (state) => state.persistedReducer.userLoginState.first_name
+  );
+
+  const drawerOpen = useAppSelector(
+    (state) => state.persistedReducer.drawerState.open
+  );
+
+  const selectedModule = useAppSelector(
+    (state) => state.persistedReducer.drawerState.selectedModule
   );
 
   // For using the theme predefined styles
@@ -151,32 +157,22 @@ function Course({ params }: { params: { alias: string } }) {
     return <CircularSpinner openBackdrop={isLoading} />;
   }
 
-  const Module = () => {
-    if (selectedModule > 0) {
-      return (
-        <CourseModule
-          moduleID={selectedModule}
-          accessToken={userTokens.access}
-        />
-      );
-    }
-    return <></>;
-  };
-
   if (isUserLogin && !error) {
     // Render the principal container for the course page.
     return (
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
         <CourseAppBar userName={userName} />
-
+        <CourseDrawer courseAlias={params.alias} />
         <Main
+          open={drawerOpen}
           sx={{
-            padding: { xs: theme.spacing(10, 3), sm: theme.spacing(3, 12) },
+            padding: theme.spacing(3, 12)
           }}
         >
+          <DrawerHeader />
           <Box component="section">
-            <CourseDrawer alias={params.alias} />
+            
             <Typography
               component="h1"
               variant="inherit"
@@ -184,7 +180,7 @@ function Course({ params }: { params: { alias: string } }) {
             >
               {courseData?.name}
             </Typography>
-            <Module />
+            <CourseModule moduleID={selectedModule} accessToken={userTokens.access} />
           </Box>
         </Main>
       </Box>

@@ -26,7 +26,7 @@ import TableChartIcon from '@mui/icons-material/TableChart';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 
 // Import constants
-import { AUTOHIDE_ALERT_DURATION } from "@/config/constants";
+import { AUTOHIDE_ALERT_DURATION, COURSE_OPTIONS } from "@/config/constants";
 
 // Import API
 import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
@@ -114,14 +114,7 @@ function CourseDrawerList({
     );
   }
 
-  const options = [
-    "Posiciones",
-    "Calificaciones",
-    "Syllabus",
-    "Mensajes"
-  ];
-
-  const optionsIcons = [
+  const COURSE_OPTIONS_ICONS = [
     <StarsIcon/>,
     <FactCheckIcon/>,
     <TableChartIcon/>,
@@ -158,10 +151,10 @@ function CourseDrawerList({
 			</List>
 			<Divider />
 			<List>
-        {options.map((text, index) => (
+        {COURSE_OPTIONS.map((text, index) => (
 				<ListItem key={text} disablePadding>
           <ListItemButton>
-            {optionsIcons[index]}
+            {COURSE_OPTIONS_ICONS[index]}
             <ListItemText className={styles.listItemText} disableTypography>
               <Typography variant="body2">
                 {text}

@@ -2,8 +2,6 @@
 
 import React, { useState } from "react";
 
-import { setOpen } from "@/redux/features/drawerSlice";
-
 // Import MaterialUI Components
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -27,10 +25,11 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import Image from "next/image";
 
 // Import constants
-import { DRAWER_WIDTH } from "@/config/constants";
+import { DRAWER_WIDTH, USER_SETTINGS } from "@/config/constants";
 
 // Import redux and router
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
+import { setOpen } from "@/redux/features/drawerSlice";
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -42,6 +41,14 @@ const AppBar = styled(MuiAppBar, {
   transition: theme.transitions.create(["margin", "width"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
+  }),
+    ...(open && {
+      width: `calc(100% - ${DRAWER_WIDTH}px)`,
+      marginLeft: `${DRAWER_WIDTH}px`,
+      transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+      }),
   }),
 }));
 
@@ -56,8 +63,6 @@ function CourseAppBar({ userName }: CourseAppBarProps) {
     (state) => state.persistedReducer.drawerState.open
   );
   const dispatch = useAppDispatch();
-
-  const userSettings = ["Cuenta", "Cerrar sesión"];
 
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
@@ -81,20 +86,12 @@ function CourseAppBar({ userName }: CourseAppBarProps) {
         className={styles.mainHeader}
         sx={{
           display: "flex",
-          flexDirection: { xs: "column", sm: "row" },
-          justifyContent: { xs: "center", sm: "space-between" },
+          flexDirection: "row" ,
+          justifyContent: "space-between" ,
         }}
-      >
-        <Box
-          sx={{
-            display: { xs: "flex", sm: "none" },
-            justifyContent: { xs: "center", sm: "space-between" },
-          }}
-        >
+      > 
+        <Box sx={{ display: "flex", alignItems: "center" }}>
           <IconButton
-            sx={{
-              ...(open && { display: "none" }),
-            }}
             color="inherit"
             aria-label="open drawer"
             onClick={handleDrawerOpenClose}
@@ -103,34 +100,16 @@ function CourseAppBar({ userName }: CourseAppBarProps) {
           >
             <MenuIcon />
           </IconButton>
-          <Image
-            src="/vercel.svg"
-            alt="Vercel Logo"
-            width={100}
-            height={50}
-            priority
-          />
-        </Box>
-        <Box sx={{ display: { xs: "none", sm: "block" } }}>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpenClose}
-            edge="start"
-            size="large"
-            sx={{ ...(open && { display: "none" }) }}
-          >
-            <MenuIcon />
-          </IconButton>
-        </Box>
-        <Box sx={{ display: { xs: "none", sm: "block" } }}>
-          <Image
-            src="/vercel.svg"
-            alt="Vercel Logo"
-            width={100}
-            height={50}
-            priority
-          />
+          <Box sx={{ display: { xs: "none", sm:  "block" }}}>
+            <Image
+              hidden={open}
+              src="/vercel.svg"
+              alt="Vercel Logo"
+              width={100}
+              height={50}
+              priority
+            />
+          </Box>
         </Box>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Typography variant="h6" component="p" sx={{ px: ".5rem" }}>
@@ -165,7 +144,7 @@ function CourseAppBar({ userName }: CourseAppBarProps) {
             open={Boolean(anchorElUser)}
             onClose={handleCloseUserMenu}
           >
-            {userSettings.map((setting) => (
+            {USER_SETTINGS.map((setting) => (
               <MenuItem key={setting} onClick={handleCloseUserMenu}>
                 <Typography textAlign="center">{setting}</Typography>
               </MenuItem>
