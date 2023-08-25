@@ -78,7 +78,7 @@ function CourseMaterialList({
     if (status === API_STATUS_CODE.NOT_FOUND) {
       setAlertConfig({
         message:
-          "Material no encontrado.",
+          "Materiales no encontrados.",
         severity: "error",
       });
       setAlertOpen(true);

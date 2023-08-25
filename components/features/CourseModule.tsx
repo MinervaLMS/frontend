@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 
 // Import MaterialUI components
 import Container from '@mui/material/Container';
@@ -23,10 +23,10 @@ interface CourseModuleProps {
   accessToken: string;
 }
 
-function CourseModule({
+const  CourseModule = memo(({
 	moduleID,
   accessToken,
-}: CourseModuleProps) {
+}: CourseModuleProps) => {
 
   // States related to the alert component
   const [alertOpen, setAlertOpen] = useState(false);
@@ -60,24 +60,18 @@ function CourseModule({
       setAlertOpen(true);
       console.log(error);
     }
+    setIsLoading(false);
   }
 
   useEffect(() => {
+    setIsLoading(true);
     handleFetch();
-    setIsLoading(false);
   }, [moduleID, accessToken]);
 
   // Event handlers
 
   const handleAlertOpen = (status: number) => {
-    if (status === API_STATUS_CODE.NOT_FOUND) {
-      setAlertConfig({
-        message:
-          "No hay materiales en este módulo.",
-        severity: "error",
-      });
-      setAlertOpen(true);
-    } else if (status === API_STATUS_CODE.SUCCESS) {
+    if (status === API_STATUS_CODE.SUCCESS) {
       setError(false);
     }
   };
@@ -112,32 +106,36 @@ function CourseModule({
     );
   }
 
-  return(
-    <>
-      <Typography 
-        component="h4" 
-        variant='inherit'
-        sx={{ marginTop: 4 }}
-      >
-        {moduleData?.name}
-      </Typography>
-      <Container 
-        disableGutters 
-      >
-        <Typography>
-          En la API los módulos no tienen descripción. Luego se comenta en la reunión.
+  if (moduleID > 0) {
+    return (
+      <>
+        <Typography 
+          component="h4" 
+          variant='inherit'
+          sx={{ marginTop: 4 }}
+        >
+          {moduleData?.name}
         </Typography>
-      </Container>
-      <Typography 
-        component="h4" 
-        variant='inherit'
-        sx={{ marginTop: 4 }}
-      >
-        Contenidos y evaluaciones
-      </Typography>
-      <CourseMaterialList moduleID={moduleID} accessToken={accessToken} />
-    </>
-  )
-}
+        <Container 
+          disableGutters 
+        >
+          <Typography>
+            En la API los módulos no tienen descripción. Luego se comenta en la reunión.
+          </Typography>
+        </Container>
+        <Typography 
+          component="h4" 
+          variant='inherit'
+          sx={{ marginTop: 4 }}
+        >
+          Contenidos y evaluaciones
+        </Typography>
+        <CourseMaterialList moduleID={moduleID} accessToken={accessToken} />
+      </>
+    );
+  } else {
+    return <></>;
+  }
+})
 
 export default CourseModule;

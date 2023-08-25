@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 
 // Import MaterialUI Components
 import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
@@ -13,15 +12,11 @@ import IconButton from "@mui/material/IconButton";
 import CircularSpinner from "@/components/common/CircularSpinner";
 import CustomSnackbar from "@/components/common/CustomSnackbar";
 import CourseAppBar from "@/components/layout/CourseAppBar";
-import CourseDrawerList from "@/components/layout/CourseDrawerList";
+import { CourseDrawer, DrawerHeader } from "@/components/layout/CourseDrawer";
 import CourseModule from "@/components/features/CourseModule";
 
 // Import styles
 import { styled, useTheme } from "@mui/material/styles";
-
-// Import icons
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 // Import constants
 import { DRAWER_WIDTH, AUTOHIDE_ALERT_DURATION } from "@/config/constants";
@@ -55,22 +50,7 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
   }),
 }));
 
-const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
-  justifyContent: "flex-end",
-}));
-
 function Course({ params }: { params: { alias: string } }) {
-
-  // State related to the drawer
-  const [open, setOpen] = useState(true);
-
-  // State related to the selected module in the drawer list
-  const [selectedModule, setSelectedModule] = useState<number>(0);
 
   // States related to the alert component
   const [alertOpen, setAlertOpen] = useState(false);
@@ -83,11 +63,27 @@ function Course({ params }: { params: { alias: string } }) {
 
   // For routing when user is not login of the course is not found
   const router = useRouter();
-  const isUserLogin =  useAppSelector(state => state.persistedReducer.userLoginState.login);
 
-  // User token to auth in the API and first name to show in the app bar
-  const userTokens = useAppSelector(state => state.persistedReducer.userLoginState.tokens);
-  const userName =  useAppSelector(state => state.persistedReducer.userLoginState.first_name);
+  // Redux states:
+  const isUserLogin = useAppSelector(
+    (state) => state.persistedReducer.userLoginState.login
+  );
+
+  const userTokens = useAppSelector(
+    (state) => state.persistedReducer.userLoginState.tokens
+  );
+
+  const userName = useAppSelector(
+    (state) => state.persistedReducer.userLoginState.first_name
+  );
+
+  const drawerOpen = useAppSelector(
+    (state) => state.persistedReducer.drawerState.open
+  );
+
+  const selectedModule = useAppSelector(
+    (state) => state.persistedReducer.drawerState.selectedModule
+  );
 
   // For using the theme predefined styles
   const theme = useTheme();
@@ -101,10 +97,13 @@ function Course({ params }: { params: { alias: string } }) {
         },
       };
 
-      let response = await fetch(`${API_ENDPOINTS.COURSE}${params.alias}`, config);
-      console.log(response);
+      let response = await fetch(
+        `${API_ENDPOINTS.COURSE}${params.alias}`,
+        config
+      );
       handleAlertOpen(response.status);
       let data = await response.json();
+      console.log(data);
       setCourseData(data);
     } catch (error) {
       setAlertConfig({
@@ -114,10 +113,10 @@ function Course({ params }: { params: { alias: string } }) {
       setAlertOpen(true);
       console.log(error);
     }
-  }
+  };
 
   useEffect(() => {
-    if(!isUserLogin) {
+    if (!isUserLogin) {
       setAlertConfig({
         message: "Para acceder al curso debes iniciar sesión.",
         severity: "error",
@@ -134,8 +133,7 @@ function Course({ params }: { params: { alias: string } }) {
   const handleAlertOpen = (status: number) => {
     if (status === API_STATUS_CODE.NOT_FOUND) {
       setAlertConfig({
-        message:
-          "Curso no encontrado.",
+        message: "Curso no encontrado.",
         severity: "error",
       });
       setAlertOpen(true);
@@ -151,98 +149,44 @@ function Course({ params }: { params: { alias: string } }) {
     }
   };
 
-  const handleDrawerOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setOpen(false);
-  }; 
-
-  const handleAlertClose = (
-    event?: React.SyntheticEvent | Event,
-  ) => {
-    router.push('/');
-  };
-
-  const handleChangeModule = (moduleID: number) => {
-    setSelectedModule(moduleID);
+  const handleAlertClose = (event?: React.SyntheticEvent | Event) => {
+    router.push("/");
   };
 
   if (isLoading) {
-    return(
-      <CircularSpinner openBackdrop={isLoading} />
-    );
+    return <CircularSpinner openBackdrop={isLoading} />;
   }
 
-  const Module = () => {
-    if (selectedModule > 0) {
-      return(
-        <CourseModule
-          moduleID={selectedModule} 
-          accessToken={userTokens.access}
-        />
-      );
-    }
-    return(<></>);
-  };
-
-  if(isUserLogin && !error) {
+  if (isUserLogin && !error) {
     // Render the principal container for the course page.
     return (
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
-        <CourseAppBar 
-          open={open} 
-          handleDrawerOpen={handleDrawerOpen} 
-          userName={userName}
-        />
-        <Drawer
-          sx={{
-            width: DRAWER_WIDTH,
-            flexShrink: 0,
-            "& .MuiDrawer-paper": {
-              width: DRAWER_WIDTH,
-              boxSizing: "border-box",
-            },
-          }}
-          variant="persistent"
-          anchor="left"
-          open={open}
-        >
-          <DrawerHeader>
-            <Typography variant="h6" noWrap component="div">
-              Navegación
-            </Typography>
-            <IconButton onClick={handleDrawerClose}>
-              {theme.direction === "ltr" ? (
-                <ChevronLeftIcon />
-              ) : (
-                <ChevronRightIcon />
-              )}
-            </IconButton>
-          </DrawerHeader>
-          <CourseDrawerList 
-            courseAlias={params.alias} 
-            accessToken={userTokens.access}
-            selectedModule={selectedModule}
-            changeSelectedModule={handleChangeModule}
-          />
-        </Drawer>
+        <CourseAppBar userName={userName} />
+        <CourseDrawer courseAlias={params.alias} />
         <Main
-          open={open}
-          sx={{ padding: { xs: theme.spacing(10, 3), sm: theme.spacing(3, 12) } }}
+          open={drawerOpen}
+          sx={{
+            padding: theme.spacing(3, 12)
+          }}
         >
           <DrawerHeader />
-          <Typography component="h1" variant="inherit">
+          <Box component="section">
+            
+            <Typography
+              component="h1"
+              variant="inherit"
+              className="tesing-lala"
+            >
               {courseData?.name}
-          </Typography>
-          <Module />
+            </Typography>
+            <CourseModule moduleID={selectedModule} accessToken={userTokens.access} />
+          </Box>
         </Main>
       </Box>
     );
   } else {
-    return(
+    return (
       <CustomSnackbar
         message={alertConfig.message}
         severity={alertConfig.severity}
