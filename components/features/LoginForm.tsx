@@ -265,6 +265,7 @@ export default function LoginForm() {
           type="submit"
           fullWidth
           variant="contained"
+          color="secondary"
           sx={{ mt: 1, mb: 2 }}
         >
           Ingresar

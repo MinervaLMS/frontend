@@ -33,14 +33,14 @@ export default function ResetPassword({
           priority
         />
         <Box className={styles.formBox}>
-          <Typography component="h1" variant="inherit">
+          <Typography component="h1" variant="h4">
             Ingresa tu nueva contraseña
           </Typography>
           <ResetPasswordForm params={params} />
         </Box>
-        <Typography component="p" variant="inherit" className={styles.contact}>
+        <Typography component="p" sx={{ color: "#fff", marginTop: "2rem" }}>
           Si tienes alguna dificultad comunicate con nuestro{" "}
-          <Link href="#">Centro de atención.</Link>
+          <Link href="/contact">Centro de atención.</Link>
         </Typography>
       </Box>
     </Box>

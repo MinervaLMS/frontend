@@ -1,5 +1,5 @@
-import { Theme, createTheme, responsiveFontSizes } from '@mui/material/styles';
-import "@/styles/globals.css"
+import { Theme, createTheme, responsiveFontSizes } from "@mui/material/styles";
+import "@/styles/globals.css";
 
 let lightTheme: Theme = createTheme({
   palette: {
@@ -9,14 +9,19 @@ let lightTheme: Theme = createTheme({
     },
     secondary: {
       main: "#55B328",
+      contrastText: "#fff",
+    },
+    info: {
+      main: "#fff",
+      contrastText: "#4348A7",
     },
   },
   typography: {
     fontFamily: '"Lato", "Helvetica", "Arial", sans-serif',
-    fontSize: 14  ,
+    fontSize: 14,
     h1: {
       fontFamily: '"Montserrat", "Helvetica", "Arial", sans-serif',
-      fontWeight: 700
+      fontWeight: 700,
     },
     h2: {
       fontFamily: '"Montserrat", "Helvetica", "Arial", sans-serif',
@@ -26,15 +31,15 @@ let lightTheme: Theme = createTheme({
     },
     h4: {
       fontFamily: '"Montserrat", "Helvetica", "Arial", sans-serif',
-      fontWeight: "bold"
+      fontWeight: "bold",
     },
     h5: {
       fontFamily: '"Montserrat", "Helvetica", "Arial", sans-serif',
-      fontWeight: "bold"
+      fontWeight: "bold",
     },
     h6: {
       fontFamily: '"Montserrat", "Helvetica", "Arial", sans-serif',
-      fontWeight: "bold"
+      fontWeight: "bold",
     },
   },
 });

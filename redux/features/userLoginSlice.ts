@@ -35,6 +35,7 @@ export const userLoginSlice = createSlice({
     setTokens: (state, action) => {
       state.tokens = action.payload;
     },
+    logOut: () => initialState,
   },
 });
 
@@ -45,6 +46,7 @@ export const {
   setLogin,
   setRol,
   setTokens,
+  logOut
 } = userLoginSlice.actions;
 
 export default userLoginSlice.reducer;

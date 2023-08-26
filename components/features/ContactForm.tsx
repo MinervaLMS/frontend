@@ -291,7 +291,7 @@ function ContactForm() {
           fullWidth
           variant="contained"
           color="secondary"
-          sx={{ my: 2, color: "white" }}
+          sx={{ my: 2}}
         >
           Enviar
         </Button>
