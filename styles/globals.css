@@ -15,6 +15,11 @@ html {
   height: 100vh;
 }
 
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}
+
 a {
   color: #55b328 !important;
   text-decoration: none !important;

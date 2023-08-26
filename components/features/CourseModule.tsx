@@ -2,7 +2,6 @@
 import React, { useState, useEffect, memo } from 'react';
 
 // Import MaterialUI components
-import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography'
 
 // Import own components
@@ -10,12 +9,16 @@ import CircularSpinner from "@/components/common/CircularSpinner";
 import CustomSnackbar from "@/components/common/CustomSnackbar";
 import CourseMaterialList from "@/components/layout/CourseMaterialList";
 
+// Import styles
+import styles from "@/styles/CourseModule.module.css";
+
 // Import constants
 import { AUTOHIDE_ALERT_DURATION } from "@/config/constants";
 
 // Import API
 import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
 import { API_ModuleObject } from '@/config/interfaces';
+import { Box } from '@mui/material';
 
 // This interface defines the types of the props object.
 interface CourseModuleProps {
@@ -109,27 +112,19 @@ const  CourseModule = memo(({
   if (moduleID > 0) {
     return (
       <>
-        <Typography 
-          component="h4" 
-          variant='inherit'
-          sx={{ marginTop: 4 }}
-        >
-          {moduleData?.name}
-        </Typography>
-        <Container 
-          disableGutters 
-        >
-          <Typography>
-            En la API los módulos no tienen descripción. Luego se comenta en la reunión.
+        <Box className={styles.title} >
+          <Typography component="h5" variant='h5'>
+            {moduleData?.name}
           </Typography>
-        </Container>
-        <Typography 
-          component="h4" 
-          variant='inherit'
-          sx={{ marginTop: 4 }}
-        >
-          Contenidos y evaluaciones
+        </Box>
+        <Typography>
+          En la API los módulos aún no tienen descripción.
         </Typography>
+        <Box className={styles.title}>
+          <Typography component="h5" variant='h5'>
+            Contenidos y evaluaciones
+          </Typography>
+        </Box>
         <CourseMaterialList moduleID={moduleID} accessToken={accessToken} />
       </>
     );
