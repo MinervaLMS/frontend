@@ -15,8 +15,8 @@
 }
 
 .materialName {
+    height: 60%;
     display: flex;
-    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
 }
@@ -24,7 +24,7 @@
 .materialDetails {
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
+    margin-top: 8px;
 }
 
 .materialReactions {
