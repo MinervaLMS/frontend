@@ -2,9 +2,10 @@
 
 import { Provider } from "react-redux";
 import { store } from "./store";
-import { Persistor } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
+import { ThemeProvider } from "@mui/material";
+import lightTheme from "@/styles/themes/LightTheme";
 
 const persistor = persistStore(store);
 
@@ -16,7 +17,7 @@ function Providers({ children }: ProvidersProps) {
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>
-        {children}
+        <ThemeProvider theme={lightTheme}>{children}</ThemeProvider>
       </PersistGate>
     </Provider>
   );
