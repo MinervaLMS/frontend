@@ -1,6 +1,7 @@
 import React from "react";
 
 // Import MaterialUI components
+import { Box } from "@mui/material";
 import Container from "@mui/material/Container";
 import Card from "@mui/material/Card/Card";
 import Checkbox from "@mui/material/Checkbox";
@@ -33,23 +34,17 @@ function CourseMaterial({
   return (
     <Card
       sx={{
-        maxWidth: 700,
-        height: "100px",
+        width: "70%",
+        height: "120px",
         bgcolor: "#E6E6E6",
       }}
     >
       <CardActionArea>
-        <Container className={styles.materialInformation}>
-          <Container
-            sx={{
-              bgcolor: "white",
-              width: "18%",
-              borderRadius: 4,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-            disableGutters
+        <Box 
+          className={styles.materialInformation}
+        >
+          <Box
+            className={styles.typeOfMaterial}
           >
             <PlayCircleOutlinedIcon
               sx={{
@@ -57,16 +52,10 @@ function CourseMaterial({
                 height: "95%",
               }}
             />
-          </Container>
+          </Box>
           <Container>
-            <Container
-              sx={{
-                display: "flex",
-                direction: "wrap",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-              disableGutters
+            <Box
+              className={styles.materialName}
             >
               <Typography component="h4">{material.name}</Typography>
               <Checkbox
@@ -78,14 +67,9 @@ function CourseMaterial({
                 }}
                 defaultChecked={false}
               />
-            </Container>
-            <Container
-              sx={{
-                display: "flex",
-                direction: "wrap",
-                justifyContent: "space-between",
-              }}
-              disableGutters
+            </Box>
+            <Box
+              className={styles.materialDetails}
             >
               <Container
                 sx={{
@@ -97,14 +81,10 @@ function CourseMaterial({
                 <TimerOutlinedIcon />
                 <Typography component="p">8m, 45s</Typography>
               </Container>
-              <Container
-                sx={{
-                  display: "flex",
-                  direction: "wrap",
-                  width: "70%",
-                }}
-                disableGutters
+              <Box
+                className={styles.materialReactions}
               >
+                {/* Lo siguiente lo dejo con estilos inline porque de igual forma se va a tener que cambiar */}
                 <Container
                   sx={{
                     display: "flex",
@@ -135,10 +115,10 @@ function CourseMaterial({
                   <ThumbDownOutlinedIcon />
                   <Typography component="p"> 32 </Typography>
                 </Container>
-              </Container>
-            </Container>
+              </Box>
+            </Box>
           </Container>
-        </Container>
+        </Box>
       </CardActionArea>
     </Card>
   );
