@@ -137,6 +137,11 @@ export default function LoginForm() {
     }
   };
 
+  const cleanForm = () => {
+    setEmail("");
+    setPassword("");
+  }
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -174,6 +179,7 @@ export default function LoginForm() {
       console.log(error);
     }
     handleCloseLoader();
+    cleanForm();
   };
 
   return (
