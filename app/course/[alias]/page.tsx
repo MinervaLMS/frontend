@@ -1,17 +1,33 @@
 "use client";
 
-import React, { useState } from "react";
-import { styled, useTheme } from "@mui/material/styles";
+import React, { useState, useEffect } from "react";
+
+// Import MaterialUI Components
 import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import { DRAWER_WIDTH } from "@/config/constants";
-import CourseAppBar from "@/components/features/CourseAppBar";
-import CourseDrawerList from "@/components/features/CourseDrawerList";
+
+// Import own components
+import CircularSpinner from "@/components/common/CircularSpinner";
+import CustomSnackbar from "@/components/common/CustomSnackbar";
+import CourseAppBar from "@/components/layout/CourseAppBar";
+import { CourseDrawer, DrawerHeader } from "@/components/layout/CourseDrawer";
+import CourseModule from "@/components/features/CourseModule";
+
+// Import styles
+import { styled, useTheme } from "@mui/material/styles";
+
+// Import constants
+import { DRAWER_WIDTH, AUTOHIDE_ALERT_DURATION } from "@/config/constants";
+
+// Import redux and router
+import { useAppSelector } from "@/redux/hook";
+import { useRouter } from "next/navigation";
+
+// Import API
+import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
+import { API_CourseObject } from "@/config/interfaces";
 
 // This functional component is the index page for the /course rute.
 // It contains the CourseAppBar and CourseDrawerList components.
@@ -34,94 +50,154 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
   }),
 }));
 
-const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
-  justifyContent: "flex-end",
-}));
+function Course({ params }: { params: { alias: string } }) {
 
-export default function Course({ params }: { params: { alias: string } }) {
-  const theme = useTheme();
-  const [open, setOpen] = useState(true);
+  // States related to the alert component
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
 
-  const handleDrawerOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setOpen(true);
-  };
+  // States related to the API Fetch
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(true);
+  const [courseData, setCourseData] = useState<API_CourseObject>();
 
-  const handleDrawerClose = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setOpen(false);
-  };
+  // For routing when user is not login of the course is not found
+  const router = useRouter();
 
-  // Render the principal container for the course page.
-  return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      <CourseAppBar open={open} handleDrawerOpen={handleDrawerOpen} />
-      <Drawer
-        sx={{
-          width: DRAWER_WIDTH,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: DRAWER_WIDTH,
-            boxSizing: "border-box",
-          },
-        }}
-        variant="persistent"
-        anchor="left"
-        open={open}
-      >
-        <DrawerHeader>
-          <Typography variant="h6" noWrap component="div">
-            Curso {params.alias}
-          </Typography>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "ltr" ? (
-              <ChevronLeftIcon />
-            ) : (
-              <ChevronRightIcon />
-            )}
-          </IconButton>
-        </DrawerHeader>
-        <CourseDrawerList params={params} />
-      </Drawer>
-      <Main
-        open={open}
-        sx={{ padding: { xs: theme.spacing(10, 3), sm: theme.spacing(3) } }}
-      >
-        <DrawerHeader />
-        <Typography paragraph>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Rhoncus
-          dolor purus non enim praesent elementum facilisis leo vel. Risus at
-          ultrices mi tempus imperdiet. Semper risus in hendrerit gravida rutrum
-          quisque non tellus. Convallis convallis tellus id interdum velit
-          laoreet id donec ultrices. Odio morbi quis commodo odio aenean sed
-          adipiscing. Amet nisl suscipit adipiscing bibendum est ultricies
-          integer quis. Cursus euismod quis viverra nibh cras. Metus vulputate
-          eu scelerisque felis imperdiet proin fermentum leo. Mauris commodo
-          quis imperdiet massa tincidunt. Cras tincidunt lobortis feugiat
-          vivamus at augue. At augue eget arcu dictum varius duis at consectetur
-          lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa sapien
-          faucibus et molestie ac.
-        </Typography>
-        <Typography paragraph>
-          Consequat mauris nunc congue nisi vitae suscipit. Fringilla est
-          ullamcorper eget nulla facilisi etiam dignissim diam. Pulvinar
-          elementum integer enim neque volutpat ac tincidunt. Ornare suspendisse
-          sed nisi lacus sed viverra tellus. Purus sit amet volutpat consequat
-          mauris. Elementum eu facilisis sed odio morbi. Euismod lacinia at quis
-          risus sed vulputate odio. Morbi tincidunt ornare massa eget egestas
-          purus viverra accumsan in. In hendrerit gravida rutrum quisque non
-          tellus orci ac. Pellentesque nec nam aliquam sem et tortor. Habitant
-          morbi tristique senectus et. Adipiscing elit duis tristique
-          sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
-          eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
-          posuere sollicitudin aliquam ultrices sagittis orci a.
-        </Typography>
-      </Main>
-    </Box>
+  // Redux states:
+  const isUserLogin = useAppSelector(
+    (state) => state.persistedReducer.userLoginState.login
   );
+
+  const userTokens = useAppSelector(
+    (state) => state.persistedReducer.userLoginState.tokens
+  );
+
+  const userName = useAppSelector(
+    (state) => state.persistedReducer.userLoginState.first_name
+  );
+
+  const drawerOpen = useAppSelector(
+    (state) => state.persistedReducer.drawerState.open
+  );
+
+  const selectedModule = useAppSelector(
+    (state) => state.persistedReducer.drawerState.selectedModule
+  );
+
+  // For using the theme predefined styles
+  const theme = useTheme();
+
+  const handleFetch = async () => {
+    try {
+      let config = {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + userTokens.access,
+        },
+      };
+
+      let response = await fetch(
+        `${API_ENDPOINTS.COURSE}${params.alias}`,
+        config
+      );
+      handleAlertOpen(response.status);
+      let data = await response.json();
+      console.log(data);
+      setCourseData(data);
+    } catch (error) {
+      setAlertConfig({
+        message: "Hubo un error. Intentalo de nuevo más tarde",
+        severity: "error",
+      });
+      setAlertOpen(true);
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (!isUserLogin) {
+      setAlertConfig({
+        message: "Para acceder al curso debes iniciar sesión.",
+        severity: "error",
+      });
+      setAlertOpen(true);
+    } else {
+      handleFetch();
+    }
+    setIsLoading(false);
+  }, []);
+
+  // Event handlers
+
+  const handleAlertOpen = (status: number) => {
+    if (status === API_STATUS_CODE.NOT_FOUND) {
+      setAlertConfig({
+        message: "Curso no encontrado.",
+        severity: "error",
+      });
+      setAlertOpen(true);
+    } else if (status === API_STATUS_CODE.UNAUTHORIZED) {
+      setAlertConfig({
+        message:
+          "La sesión es inválida o ha expirado: Vuelve a iniciar sesión.",
+        severity: "error",
+      });
+      setAlertOpen(true);
+    } else if (status === API_STATUS_CODE.SUCCESS) {
+      setError(false);
+    }
+  };
+
+  const handleAlertClose = (event?: React.SyntheticEvent | Event) => {
+    router.push("/");
+  };
+
+  if (isLoading) {
+    return <CircularSpinner openBackdrop={isLoading} />;
+  }
+
+  if (isUserLogin && !error) {
+    // Render the principal container for the course page.
+    return (
+      <Box sx={{ display: "flex" }}>
+        <CssBaseline />
+        <CourseAppBar userName={userName} />
+        <CourseDrawer courseAlias={params.alias} />
+        <Main
+          open={drawerOpen}
+          sx={{
+            padding: theme.spacing(3, 12)
+          }}
+        >
+          <DrawerHeader />
+          <Box component="section">
+            
+            <Typography
+              component="h1"
+              variant="inherit"
+              className="tesing-lala"
+            >
+              {courseData?.name}
+            </Typography>
+            <CourseModule moduleID={selectedModule} accessToken={userTokens.access} />
+          </Box>
+        </Main>
+      </Box>
+    );
+  } else {
+    return (
+      <CustomSnackbar
+        message={alertConfig.message}
+        severity={alertConfig.severity}
+        vertical="top"
+        horizontal="center"
+        autoHideDuration={AUTOHIDE_ALERT_DURATION}
+        open={alertOpen}
+        onClose={handleAlertClose}
+      />
+    );
+  }
 }
+
+export default Course;

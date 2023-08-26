@@ -31,4 +31,18 @@ export const FAQS: {
   },
 ];
 
-export const DRAWER_WIDTH: number = 200;
+// Constants for user settings menu
+export const USER_SETTINGS: Array<string> = [
+  "Cuenta",
+  "Cerrar sesión"
+];
+
+// Constants for course navigation
+export const DRAWER_WIDTH: number = 240;
+
+export const COURSE_OPTIONS: Array<string> = [
+  "Posiciones",
+  "Calificaciones",
+  "Syllabus",
+  "Mensajes"
+];

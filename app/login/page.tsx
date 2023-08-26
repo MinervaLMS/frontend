@@ -1,11 +1,13 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
+import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import LoginForm from "@/components/features/LoginForm";
 import styles from "@/styles/RegisterLogin.module.css";
 import bg from "@/public/assets/images/register-bg.png";
 import Image from "next/image";
+import { GifBox } from "@mui/icons-material";
 
 export default function Login() {
   return (
@@ -34,11 +36,20 @@ export default function Login() {
             ¡Estamos emocionados de verte de nuevo!
           </Typography>
           <LoginForm />
+          <Box sx={{ mt: 1 }}>
+            <Typography variant="inherit">
+              {"¿Aún no estás registrado? - "}
+              <Link href="/register" variant="body1">
+                {"Regístrate"}
+              </Link>
+            </Typography>
+          </Box>
         </Box>
         <Typography component="p" variant="inherit" className={styles.contact}>
           Si tienes alguna dificultad comunícate con nuestro{" "}
           <Link href="#">Centro de atención.</Link>
         </Typography>
+        <Divider />
       </Box>
     </Box>
   );

@@ -24,3 +24,26 @@ export interface API_Contact {
   subject: string;
   email_body: string;
 }
+
+export interface API_CourseObject {
+  id: number,
+  name: string,
+  alias: string,
+  description: string | null,
+}
+
+export interface API_ModuleObject {
+  id: number,
+  name: string,
+  order: number,
+  course_id: string,
+}
+
+export interface API_MaterialObject {
+  id: number,
+  name: string,
+  material_type: string,
+  is_extra: boolean,
+  order: number,
+  module_id: number
+}

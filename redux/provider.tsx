@@ -14,9 +14,11 @@ interface ProvidersProps {
 
 function Providers({ children }: ProvidersProps) {
   return (
-    <PersistGate persistor={persistor}>
-      <Provider store={store}>{children}</Provider>
-    </PersistGate>
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>
+        {children}
+      </PersistGate>
+    </Provider>
   );
 }
 
