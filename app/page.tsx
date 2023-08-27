@@ -11,7 +11,7 @@ import { useAppSelector } from "@/redux/hook";
 
 // Theming
 import lightTheme from "@/styles/themes/LightTheme"
-import { ThemeProvider, Typography } from "@mui/material";
+import { Box, ThemeProvider, Typography } from "@mui/material";
 import CssBaseline from '@mui/material/CssBaseline';
 
 export default function Home() {
@@ -35,7 +35,7 @@ export default function Home() {
       <CssBaseline/>
   
       <main>
-
+        
         <Typography variant="h1">Título h1</Typography>
         <Typography variant="body1" gutterBottom>
           www.html.com Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
