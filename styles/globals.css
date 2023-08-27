@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
 
 * {
   -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
@@ -15,7 +15,10 @@ html {
   height: 100vh;
 }
 
-/*
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}
 
 a {
   color: #55b328 !important;
@@ -29,6 +32,10 @@ a:hover {
   text-decoration-color: #40881f !important;
   transition: ease 0.5s;
 }
+
+/*
+
+
 
 .btn-primary {
   background-color: #55b328 !important;

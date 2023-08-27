@@ -290,7 +290,8 @@ function ContactForm() {
           type="submit"
           fullWidth
           variant="contained"
-          sx={{ my: 2 }}
+          color="secondary"
+          sx={{ my: 2}}
         >
           Enviar
         </Button>

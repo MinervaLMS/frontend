@@ -6,7 +6,6 @@ import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
 
 // Import own components
 import CircularSpinner from "@/components/common/CircularSpinner";
@@ -17,6 +16,7 @@ import CourseModule from "@/components/features/CourseModule";
 
 // Import styles
 import { styled, useTheme } from "@mui/material/styles";
+import styles from "@/styles/Course.module.css";
 
 // Import constants
 import { DRAWER_WIDTH, AUTOHIDE_ALERT_DURATION } from "@/config/constants";
@@ -160,24 +160,14 @@ function Course({ params }: { params: { alias: string } }) {
   if (isUserLogin && !error) {
     // Render the principal container for the course page.
     return (
-      <Box sx={{ display: "flex" }}>
+      <Box className={styles.course}>
         <CssBaseline />
         <CourseAppBar userName={userName} />
         <CourseDrawer courseAlias={params.alias} />
-        <Main
-          open={drawerOpen}
-          sx={{
-            padding: theme.spacing(3, 12)
-          }}
-        >
+        <Main open={drawerOpen}>
           <DrawerHeader />
           <Box component="section">
-            
-            <Typography
-              component="h1"
-              variant="inherit"
-              className="tesing-lala"
-            >
+            <Typography component="h1" variant="h4">
               {courseData?.name}
             </Typography>
             <CourseModule moduleID={selectedModule} accessToken={userTokens.access} />

@@ -7,7 +7,6 @@ import LoginForm from "@/components/features/LoginForm";
 import styles from "@/styles/RegisterLogin.module.css";
 import bg from "@/public/assets/images/register-bg.png";
 import Image from "next/image";
-import { GifBox } from "@mui/icons-material";
 
 export default function Login() {
   return (
@@ -27,27 +26,25 @@ export default function Login() {
           priority
         />
         <Box className={styles.formBox}>
-          <Typography component="h1" variant="inherit" align="center">
+          <Typography component="h1" variant="h4" align="center">
             Bienvenido
           </Typography>
-          <Typography component="p" variant="inherit" align="center">
-            Ingresa tus tus datos de inicio de sesión para acceder a tu
-            cuenta. <br />
+          <Typography component="p" align="center">
+            Ingresa tus tus datos de inicio de sesión para acceder a tu cuenta.{" "}
+            <br />
             ¡Estamos emocionados de verte de nuevo!
           </Typography>
           <LoginForm />
           <Box sx={{ mt: 1 }}>
-            <Typography variant="inherit">
+            <Typography component="p">
               {"¿Aún no estás registrado? - "}
-              <Link href="/register" variant="body1">
-                {"Regístrate"}
-              </Link>
+              <Link href="/register">{"Regístrate"}</Link>
             </Typography>
           </Box>
         </Box>
-        <Typography component="p" variant="inherit" className={styles.contact}>
+        <Typography component="p" sx={{ color: "#fff", marginTop: "2rem" }}>
           Si tienes alguna dificultad comunícate con nuestro{" "}
-          <Link href="#">Centro de atención.</Link>
+          <Link href="/contact">Centro de atención.</Link>
         </Typography>
         <Divider />
       </Box>

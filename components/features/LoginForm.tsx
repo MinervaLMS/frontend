@@ -137,6 +137,11 @@ export default function LoginForm() {
     }
   };
 
+  const cleanForm = () => {
+    setEmail("");
+    setPassword("");
+  }
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -174,6 +179,7 @@ export default function LoginForm() {
       console.log(error);
     }
     handleCloseLoader();
+    cleanForm();
   };
 
   return (
@@ -265,6 +271,7 @@ export default function LoginForm() {
           type="submit"
           fullWidth
           variant="contained"
+          color="secondary"
           sx={{ mt: 1, mb: 2 }}
         >
           Ingresar

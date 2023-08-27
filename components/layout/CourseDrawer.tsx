@@ -2,18 +2,12 @@ import React from "react";
 
 // Import MaterialUI Components
 import Drawer from "@mui/material/Drawer";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
 
 // Import styles
 import { styled, useTheme } from "@mui/material/styles";
 
 // Import own components
 import CourseDrawerList from "./CourseDrawerList";
-
-// Import icons
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 // Import images
 import Image from "next/image";
