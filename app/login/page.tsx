@@ -13,7 +13,6 @@ export default function Login() {
     <Box
       component="main"
       style={{ backgroundImage: `url(${bg.src})`, backgroundSize: "cover" }}
-      width={"100vw"}
       height={"100vh"}
     >
       <Box component="section" className={styles.mainContainer}>

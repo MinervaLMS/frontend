@@ -15,10 +15,7 @@ export default function Register() {
   return (
     <Box
       component="main"
-      style={{ backgroundImage: `url(${bg.src})`, backgroundSize: "cover" }}
-      width={"100vw"}
-      height={"100vh"}
-    >
+      style={{ backgroundImage: `url(${bg.src})`, backgroundSize: "cover" }}>
       <Box component="section" className={styles.mainContainer}>
         <Image
           src="/vercel.svg"

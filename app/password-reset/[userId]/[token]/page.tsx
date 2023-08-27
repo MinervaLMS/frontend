@@ -6,6 +6,7 @@ import styles from "@/styles/RegisterLogin.module.css";
 import bg from "@/public/assets/images/register-bg.png";
 import Image from "next/image";
 import ResetPasswordForm from "@/components/features/PasswordResetForm";
+import { CssBaseline } from "@mui/material";
 
 // This functional component is the index page for the /register rute.
 // It contains the RegisterForm component.
@@ -17,10 +18,11 @@ export default function ResetPassword({
 }) {
   // Render the principal container for the register page.
   return (
+    <React.Fragment>
+      <CssBaseline/>
     <Box
       component="main"
       style={{ backgroundImage: `url(${bg.src})`, backgroundSize: "cover" }}
-      width={"100vw"}
       height={"100vh"}
     >
       <Box component="section" className={styles.mainContainer}>
@@ -44,5 +46,7 @@ export default function ResetPassword({
         </Typography>
       </Box>
     </Box>
+      
+      </React.Fragment>
   );
 }

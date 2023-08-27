@@ -6,6 +6,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
 import { ThemeProvider } from "@mui/material";
 import lightTheme from "@/styles/themes/LightTheme";
+import CssBaseline from '@mui/material/CssBaseline';
 
 const persistor = persistStore(store);
 
@@ -17,7 +18,10 @@ function Providers({ children }: ProvidersProps) {
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>
-        <ThemeProvider theme={lightTheme}>{children}</ThemeProvider>
+        <ThemeProvider theme={lightTheme}>
+          <CssBaseline/>
+          {children}
+        </ThemeProvider>
       </PersistGate>
     </Provider>
   );
