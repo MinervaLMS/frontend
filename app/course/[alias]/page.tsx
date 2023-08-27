@@ -174,9 +174,9 @@ function Course({ params }: { params: { alias: string } }) {
           <Box component="section">
             
             <Typography
-              component="h1"
-              variant="inherit"
+              variant="h3"
               className="tesing-lala"
+              sx={{fontWeight: 'bold'}}
             >
               {courseData?.name}
             </Typography>

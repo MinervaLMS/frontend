@@ -110,8 +110,7 @@ const  CourseModule = memo(({
     return (
       <>
         <Typography 
-          component="h4" 
-          variant='inherit'
+          variant='h4'
           sx={{ marginTop: 4 }}
         >
           {moduleData?.name}
@@ -123,9 +122,8 @@ const  CourseModule = memo(({
             En la API los módulos no tienen descripción. Luego se comenta en la reunión.
           </Typography>
         </Container>
-        <Typography 
-          component="h4" 
-          variant='inherit'
+        <Typography  
+          variant='h6'
           sx={{ marginTop: 4 }}
         >
           Contenidos y evaluaciones
