@@ -13,7 +13,7 @@ import styles from "@/styles/Header.module.css";
 import Image from "next/image";
 import { Button } from "@mui/material";
 
-export default function MainHeader() {
+export default function MainAppBar() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -65,18 +65,16 @@ export default function MainHeader() {
   const logOutUserOptions = (
     <>
       <Button
-        className="btn btn-secondary"
         variant="contained"
-        sx={{ mx: 1 }}
+        sx={{ mx: 1, textTransform: "none" }}
         href="/register"
         type="button"
       >
         Registrarse
       </Button>
       <Button
-        className="btn btn-primary"
         variant="contained"
-        sx={{ mx: 1 }}
+        sx={{ mx: 1, textTransform: "none" }}
         href="/login"
         type="button"
       >
