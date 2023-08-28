@@ -33,9 +33,9 @@ import { ROLES } from "@/config/enums";
 import { useRouter } from "next/navigation";
 
 // Theming
-import lightTheme from "@/styles/themes/LightTheme"
+import lightTheme from "@/styles/themes/LightTheme";
 import { ThemeProvider } from "@mui/material";
-import CssBaseline from '@mui/material/CssBaseline';
+import CssBaseline from "@mui/material/CssBaseline";
 
 export default function LoginForm() {
   // Router
@@ -111,7 +111,7 @@ export default function LoginForm() {
     }
     setAlertOpen(false);
   };
-  
+
   const handlePasswordForgot = (
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
   ) => {
@@ -143,7 +143,7 @@ export default function LoginForm() {
   const cleanForm = () => {
     setEmail("");
     setPassword("");
-  }
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -271,17 +271,28 @@ export default function LoginForm() {
               </Link>
             </Grid>
           </Grid>
-          <Button
-            // className="btn secondary"
-            color="secondary"
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 1, mb: 2 }}
-          >
-            Ingresar
-          </Button>
+          <Grid item xs={12}>
+            <Link
+              href="#"
+              onClick={handlePasswordForgot}
+              underline="hover"
+              color={""}
+              variant="body1"
+            >
+              Olvidé mi contraseña →
+            </Link>
+          </Grid>
         </Box>
+        <Button
+          className="btn btn-primary"
+          type="submit"
+          fullWidth
+          variant="contained"
+          color="secondary"
+          sx={{ mt: 1, mb: 2 }}
+        >
+          Ingresar
+        </Button>
       </ThemeProvider>
     </>
   );

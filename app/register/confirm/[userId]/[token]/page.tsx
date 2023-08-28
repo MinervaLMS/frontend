@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import styles from "@/styles/RegisterLogin.module.css";
+import { Typography } from "@mui/material";
 
 function AccountConfirmation({
   params,
@@ -52,20 +53,26 @@ function AccountConfirmation({
     if (status == API_STATUS_CODE.SUCCESS) {
       setconfirmText(
         <>
-          <h1>Gracias por registrate en Minerva LMS</h1>
-          <p>
+          <Typography component="h2" variant="h4" my={2}>
+            Gracias por registrate en Minerva LMS
+          </Typography>
+          <Typography component="p" my={2}>
             Tu cuenta ha sido activada exitosamente. Ahora estás listo para
             empezar a aprender.
-          </p>
-          <Link href="/login">Ingresar</Link>
+          </Typography>
+          <Link href="/login">Ingresar →</Link>
         </>
       );
     } else {
       setconfirmText(
         <>
-          <h1>Hubo un error al activar tu cuenta</h1>
-          <p>El token ha fallado. Solicita un nuevo correo de activación.</p>
-          <Link href="#">Reenviar correo </Link>
+          <Typography component="h2" variant="h4" my={2}>
+            Hubo un error al activar tu cuenta
+          </Typography>
+          <Typography component="p" my={2}>
+            El token ha fallado. Solicita un nuevo correo de activación.
+          </Typography>
+          <Link href="#">Reenviar correo →</Link>
         </>
       );
     }

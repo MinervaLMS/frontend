@@ -15,7 +15,7 @@ import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 
 // Import styles
 import { styled } from "@mui/material/styles";
-import styles from "@/styles/AppBar.module.css";
+import styles from "@/styles/Course.module.css";
 
 // Import icons
 import MenuIcon from "@mui/icons-material/Menu";
@@ -82,15 +82,8 @@ function CourseAppBar({ userName }: CourseAppBarProps) {
 
   return (
     <AppBar position="fixed" open={open}>
-      <Toolbar
-        className={styles.mainHeader}
-        sx={{
-          display: "flex",
-          flexDirection: "row" ,
-          justifyContent: "space-between" ,
-        }}
-      > 
-        <Box sx={{ display: "flex", alignItems: "center" }}>
+      <Toolbar className={styles.toolbar}> 
+        <Box className={styles.logoBox}>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -111,8 +104,8 @@ function CourseAppBar({ userName }: CourseAppBarProps) {
             />
           </Box>
         </Box>
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Typography variant="h6" component="p" sx={{ px: ".5rem" }}>
+        <Box className={styles.userBox}>
+          <Typography className={styles.userName} component="h2">
             {userName}
           </Typography>
           <Avatar alt={userName} src="/static/images/avatar/.jpg" />
@@ -128,8 +121,7 @@ function CourseAppBar({ userName }: CourseAppBarProps) {
               <KeyboardArrowDownIcon />
             </IconButton>
           </Tooltip>
-          <Menu
-            sx={{ mt: "45px" }}
+          <Menu className={styles.userMenu}
             id="menu-appbar"
             anchorEl={anchorElUser}
             anchorOrigin={{

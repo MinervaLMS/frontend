@@ -129,13 +129,13 @@ function PasswordForgot({
         >
           <Typography
             id="passwordForgotModal"
-            component="h4"
-            variant="inherit"
+            component="h2"
+            variant="h5"
             align="center"
           >
             Olvidé mi contraseña
           </Typography>
-          <Typography id="modalDescription" sx={{ mt: 1 }}>
+          <Typography component='p' id="modalDescription" sx={{ mt: 1 }}>
             Ingresa tu correo electrónico y te enviaremos un enlace para que
             puedas restablecer tu contraseña.
           </Typography>
@@ -157,7 +157,7 @@ function PasswordForgot({
             type="submit"
             fullWidth
             variant="contained"
-            color="success"
+            color="secondary"
             sx={{ mt: 2, mb: 2 }}
           >
             Enviar

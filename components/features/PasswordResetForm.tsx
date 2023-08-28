@@ -161,7 +161,7 @@ export default function ResetPasswordForm({
           type="submit"
           fullWidth
           variant="contained"
-          color="success"
+          color="secondary"
           sx={{ mt: 2, mb: 2 }}
         >
           Cambiar contraseña

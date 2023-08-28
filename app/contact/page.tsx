@@ -12,7 +12,7 @@ import { FAQS } from "@/config/constants";
 function page() {
   return (
     <>
-      <Box component="main" width={"100vw"} height={"100vh"}>
+      <Box component="main" className={styles.main}>
         <MainAppBar />
         <Box component="section" className={styles.mainSection}>
           <Box

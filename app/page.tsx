@@ -1,80 +1,77 @@
 "use client";
 
-import Image from "next/image";
-//import styles from "@/styles/Home.module.css";
-import "@/styles/globals.css";
+import bg from "@/public/assets/images/register-bg.png";
 
-import CustomSnackbar from "@/components/common/CustomSnackbar";
-import Button from "@mui/material/Button";
 import * as React from "react";
 import { useAppSelector } from "@/redux/hook";
+import { Box, Container, Paper, Typography } from "@mui/material";
+import Image from "next/image";
 
-// Theming
-import lightTheme from "@/styles/themes/LightTheme"
-import { ThemeProvider, Typography } from "@mui/material";
-import CssBaseline from '@mui/material/CssBaseline';
+import styles from "@/styles/RegisterLogin.module.css";
+import Link from "@mui/material/Link";
+import RegisterForm from "@/components/features/RegisterForm";
+import lightTheme from "@/styles/themes/LightTheme";
 
 export default function Home() {
 
   const userLoginState = useAppSelector((state) => state.persistedReducer.userLoginState.email);
 
-  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
-
-  const handleSnackbarClick = () => {
-    setSnackbarOpen(true);
-  };
-
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
-  };
-
   return (
 
-    <ThemeProvider theme={lightTheme}>
-      
-      <CssBaseline/>
-  
-      <main>
+    <Box
+    sx={{
+      minHeight: '100vh',
+      backgroundImage: `url(${bg.src})`,
+      backgroundSize: 'cover',
+      display: 'flex',
+      flexDirection: "column",
+      justifyContent: 'center',
+      alignItems: 'center',
+    }}
+    component="main"
+    >
+      <Image
+          src="/vercel.svg"
+          alt="Vercel Logo"
+          className={styles.logo}
+          width={100}
+          height={100}
+        />
 
-        <Typography variant="h1">Título h1</Typography>
-        <Typography variant="body1" gutterBottom>
-          www.html.com Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      <Paper
+        elevation={3}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          padding: lightTheme.spacing(5),
+          margin: lightTheme.spacing(3),
+          overflow: "visible",
+          maxWidth: "sm"
+        }}
+      >
+
+        <Typography component="h1" variant="h4" align="center" gutterBottom>
+            Regístrate
         </Typography>
-        <Typography variant="h2">Título H2</Typography>
-        <Typography variant="h3">Título H3</Typography>
-        <Typography variant="h4">Título H4</Typography>
-        <Typography variant="h5" gutterBottom>Título H5</Typography>
-        <Typography variant="h6">Título H6</Typography>
-        <Typography variant="body1" gutterBottom>
-          www.html.com Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        <Typography component="p" align="justify">
+          Completa el formulario a continuación para crear tu cuenta en
+          nuestra plataforma.
+          <br />
+          ¡Es rápido y fácil! Solo necesitamos
+          algunos detalles para empezar.
+        </Typography>
+        
+        <RegisterForm />
+
+        <Typography component="p" sx={{ marginTop: "1rem" }}>
+          Si tienes alguna dificultad comunicate con nuestro{" "}
+          <Link href="/contact">Centro de atención.</Link>
         </Typography>
 
-        {/* Sección de pruebas */}
-        <p>{userLoginState}</p>
+      </Paper>
 
-        <section>
-          {/* Botón para abrir el Snackbar */}
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSnackbarClick}
-          >
-            Mostrar Snackbar
-          </Button>
+  </Box>
 
-          {/* Snackbar */}
-          <CustomSnackbar
-            message="Este es un mensaje de ejemplo"
-            severity="warning"
-            vertical="top"
-            horizontal="center"
-            autoHideDuration={3000}
-            open={snackbarOpen}
-            onClose={handleSnackbarClose}
-          />
-        </section>
-      </main>
-
-    </ThemeProvider>
   );
 }

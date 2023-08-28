@@ -12,8 +12,19 @@ import Menu from "@mui/material/Menu";
 import styles from "@/styles/Header.module.css";
 import Image from "next/image";
 import { Button } from "@mui/material";
+import { useAppSelector, useAppDispatch } from "@/redux/hook";
+import { logOut } from "@/redux/features/userLoginSlice";
+import { useRouter } from "next/navigation";
 
 export default function MainAppBar() {
+  const router = useRouter();
+
+  const userLoginState = useAppSelector(
+    (state) => state.persistedReducer.userLoginState.login
+  );
+
+  const dispatch = useAppDispatch();
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -22,6 +33,15 @@ export default function MainAppBar() {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleNavigate = (rute: string) => {
+    router.push(rute);
+  };
+
+  const handleLogOut = () => {
+    dispatch(logOut());
+    handleNavigate("/");
   };
 
   const logInUserOptions = (
@@ -55,9 +75,9 @@ export default function MainAppBar() {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose}>Mi perfil</MenuItem>
-        <MenuItem onClick={handleClose}>Mis cursos</MenuItem>
-        <MenuItem onClick={handleClose}>Cerrar sesión</MenuItem>
+        <MenuItem onClick={() => handleNavigate("#")}>Mi perfil</MenuItem>
+        <MenuItem onClick={() => handleNavigate("#")}>Mis cursos</MenuItem>
+        <MenuItem onClick={handleLogOut}>Cerrar sesión</MenuItem>
       </Menu>
     </>
   );
@@ -66,16 +86,18 @@ export default function MainAppBar() {
     <>
       <Button
         variant="contained"
-        sx={{ mx: 1, textTransform: "none" }}
-        href="/register"
+        color="info"
+        sx={{ mx: 1, textTransform: "none"}}
+        onClick={() => handleNavigate("/register")}
         type="button"
       >
         Registrarse
       </Button>
       <Button
+        color="secondary"
         variant="contained"
-        sx={{ mx: 1, textTransform: "none" }}
-        href="/login"
+        sx={{ mx: 1, textTransform: "none"}}
+        onClick={() => handleNavigate("/login")}
         type="button"
       >
         Ingresar
@@ -95,10 +117,13 @@ export default function MainAppBar() {
               width={50}
               height={50}
               priority
+              onClick={() => {}}
             />
           </div>
 
-          <div className={styles.topBarArea}>{logOutUserOptions}</div>
+          <div className={styles.topBarArea}>
+            {userLoginState ? logInUserOptions : logOutUserOptions}
+          </div>
         </Toolbar>
       </AppBar>
     </Box>

@@ -15,7 +15,7 @@ import CircularSpinner from "@/components/common/CircularSpinner";
 import CustomSnackbar from "@/components/common/CustomSnackbar";
 
 // Import styles
-import styles from "@/styles/DrawerList.module.css";
+import styles from "@/styles/Course.module.css";
 
 // Import icons
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -115,10 +115,10 @@ function CourseDrawerList({
   }
 
   const COURSE_OPTIONS_ICONS = [
-    <StarsIcon/>,
-    <FactCheckIcon/>,
-    <TableChartIcon/>,
-    <QuestionAnswerIcon/>
+    <StarsIcon color="secondary"/>,
+    <FactCheckIcon color="secondary"/>,
+    <TableChartIcon color="secondary"/>,
+    <QuestionAnswerIcon color="secondary"/>
   ];
 
 	return(
@@ -139,8 +139,8 @@ function CourseDrawerList({
               onClick={() => changeSelectedModule(module.id)} 
               selected={selectedModule === module.id ? true : false}
             >
-              <RadioButtonUncheckedIcon />
-							<ListItemText className={styles.listItemText} disableTypography>
+              <RadioButtonUncheckedIcon color="secondary"/>
+							<ListItemText className={styles.moduleListItemText} disableTypography>
                 <Typography variant="body2">
                   {(module.order + 1).toString() + ". " + module.name}
                 </Typography>
@@ -155,7 +155,7 @@ function CourseDrawerList({
 				<ListItem key={text} disablePadding>
           <ListItemButton>
             {COURSE_OPTIONS_ICONS[index]}
-            <ListItemText className={styles.listItemText} disableTypography>
+            <ListItemText className={styles.moduleListItemText} disableTypography>
               <Typography variant="body2">
                 {text}
               </Typography>
