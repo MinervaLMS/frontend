@@ -1,95 +1,77 @@
-import Image from 'next/image'
-import styles from '@/styles/Home.module.css'
+"use client";
+
+import bg from "@/public/assets/images/register-bg.png";
+
+import * as React from "react";
+import { useAppSelector } from "@/redux/hook";
+import { Box, Container, Paper, Typography } from "@mui/material";
+import Image from "next/image";
+
+import styles from "@/styles/RegisterLogin.module.css";
+import Link from "@mui/material/Link";
+import RegisterForm from "@/components/features/RegisterForm";
+import lightTheme from "@/styles/themes/LightTheme";
 
 export default function Home() {
+
+  const userLoginState = useAppSelector((state) => state.persistedReducer.userLoginState.email);
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
 
-      <div className={styles.center}>
-        <Image
+    <Box
+    sx={{
+      minHeight: '100vh',
+      backgroundImage: `url(${bg.src})`,
+      backgroundSize: 'cover',
+      display: 'flex',
+      flexDirection: "column",
+      justifyContent: 'center',
+      alignItems: 'center',
+    }}
+    component="main"
+    >
+      <Image
+          src="/vercel.svg"
+          alt="Vercel Logo"
           className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
+          width={100}
+          height={100}
         />
-      </div>
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
+      <Paper
+        elevation={3}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          padding: lightTheme.spacing(5),
+          margin: lightTheme.spacing(3),
+          overflow: "visible",
+          maxWidth: "sm"
+        }}
+      >
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
+        <Typography component="h1" variant="h4" align="center" gutterBottom>
+            Regístrate
+        </Typography>
+        <Typography component="p" align="justify">
+          Completa el formulario a continuación para crear tu cuenta en
+          nuestra plataforma.
+          <br />
+          ¡Es rápido y fácil! Solo necesitamos
+          algunos detalles para empezar.
+        </Typography>
+        
+        <RegisterForm />
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
+        <Typography component="p" sx={{ marginTop: "1rem" }}>
+          Si tienes alguna dificultad comunicate con nuestro{" "}
+          <Link href="/contact">Centro de atención.</Link>
+        </Typography>
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+      </Paper>
+
+  </Box>
+
+  );
 }

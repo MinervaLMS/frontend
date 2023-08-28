@@ -1,15 +1,25 @@
-import React from "react";
-import Box from "@mui/material/Box";
+import * as React from "react";
 import Link from "@mui/material/Link";
-import Divider from "@mui/material/Divider";
+import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import LoginForm from "@/components/features/LoginForm";
 import styles from "@/styles/RegisterLogin.module.css";
 import bg from "@/public/assets/images/register-bg.png";
 import Image from "next/image";
+import ResetPasswordForm from "@/components/features/PasswordResetForm";
+import { CssBaseline } from "@mui/material";
 
-export default function Login() {
+// This functional component is the index page for the /register rute.
+// It contains the RegisterForm component.
+
+export default function ResetPassword({
+  params,
+}: {
+  params: { userId: string; token: string };
+}) {
+  // Render the principal container for the register page.
   return (
+    <React.Fragment>
+      <CssBaseline/>
     <Box
       component="main"
       style={{ backgroundImage: `url(${bg.src})`, backgroundSize: "cover" }}
@@ -25,28 +35,18 @@ export default function Login() {
           priority
         />
         <Box className={styles.formBox}>
-          <Typography component="h1" variant="h4" align="center">
-            Bienvenido
+          <Typography component="h1" variant="h4">
+            Ingresa tu nueva contraseña
           </Typography>
-          <Typography component="p" align="center">
-            Ingresa tus tus datos de inicio de sesión para acceder a tu cuenta.{" "}
-            <br />
-            ¡Estamos emocionados de verte de nuevo!
-          </Typography>
-          <LoginForm />
-          <Box sx={{ mt: 1 }}>
-            <Typography component="p">
-              {"¿Aún no estás registrado? - "}
-              <Link href="/register">{"Regístrate"}</Link>
-            </Typography>
-          </Box>
+          <ResetPasswordForm params={params} />
         </Box>
         <Typography component="p" sx={{ color: "#fff", marginTop: "2rem" }}>
-          Si tienes alguna dificultad comunícate con nuestro{" "}
+          Si tienes alguna dificultad comunicate con nuestro{" "}
           <Link href="/contact">Centro de atención.</Link>
         </Typography>
-        <Divider />
       </Box>
     </Box>
+      
+      </React.Fragment>
   );
 }

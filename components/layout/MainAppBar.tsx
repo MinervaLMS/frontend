@@ -1,0 +1,131 @@
+"use client";
+
+import * as React from "react";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import { AccountCircle, ArrowDropDown } from "@mui/icons-material";
+import MenuItem from "@mui/material/MenuItem";
+import Menu from "@mui/material/Menu";
+import styles from "@/styles/Header.module.css";
+import Image from "next/image";
+import { Button } from "@mui/material";
+import { useAppSelector, useAppDispatch } from "@/redux/hook";
+import { logOut } from "@/redux/features/userLoginSlice";
+import { useRouter } from "next/navigation";
+
+export default function MainAppBar() {
+  const router = useRouter();
+
+  const userLoginState = useAppSelector(
+    (state) => state.persistedReducer.userLoginState.login
+  );
+
+  const dispatch = useAppDispatch();
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleNavigate = (rute: string) => {
+    router.push(rute);
+  };
+
+  const handleLogOut = () => {
+    dispatch(logOut());
+    handleNavigate("/");
+  };
+
+  const logInUserOptions = (
+    <>
+      <Typography variant="h6" component="p">
+        User.name
+      </Typography>
+      <AccountCircle />
+      <IconButton
+        size="large"
+        aria-label="account of current user"
+        aria-controls="menu-appbar"
+        aria-haspopup="true"
+        onClick={handleMenu}
+        color="inherit"
+      >
+        <ArrowDropDown />
+      </IconButton>
+      <Menu
+        id="menu-appbar"
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        keepMounted
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        <MenuItem onClick={() => handleNavigate("#")}>Mi perfil</MenuItem>
+        <MenuItem onClick={() => handleNavigate("#")}>Mis cursos</MenuItem>
+        <MenuItem onClick={handleLogOut}>Cerrar sesión</MenuItem>
+      </Menu>
+    </>
+  );
+
+  const logOutUserOptions = (
+    <>
+      <Button
+        variant="contained"
+        color="info"
+        sx={{ mx: 1, textTransform: "none"}}
+        onClick={() => handleNavigate("/register")}
+        type="button"
+      >
+        Registrarse
+      </Button>
+      <Button
+        color="secondary"
+        variant="contained"
+        sx={{ mx: 1, textTransform: "none"}}
+        onClick={() => handleNavigate("/login")}
+        type="button"
+      >
+        Ingresar
+      </Button>
+    </>
+  );
+
+  return (
+    <Box id="header">
+      <AppBar position="static">
+        <Toolbar className={styles.mainHeader}>
+          <div className={styles.topBarArea}>
+            <Image
+              src="/vercel.svg"
+              alt="Vercel Logo"
+              className={styles.logo}
+              width={50}
+              height={50}
+              priority
+              onClick={() => {}}
+            />
+          </div>
+
+          <div className={styles.topBarArea}>
+            {userLoginState ? logInUserOptions : logOutUserOptions}
+          </div>
+        </Toolbar>
+      </AppBar>
+    </Box>
+  );
+}
