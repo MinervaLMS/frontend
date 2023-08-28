@@ -13,7 +13,7 @@ let lightTheme: Theme = createTheme({
   },
   typography: {
     fontFamily: '"Lato", "Helvetica", "Arial", sans-serif',
-    fontSize: 14  ,
+    fontSize: 14,
     h1: {
       fontFamily: '"Montserrat", "Helvetica", "Arial", sans-serif',
       fontWeight: 700
