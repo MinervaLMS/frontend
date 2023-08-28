@@ -136,7 +136,7 @@ export default function LoginForm() {
       dispatch(setRol(ROLES.USER));
       dispatch(setTokens(data.tokens));
       dispatch(setLogin(true));
-      router.push("/");
+      router.push("/course/ED20241");
     }
   };
 
@@ -264,35 +264,24 @@ export default function LoginForm() {
                 href="#"
                 onClick={handlePasswordForgot}
                 underline="hover"
-                color="secondary"
+                color={""}
                 variant="body1"
               >
                 Olvidé mi contraseña →
               </Link>
             </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <Link
-              href="#"
-              onClick={handlePasswordForgot}
-              underline="hover"
-              color={""}
-              variant="body1"
-            >
-              Olvidé mi contraseña →
-            </Link>
-          </Grid>
+          <Button
+            className="btn btn-primary"
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="secondary"
+            sx={{ mt: 1, mb: 2 }}
+          >
+            Ingresar
+          </Button>
         </Box>
-        <Button
-          className="btn btn-primary"
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="secondary"
-          sx={{ mt: 1, mb: 2 }}
-        >
-          Ingresar
-        </Button>
       </ThemeProvider>
     </>
   );
