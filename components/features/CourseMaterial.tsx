@@ -58,7 +58,7 @@ function CourseMaterial({
             <Box
               className={styles.materialName}
             >
-              <Typography variant="h6">{material.name}</Typography>
+              <Typography sx={{ typography: {sm: 'body1', md: 'h6'}}}>{material.name}</Typography>
               <Checkbox
                 sx={{
                   color: common["black"],
