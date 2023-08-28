@@ -2,7 +2,4 @@
 export enum ROLES {
     ADMIN = "admin",
     USER = "user",
-    STUDENT = "student",
-    TEACHER = "teacher",
-    
 }

@@ -15,7 +15,10 @@ export default function Register() {
   return (
     <Box
       component="main"
-      style={{ backgroundImage: `url(${bg.src})`, backgroundSize: "cover" }}>
+      style={{ backgroundImage: `url(${bg.src})`, backgroundSize: "cover" }}
+      width={"100vw"}
+      height={"100vh"}
+    >
       <Box component="section" className={styles.mainContainer}>
         <Image
           src="/vercel.svg"
@@ -26,19 +29,18 @@ export default function Register() {
           priority
         />
         <Box className={styles.formBox}>
-          <Typography component="h1" variant="h4">
+          <Typography component="h1" variant="inherit">
             Regístrate
           </Typography>
-          <Typography component="p" align="center">
-            Completa el formulario a continuación para crear tu cuenta en
-            nuestra plataforma. <br /> ¡Es rápido y fácil! Solo necesitamos
-            algunos detalles para empezar.
+          <Typography component="p" variant="inherit" align="center">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. <br />
+            Architecto exercitationem temporibus assumenda quos, dolore nemo?
           </Typography>
           <RegisterForm />
         </Box>
-        <Typography component="p" sx={{ color: "#fff", marginTop: "2rem" }}>
+        <Typography component="p" variant="inherit" className={styles.contact}>
           Si tienes alguna dificultad comunicate con nuestro{" "}
-          <Link href="/contact">Centro de atención.</Link>
+          <Link href="#">Centro de atención.</Link>
         </Typography>
       </Box>
     </Box>
