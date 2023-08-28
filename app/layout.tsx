@@ -1,9 +1,5 @@
 import Providers from "@/redux/provider";
-//import "../styles/globals.css";
 import type { Metadata } from "next";
-import { Montserrat } from "next/font/google";
-
-const montserrat = Montserrat({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Minerva LMS",
