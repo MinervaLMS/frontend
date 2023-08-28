@@ -6,7 +6,7 @@ import Container from "@mui/material/Container";
 import Card from "@mui/material/Card/Card";
 import Checkbox from "@mui/material/Checkbox";
 import CardActionArea from "@mui/material/CardActionArea/CardActionArea";
-import Typography from "@mui/material/Typography/Typography";
+import Typography from "@mui/material/Typography";
 
 // Import icons
 import PlayCircleOutlinedIcon from "@mui/icons-material/PlayCircleOutlined";
@@ -47,6 +47,7 @@ function CourseMaterial({
             className={styles.typeOfMaterial}
           >
             <PlayCircleOutlinedIcon
+              color="primary"
               sx={{
                 width: "95%",
                 height: "95%",
@@ -57,7 +58,7 @@ function CourseMaterial({
             <Box
               className={styles.materialName}
             >
-              <Typography component="h4">{material.name}</Typography>
+              <Typography sx={{ typography: {sm: 'body1', md: 'h6'}}}>{material.name}</Typography>
               <Checkbox
                 sx={{
                   color: common["black"],
@@ -78,8 +79,8 @@ function CourseMaterial({
                 }}
                 disableGutters
               >
-                <TimerOutlinedIcon />
-                <Typography component="p">8m, 45s</Typography>
+                <TimerOutlinedIcon color="primary" />
+                <Typography color="primary" variant="body1">8m, 45s</Typography>
               </Container>
               <Box
                 className={styles.materialReactions}
@@ -92,8 +93,8 @@ function CourseMaterial({
                   }}
                   disableGutters
                 >
-                  <ModeCommentOutlinedIcon />
-                  <Typography component="p"> 32 </Typography>
+                  <ModeCommentOutlinedIcon color="primary" />
+                  <Typography variant="body1" color="primary" > 32 </Typography>
                 </Container>
                 <Container
                   sx={{
@@ -102,8 +103,8 @@ function CourseMaterial({
                   }}
                   disableGutters
                 >
-                  <ThumbUpOutlinedIcon />
-                  <Typography component="p"> 32 </Typography>
+                  <ThumbUpOutlinedIcon color="secondary" />
+                  <Typography variant="body1" color="secondary"> 32 </Typography>
                 </Container>
                 <Container
                   sx={{
@@ -113,7 +114,7 @@ function CourseMaterial({
                   disableGutters
                 >
                   <ThumbDownOutlinedIcon />
-                  <Typography component="p"> 32 </Typography>
+                  <Typography variant="body1"> 32 </Typography>
                 </Container>
               </Box>
             </Box>
