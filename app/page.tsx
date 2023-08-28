@@ -10,6 +10,7 @@ import Image from "next/image";
 import styles from "@/styles/RegisterLogin.module.css";
 import Link from "@mui/material/Link";
 import RegisterForm from "@/components/features/RegisterForm";
+import lightTheme from "@/styles/themes/LightTheme";
 
 export default function Home() {
 
@@ -17,28 +18,60 @@ export default function Home() {
 
   return (
 
-    <Container
+    <Box
     sx={{
-      display: "flex",
+      minHeight: '100vh',
+      backgroundImage: `url(${bg.src})`,
+      backgroundSize: 'cover',
+      display: 'flex',
       flexDirection: "column",
-      height: "100vh",
-      alignItems: "center"
+      justifyContent: 'center',
+      alignItems: 'center',
     }}
+    component="main"
     >
+      <Image
+          src="/vercel.svg"
+          alt="Vercel Logo"
+          className={styles.logo}
+          width={100}
+          height={100}
+        />
+
       <Paper
         elevation={3}
         sx={{
-          //flex: 1,
-          padding: '40px',
-          margin: "30px",
-          overflow: 'auto',
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          padding: lightTheme.spacing(5),
+          margin: lightTheme.spacing(3),
+          overflow: "visible",
           maxWidth: "sm"
         }}
       >
+
+        <Typography component="h1" variant="h4" align="center" gutterBottom>
+            Regístrate
+        </Typography>
+        <Typography component="p" align="justify">
+          Completa el formulario a continuación para crear tu cuenta en
+          nuestra plataforma.
+          <br />
+          ¡Es rápido y fácil! Solo necesitamos
+          algunos detalles para empezar.
+        </Typography>
+        
         <RegisterForm />
 
+        <Typography component="p" sx={{ marginTop: "1rem" }}>
+          Si tienes alguna dificultad comunicate con nuestro{" "}
+          <Link href="/contact">Centro de atención.</Link>
+        </Typography>
+
       </Paper>
-  </Container>
+
+  </Box>
 
   );
 }
