@@ -12,6 +12,7 @@ export const API_ENDPOINTS = {
   MODULES: `/modules/`,
   MODULE: `${API_URL}/module/`,
   MATERIALS: `/materials/`,
+  MATERIAL: `${API_URL}/material/`
 };
 
 export const API_STATUS_CODE = {
