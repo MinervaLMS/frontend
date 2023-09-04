@@ -1,14 +1,14 @@
-"use client"
+"use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 // Import MaterialUI components
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import Divider from '@mui/material/Divider';
-import Typography from '@mui/material/Typography'
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
+import Divider from "@mui/material/Divider";
+import Typography from "@mui/material/Typography";
 
 // Import own components
 import CircularSpinner from "@/components/common/CircularSpinner";
@@ -18,12 +18,12 @@ import CustomSnackbar from "@/components/common/CustomSnackbar";
 import styles from "@/styles/Course.module.css";
 
 // Import icons
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
-import StarsIcon from '@mui/icons-material/Stars';
-import FactCheckIcon from '@mui/icons-material/FactCheck';
-import TableChartIcon from '@mui/icons-material/TableChart';
-import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
+import StarsIcon from "@mui/icons-material/Stars";
+import FactCheckIcon from "@mui/icons-material/FactCheck";
+import TableChartIcon from "@mui/icons-material/TableChart";
+import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 
 // Import constants
 import { AUTOHIDE_ALERT_DURATION, COURSE_OPTIONS } from "@/config/constants";
@@ -34,19 +34,18 @@ import { API_ModuleObject } from "@/config/interfaces";
 
 // This interface defines the types of the props object.
 interface CourseDrawerListProps {
-	courseAlias: string;
+  courseAlias: string;
   accessToken: string;
-  selectedModule: number;
-	changeSelectedModule: (moduleID: number) => void;
+  moduleID: number;
+  changeSelectedModule: (moduleID: number) => void;
 }
 
 function CourseDrawerList({
-	courseAlias,
+  courseAlias,
   accessToken,
-  selectedModule,
+  moduleID,
   changeSelectedModule,
 }: CourseDrawerListProps) {
-
   // States related to the alert component
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
@@ -65,22 +64,29 @@ function CourseDrawerList({
         },
       };
 
-      let response = await fetch(`${API_ENDPOINTS.COURSE}${courseAlias}${API_ENDPOINTS.MODULES}`, config);
+      let response = await fetch(
+        `${API_ENDPOINTS.COURSE}${courseAlias}${API_ENDPOINTS.MODULES}`,
+        config
+      );
       handleAlertOpen(response.status);
       const data = await response.json();
+      console.log(data);
       // Order the list of modules according to their order property.
-      data.sort((a: API_ModuleObject, b: API_ModuleObject) => (a.order > b.order) ? 1 : -1);
+      data.sort((a: API_ModuleObject, b: API_ModuleObject) =>
+        a.order > b.order ? 1 : -1
+      );
       setModulesList(data);
-      changeSelectedModule(data[0].id)
+      changeSelectedModule(data[0].id);
     } catch (error) {
       setAlertConfig({
-        message: "No hay módulos en este curso o hubo un error. Inténtalo de nuevo más tarde",
+        message:
+          "No hay módulos en este curso o hubo un error. Inténtalo de nuevo más tarde",
         severity: "error",
       });
       setAlertOpen(true);
     }
     setIsLoading(false);
-  }
+  };
 
   useEffect(() => {
     handleFetch();
@@ -109,20 +115,11 @@ function CourseDrawerList({
   };
 
   if (isLoading) {
-    return(
-      <CircularSpinner openBackdrop={isLoading} />
-    );
+    return <CircularSpinner openBackdrop={isLoading} />;
   }
 
-  const COURSE_OPTIONS_ICONS = [
-    <StarsIcon color="secondary"/>,
-    <FactCheckIcon color="secondary"/>,
-    <TableChartIcon color="secondary"/>,
-    <QuestionAnswerIcon color="secondary"/>
-  ];
-
-	return(
-		<>
+  return (
+    <>
       <CustomSnackbar
         message={alertConfig.message}
         severity={alertConfig.severity}
@@ -132,40 +129,28 @@ function CourseDrawerList({
         open={alertOpen}
         onClose={handleAlertClose}
       />
-			<List>
-				{modulesList.map((module: API_ModuleObject) => (
-					<ListItem key={module.id} disablePadding>
-						<ListItemButton 
-              onClick={() => changeSelectedModule(module.id)} 
-              selected={selectedModule === module.id ? true : false}
+      <List>
+        {modulesList.map((module: API_ModuleObject) => (
+          <ListItem key={module.id} disablePadding>
+            <ListItemButton
+              onClick={() => changeSelectedModule(module.id)}
+              selected={moduleID === module.id ? true : false}
             >
-              <RadioButtonUncheckedIcon color="secondary"/>
-							<ListItemText className={styles.moduleListItemText} disableTypography>
+              <RadioButtonUncheckedIcon color="secondary" />
+              <ListItemText
+                className={styles.moduleListItemText}
+                disableTypography
+              >
                 <Typography variant="body2">
                   {(module.order + 1).toString() + ". " + module.name}
                 </Typography>
               </ListItemText>
-						</ListItemButton>
-					</ListItem>
-				))}
-			</List>
-			<Divider />
-			<List>
-        {COURSE_OPTIONS.map((text, index) => (
-				<ListItem key={text} disablePadding>
-          <ListItemButton>
-            {COURSE_OPTIONS_ICONS[index]}
-            <ListItemText className={styles.moduleListItemText} disableTypography>
-              <Typography variant="body2">
-                {text}
-              </Typography>
-            </ListItemText>
-          </ListItemButton>
-				</ListItem>
+            </ListItemButton>
+          </ListItem>
         ))}
-			</List>
-		</>
-	);
+      </List>
+    </>
+  );
 }
 
 export default CourseDrawerList;

@@ -33,8 +33,7 @@ export const FAQS: {
 
 // Constants for user settings menu
 export const USER_SETTINGS: Array<string> = [
-  "Cuenta",
-  "Cerrar sesión"
+  "Cuenta"
 ];
 
 // Constants for course navigation

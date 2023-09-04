@@ -7,7 +7,7 @@ import Drawer from "@mui/material/Drawer";
 import { styled, useTheme } from "@mui/material/styles";
 
 // Import own components
-import CourseDrawerList from "./CourseDrawerList";
+import CourseDrawerList from "./CourseModuleList";
 
 // Import images
 import Image from "next/image";
@@ -16,11 +16,15 @@ import Image from "next/image";
 import { DRAWER_WIDTH } from "@/config/constants";
 
 // Import redux
-import { useAppDispatch, useAppSelector } from "@/redux/hook";
-import { setOpen, setSelectedModule } from "@/redux/features/drawerSlice";
+import { useAppSelector } from "@/redux/hook";
+
+import { useRouter } from "next/navigation";
+import { Divider } from "@mui/material";
+import CourseMiscellaneous from "./CourseMiscellaneous";
 
 interface CourseDrawerProps {
   courseAlias: string;
+  moduleID?: number;
 }
 
 // Style for the drawer header
@@ -33,10 +37,11 @@ export const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "center",
 }));
 
-export const CourseDrawer = ({ courseAlias }: CourseDrawerProps) => {
+export const CourseDrawer = ({ courseAlias, moduleID }: CourseDrawerProps) => {
+  // Router
+  const router = useRouter();
 
   // Redux states
-  const dispatch = useAppDispatch();
 
   const open = useAppSelector(
     (state) => state.persistedReducer.drawerState.open
@@ -46,19 +51,8 @@ export const CourseDrawer = ({ courseAlias }: CourseDrawerProps) => {
     (state) => state.persistedReducer.userLoginState.tokens
   );
 
-  const selectedModule = useAppSelector(
-    (state) => state.persistedReducer.drawerState.selectedModule
-  );
-
-  // Event handler for the drawer
-  const handleDrawerOpenClose = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    dispatch(setOpen());
-  };
-
   const handleChangeModule = (moduleID: number) => {
-    dispatch(setSelectedModule(moduleID));;
+    router.push(`/course/${courseAlias}/${moduleID}`);
   };
 
   // For using the theme predefined styles
@@ -90,9 +84,11 @@ export const CourseDrawer = ({ courseAlias }: CourseDrawerProps) => {
       <CourseDrawerList
         courseAlias={courseAlias}
         accessToken={userTokens.access}
-        selectedModule={selectedModule}
+        moduleID={moduleID ? moduleID : 0}
         changeSelectedModule={handleChangeModule}
       />
+      <Divider />
+      <CourseMiscellaneous />
     </Drawer>
   );
 };

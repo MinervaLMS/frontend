@@ -30,6 +30,8 @@ import { DRAWER_WIDTH, USER_SETTINGS } from "@/config/constants";
 // Import redux and router
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { setOpen } from "@/redux/features/drawerSlice";
+import { useRouter } from "next/navigation";
+import { logOut } from "@/redux/features/userLoginSlice";
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -42,13 +44,13 @@ const AppBar = styled(MuiAppBar, {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-    ...(open && {
-      width: `calc(100% - ${DRAWER_WIDTH}px)`,
-      marginLeft: `${DRAWER_WIDTH}px`,
-      transition: theme.transitions.create(['margin', 'width'], {
+  ...(open && {
+    width: `calc(100% - ${DRAWER_WIDTH}px)`,
+    marginLeft: `${DRAWER_WIDTH}px`,
+    transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
-      }),
+    }),
   }),
 }));
 
@@ -58,6 +60,9 @@ interface CourseAppBarProps {
 }
 
 function CourseAppBar({ userName }: CourseAppBarProps) {
+  // Router
+  const router = useRouter();
+
   // Redux states
   const open = useAppSelector(
     (state) => state.persistedReducer.drawerState.open
@@ -79,10 +84,14 @@ function CourseAppBar({ userName }: CourseAppBarProps) {
   ) => {
     dispatch(setOpen());
   };
+  const handleLogOut = () => {
+    dispatch(logOut());
+    router.push("/");
+  };
 
   return (
     <AppBar position="fixed" open={open}>
-      <Toolbar className={styles.toolbar}> 
+      <Toolbar className={styles.toolbar}>
         <Box className={styles.logoBox}>
           <IconButton
             color="inherit"
@@ -93,7 +102,7 @@ function CourseAppBar({ userName }: CourseAppBarProps) {
           >
             <MenuIcon />
           </IconButton>
-          <Box sx={{ display: { xs: "none", sm:  "block" }}}>
+          <Box sx={{ display: { xs: "none", sm: "block" } }}>
             <Image
               hidden={open}
               src="/vercel.svg"
@@ -121,7 +130,8 @@ function CourseAppBar({ userName }: CourseAppBarProps) {
               <KeyboardArrowDownIcon />
             </IconButton>
           </Tooltip>
-          <Menu className={styles.userMenu}
+          <Menu
+            className={styles.userMenu}
             id="menu-appbar"
             anchorEl={anchorElUser}
             anchorOrigin={{
@@ -141,6 +151,7 @@ function CourseAppBar({ userName }: CourseAppBarProps) {
                 <Typography textAlign="center">{setting}</Typography>
               </MenuItem>
             ))}
+            <MenuItem onClick={handleLogOut}>Cerrar sesión</MenuItem>
           </Menu>
         </Box>
       </Toolbar>

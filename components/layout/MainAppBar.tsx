@@ -15,6 +15,7 @@ import { Button } from "@mui/material";
 import { useAppSelector, useAppDispatch } from "@/redux/hook";
 import { logOut } from "@/redux/features/userLoginSlice";
 import { useRouter } from "next/navigation";
+import { USER_SETTINGS } from "@/config/constants";
 
 export default function MainAppBar() {
   // Router
@@ -84,8 +85,11 @@ export default function MainAppBar() {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={() => handleNavigate("#")}>Mi perfil</MenuItem>
-        <MenuItem onClick={() => handleNavigate("#")}>Mis cursos</MenuItem>
+        {USER_SETTINGS.map((setting) => (
+          <MenuItem key={setting} onClick={handleClose}>
+            <Typography textAlign="center">{setting}</Typography>
+          </MenuItem>
+        ))}
         <MenuItem onClick={handleLogOut}>Cerrar sesión</MenuItem>
       </Menu>
     </>

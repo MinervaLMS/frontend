@@ -12,12 +12,9 @@ export const drawerSlice = createSlice({
     setOpen: (state) => {
       state.open = !state.open;
     },
-    setSelectedModule: (state, action) => {
-      state.selectedModule = action.payload;
-    },
   },
 });
 
-export const { setOpen, setSelectedModule } = drawerSlice.actions;
+export const { setOpen } = drawerSlice.actions;
 
 export default drawerSlice.reducer;

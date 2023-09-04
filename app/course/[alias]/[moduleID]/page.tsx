@@ -50,7 +50,8 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
   }),
 }));
 
-function CourseHome({ params }: { params: { alias: string } }) {
+function Course({ params }: { params: { alias: string , moduleID: number} }) {
+
   // States related to the alert component
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
@@ -80,10 +81,6 @@ function CourseHome({ params }: { params: { alias: string } }) {
     (state) => state.persistedReducer.drawerState.open
   );
 
-  const selectedModule = useAppSelector(
-    (state) => state.persistedReducer.drawerState.selectedModule
-  );
-
   // For using the theme predefined styles
   const theme = useTheme();
 
@@ -100,7 +97,6 @@ function CourseHome({ params }: { params: { alias: string } }) {
         `${API_ENDPOINTS.COURSE}${params.alias}`,
         config
       );
-      console.log(response);
       handleAlertOpen(response.status);
       let data = await response.json();
       console.log(data);
@@ -167,13 +163,10 @@ function CourseHome({ params }: { params: { alias: string } }) {
         <Main open={drawerOpen}>
           <DrawerHeader />
           <Box component="section">
-            HOME
             <Typography component="h1" variant="h4">
               {courseData?.name}
             </Typography>
-            <Typography component="h2" variant="h6">
-              {courseData?.description}
-            </Typography>
+            <CourseModule moduleID={params.moduleID} accessToken={userTokens.access} />
           </Box>
         </Main>
       </Box>
@@ -193,4 +186,4 @@ function CourseHome({ params }: { params: { alias: string } }) {
   }
 }
 
-export default CourseHome;
+export default Course;
