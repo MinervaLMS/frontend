@@ -12,13 +12,22 @@ import { AUTOHIDE_ALERT_DURATION } from "@/config/constants";
 import CustomSnackbar from "../common/CustomSnackbar";
 import { InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import CircularSpinner from "../common/CircularSpinner";
+import { useAppSelector } from "@/redux/hook";
 
 // This functional component is the form for the register page.
 // It contains the PasswordForgot component.
 function ContactForm() {
+  // Redux states
+  const userNameState = useAppSelector(
+    (state) => state.persistedReducer.userLoginState.first_name
+  );
+  const userEmailState = useAppSelector(
+    (state) => state.persistedReducer.userLoginState.email
+  );
+
   // States related to the email
-  const [userName, setUserName] = useState("");
-  const [userEmail, setUserEmail] = useState("");
+  const [userName, setUserName] = useState(userNameState);
+  const [userEmail, setUserEmail] = useState(userEmailState);
   const [subject, setSubject] = useState("");
   const [emailBody, setEmailBody] = useState("");
   // States related to the alert component
@@ -291,7 +300,7 @@ function ContactForm() {
           fullWidth
           variant="contained"
           color="secondary"
-          sx={{ my: 2}}
+          sx={{ my: 2 }}
         >
           Enviar
         </Button>

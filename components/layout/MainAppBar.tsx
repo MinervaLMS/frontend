@@ -17,16 +17,24 @@ import { logOut } from "@/redux/features/userLoginSlice";
 import { useRouter } from "next/navigation";
 
 export default function MainAppBar() {
+  // Router
   const router = useRouter();
 
+  // Redux states
   const userLoginState = useAppSelector(
     (state) => state.persistedReducer.userLoginState.login
   );
+  const userNameState = useAppSelector(
+    (state) => state.persistedReducer.userLoginState.first_name
+  );
 
+  // Redux dispatch
   const dispatch = useAppDispatch();
 
+  // Menu states
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
+  // Event handlers
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -44,10 +52,11 @@ export default function MainAppBar() {
     handleNavigate("/");
   };
 
+  // Menu options for the log in user
   const logInUserOptions = (
     <>
       <Typography variant="h6" component="p">
-        User.name
+        {userNameState}
       </Typography>
       <AccountCircle />
       <IconButton
@@ -82,12 +91,13 @@ export default function MainAppBar() {
     </>
   );
 
+  // Menu options for the log out user
   const logOutUserOptions = (
     <>
       <Button
         variant="contained"
         color="info"
-        sx={{ mx: 1, textTransform: "none"}}
+        sx={{ mx: 1, textTransform: "none" }}
         onClick={() => handleNavigate("/register")}
         type="button"
       >
@@ -96,7 +106,7 @@ export default function MainAppBar() {
       <Button
         color="secondary"
         variant="contained"
-        sx={{ mx: 1, textTransform: "none"}}
+        sx={{ mx: 1, textTransform: "none" }}
         onClick={() => handleNavigate("/login")}
         type="button"
       >
