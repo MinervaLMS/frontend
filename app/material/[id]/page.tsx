@@ -28,6 +28,7 @@ import { useRouter } from "next/navigation";
 // Import API
 import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
 import { API_CourseObject, API_MaterialObject } from "@/config/interfaces";
+import PdfMaterial from "@/components/features/PdfMaterial";
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
     open?: boolean;
@@ -47,10 +48,11 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
     }),
 }));
 
-// interface MaterialModuleProps {
-//     id: number,
-//     accessToken: string
-// }
+const views = {
+    // pdf: PdfMaterialView,
+    // html: HtmlMaterialView,
+    // video: VideoMaterialView
+}
 
 function Material({ params }: { params: { id: number } }) {
     // States related to the alert component
@@ -60,13 +62,13 @@ function Material({ params }: { params: { id: number } }) {
     // States related to the API Fetch
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(true);
-    const [materialData, setMaterialData] = useState<API_MaterialObject>();
+    const [material, setMaterial] = useState<API_MaterialObject>();
 
     // For routing when user is not login or the material is not found
     const router = useRouter();
 
     // Redux states:
-    const isUserLogin = useAppSelector(
+    const isUserLogged = useAppSelector(
         (state) => state.persistedReducer.userLoginState.login
     );
 
@@ -94,21 +96,32 @@ function Material({ params }: { params: { id: number } }) {
     // Fetch function to obtain the data of the material
     const handleFetch = async () => {
         try {
-        let config = {
-            method: "GET",
-            headers: {
-            Authorization: "Bearer " + userTokens.access,
-            },
-        };
+            let config = {
+                method: "GET",
+                headers: {
+                Authorization: "Bearer " + userTokens.access,
+                },
+            };
 
-        let responseMaterial = await fetch(
-            `${API_ENDPOINTS.MATERIAL}${params.id}/`,
-            config
-        );
+            let apiResponse = await fetch(
+                `${API_ENDPOINTS.MATERIAL}${params.id}/`,
+                config
+            );
 
-        handleAlertOpen(responseMaterial.status);
-        let dataMaterial = await responseMaterial.json();
-        setMaterialData(dataMaterial);
+            handleAlertOpen(apiResponse.status);
+            let dataMaterial = await apiResponse.json();
+            console.log(dataMaterial);
+            
+            if(dataMaterial.message) {
+                setAlertConfig({
+                    message: dataMaterial.message,
+                    severity: "error"
+                })
+                setAlertOpen(true);
+            } else {
+                setMaterial(dataMaterial)
+            }
+
         } catch (error) {
             setAlertConfig({
                 message: "No hay información de este material o hubo un error. Intentalo de nuevo más tarde",
@@ -130,24 +143,26 @@ function Material({ params }: { params: { id: number } }) {
         router.push("/");
     };
 
+    // const currentView = views[material.material_type]
+
     if (isLoading) {
         return <CircularSpinner openBackdrop={isLoading} />;
     }
 
-    if (isUserLogin && !error) {
+    if (isUserLogged && !error) {
         // Render the principal container for the course page.
         return (
             <Box className={styles.course}>
             <CssBaseline />
             <CourseAppBar userName={userName} />
-            <CourseDrawer courseAlias="testing have to change" />
+            <CourseDrawer courseAlias="ED20241" />
             <Main open={drawerOpen}>
                 <DrawerHeader />
-                <Box component="section">
-                <Typography component="h1" variant="h4">
-                    {materialData?.name}
-                </Typography>
-                <CourseModule moduleID={selectedModule} accessToken={userTokens.access} />
+                <Box component="section" style={{height: 'calc(100vh - 130px)'}}>
+                    <Typography component="h1" variant="h4">
+                        {material?.name}
+                    </Typography>
+                    <PdfMaterial />
                 </Box>
             </Main>
             </Box>
