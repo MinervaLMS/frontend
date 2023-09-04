@@ -12,10 +12,9 @@ import CircularSpinner from "@/components/common/CircularSpinner";
 import CustomSnackbar from "@/components/common/CustomSnackbar";
 import CourseAppBar from "@/components/layout/CourseAppBar";
 import { CourseDrawer, DrawerHeader } from "@/components/layout/CourseDrawer";
-import CourseModule from "@/components/features/CourseModule";
 
 // Import styles
-import { styled, useTheme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import styles from "@/styles/Course.module.css";
 
 // Import constants
@@ -27,7 +26,7 @@ import { useRouter } from "next/navigation";
 
 // Import API
 import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
-import { API_CourseObject, API_MaterialObject } from "@/config/interfaces";
+import { API_MaterialObject } from "@/config/interfaces";
 import PdfMaterial from "@/components/features/PdfMaterial";
 import VideoMaterial from "@/components/features/VideoMaterial";
 import MarkDownMaterial from "@/components/features/MarkDownMaterial";
@@ -50,10 +49,19 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
     }),
 }));
 
-const views = {
-    // pdf: PdfMaterialView,
-    // html: HtmlMaterialView,
-    // video: VideoMaterialView
+const views: any = {
+    PDF: PdfMaterial,
+    HTM: MarkDownMaterial,
+    VID: VideoMaterial
+}
+
+const initialMaterial: API_MaterialObject = {
+    id: 0,
+    name: "",
+    material_type: "",
+    is_extra: false,
+    order: 0,
+    module_id: 0
 }
 
 function Material({ params }: { params: { id: number } }) {
@@ -64,7 +72,7 @@ function Material({ params }: { params: { id: number } }) {
     // States related to the API Fetch
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(true);
-    const [material, setMaterial] = useState<API_MaterialObject>();
+    const [material, setMaterial] = useState<API_MaterialObject>(initialMaterial);
 
     // For routing when user is not login or the material is not found
     const router = useRouter();
@@ -145,7 +153,7 @@ function Material({ params }: { params: { id: number } }) {
         router.push("/");
     };
 
-    // const currentView = views[material.material_type]
+    const CurrentView = views[material.material_type]
 
     if (isLoading) {
         return <CircularSpinner openBackdrop={isLoading} />;
@@ -164,9 +172,7 @@ function Material({ params }: { params: { id: number } }) {
                     <Typography component="h1" variant="h4">
                         {material?.name}
                     </Typography>
-                    {/* <PdfMaterial /> */}
-                    {/* <VideoMaterial /> */}
-                    <MarkDownMaterial />
+                    <CurrentView />
                 </Box>
             </Main>
             </Box>
