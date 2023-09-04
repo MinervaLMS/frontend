@@ -29,6 +29,8 @@ import { useRouter } from "next/navigation";
 import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
 import { API_CourseObject, API_MaterialObject } from "@/config/interfaces";
 import PdfMaterial from "@/components/features/PdfMaterial";
+import VideoMaterial from "@/components/features/VideoMaterial";
+import MarkDownMaterial from "@/components/features/MarkDownMaterial";
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
     open?: boolean;
@@ -155,14 +157,16 @@ function Material({ params }: { params: { id: number } }) {
             <Box className={styles.course}>
             <CssBaseline />
             <CourseAppBar userName={userName} />
-            <CourseDrawer courseAlias="ED20241" />
+            <CourseDrawer courseAlias="ing" />
             <Main open={drawerOpen}>
                 <DrawerHeader />
                 <Box component="section" style={{height: 'calc(100vh - 130px)'}}>
                     <Typography component="h1" variant="h4">
                         {material?.name}
                     </Typography>
-                    <PdfMaterial />
+                    {/* <PdfMaterial /> */}
+                    {/* <VideoMaterial /> */}
+                    <MarkDownMaterial />
                 </Box>
             </Main>
             </Box>
