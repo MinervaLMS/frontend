@@ -22,7 +22,7 @@ import { DRAWER_WIDTH, AUTOHIDE_ALERT_DURATION } from "@/config/constants";
 
 // Import redux and router
 import { useAppSelector } from "@/redux/hook";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 
 // Import API
 import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
@@ -64,7 +64,7 @@ const initialMaterial: API_MaterialObject = {
     module_id: 0
 }
 
-function Material({ params }: { params: { id: number } }) {
+function Material() {
     // States related to the alert component
     const [alertOpen, setAlertOpen] = useState(false);
     const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
@@ -76,6 +76,7 @@ function Material({ params }: { params: { id: number } }) {
 
     // For routing when user is not login or the material is not found
     const router = useRouter();
+    const { alias, materialId } = useParams();
 
     // Redux states:
     const isUserLogged = useAppSelector(
@@ -114,7 +115,7 @@ function Material({ params }: { params: { id: number } }) {
             };
 
             let apiResponse = await fetch(
-                `${API_ENDPOINTS.MATERIAL}${params.id}/`,
+                `${API_ENDPOINTS.MATERIAL}${materialId}/`,
                 config
             );
 
@@ -165,7 +166,7 @@ function Material({ params }: { params: { id: number } }) {
             <Box className={styles.course}>
             <CssBaseline />
             <CourseAppBar userName={userName} />
-            <CourseDrawer courseAlias="ing" />
+            <CourseDrawer courseAlias={alias.toString()} />
             <Main open={drawerOpen}>
                 <DrawerHeader />
                 <Box component="section" style={{height: 'calc(100vh - 130px)'}}>

@@ -19,6 +19,9 @@ import { AUTOHIDE_ALERT_DURATION } from "@/config/constants";
 import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
 import { API_MaterialObject } from "@/config/interfaces";
 
+// Import router
+import { useRouter, usePathname } from "next/navigation";
+
 // This interface defines the types of the props object.
 interface CourseMaterialListProps {
 	moduleID: number;
@@ -29,6 +32,8 @@ function CourseMaterialList({
 	moduleID,
   accessToken,
 }: CourseMaterialListProps) {
+  const router = useRouter();
+  const currentPath: string = usePathname();
 
   // States related to the alert component
   const [alertOpen, setAlertOpen] = useState(false);
@@ -97,6 +102,11 @@ function CourseMaterialList({
     setAlertOpen(false);
   };
 
+  const goToSelectedMaterial = (materialId: number) => {
+    router.push(`${currentPath}/${materialId}`)
+    return undefined
+  }
+
   if (isLoading) {
     return(
       <CircularSpinner openBackdrop={isLoading} />
@@ -121,7 +131,7 @@ function CourseMaterialList({
     <List>
       {materialsList.map((material: API_MaterialObject) => (
         <ListItem key={material.id}>
-          <CourseMaterial material={material} />
+          <CourseMaterial onSelected={() => goToSelectedMaterial(material.id)} material={material} />
         </ListItem>
       ))}
     </List>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { MouseEventHandler } from "react";
 
 // Import MaterialUI components
 import { Box } from "@mui/material";
@@ -25,10 +25,12 @@ import { API_MaterialObject } from "@/config/interfaces";
 // This interface defines the types of the props object.
 interface CourseMaterialProps {
 	material: API_MaterialObject;
+  onSelected: () => undefined
 }
 
 function CourseMaterial({
 	material,
+  onSelected
 }: CourseMaterialProps) {
 
   return (
@@ -39,7 +41,7 @@ function CourseMaterial({
         bgcolor: "#E6E6E6",
       }}
     >
-      <CardActionArea>
+      <CardActionArea onClick={onSelected} >
         <Box 
           className={styles.materialInformation}
         >
