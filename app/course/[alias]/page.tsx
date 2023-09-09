@@ -167,44 +167,49 @@ function CourseHome({ params }: { params: { alias: string } }) {
         <CourseDrawer courseAlias={params.alias} />
         <Main open={drawerOpen}>
           <DrawerHeader />
-          <Box component="section">
-            <Box component="div">
-              <Typography component="h1" variant="h4">
-                {courseData?.name}
-              </Typography>
-              <Typography component="p">{courseData?.description}</Typography>
-            </Box>
-            <Box component="div">
-              <Typography component="h2" variant="h6">
-                Universidad
-              </Typography>
-              <Box component="div">
-                <AccountCircle />
-                <Typography component="p">Profesor.Nombre</Typography>
-                <Typography component="caption">Instructor</Typography>
-              </Box>
+          <Box component="section" className={styles.courseHomeContainer}>
+            <Box component="section" className={styles.courseHomeSection}>
               <Box component="div">
                 <Image
-                  src="@/public/assets/images/course-image.png"
+                  src="/assets/images/course-image.png"
                   alt="Course image"
-                  width={100}
-                  height={100}
+                  width={800}
+                  height={400}
                   priority
                 />
               </Box>
+              <Box component="div" paddingTop={2}>
+                <Typography component="h1" variant="h4">
+                  {courseData?.name}
+                </Typography>
+                <Typography component="p">{courseData?.description}</Typography>
+              </Box>
             </Box>
-          </Box>
-          <Box component="section">
-            <Box component="div">
-              <Typography component="h2" variant="h6">
-                Detalles
-              </Typography>
-              <Typography component="p">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Esse
-                et nesciunt dicta saepe at vel! Nesciunt sint facere quos
-                ducimus laudantium, ratione exercitationem praesentium ad odio,
-                suscipit non consectetur ut!
-              </Typography>
+
+            <Box component="section" className={styles.courseHomeSection}>
+              <Box component="div" className={styles.courseDetailsCard}>
+                <Typography component="h2" variant="h5">
+                  Detalles
+                </Typography>
+                <Box component="div" className={styles.courseOwnerInfo}>
+                  <Typography component='p'>
+                    Universidad
+                  </Typography>
+                  <Box component="div" display='flex' alignItems='center'>
+                    <AccountCircle sx={{paddingRight: 1}} />
+                    <Box component="div">
+                      <Typography component="p">Profesor.Nombre</Typography>
+                      <Typography component="caption">Instructor</Typography>
+                    </Box>
+                  </Box>
+                </Box>
+                <Typography component="p">
+                  Lorem ipsum, dolor sit amet consectetur adipisicing elit. Esse
+                  et nesciunt dicta saepe at vel! Nesciunt sint facere quos
+                  ducimus laudantium, ratione exercitationem praesentium ad
+                  odio, suscipit non consectetur ut!
+                </Typography>
+              </Box>
             </Box>
           </Box>
         </Main>
