@@ -29,8 +29,9 @@ import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
 import { API_MaterialObject } from "@/config/interfaces";
 import PdfMaterial from "@/components/materials/PdfMaterial";
 import VideoMaterial from "@/components/materials/VideoMaterial";
-import MarkDownMaterial from "@/components/features/MarkDownMaterial";
+import MarkDownMaterial from "@/components/materials/MarkDownMaterial";
 import ExerciseMaterial from "@/components/materials/ExerciseMaterial";
+import { Link } from "@mui/material";
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
   open?: boolean;
@@ -78,7 +79,8 @@ function Material() {
 
   // For routing when user is not login or the material is not found
   const router = useRouter();
-  const { alias, materialId } = useParams();
+  const { alias, moduleID, materialId } = useParams();
+  console.log(alias, moduleID, materialId);
 
   // Redux states:
   const isUserLogged = useAppSelector(
@@ -172,6 +174,15 @@ function Material() {
         <Main open={drawerOpen}>
           <DrawerHeader />
           <Box component="section" style={{ height: "calc(100vh - 130px)" }}>
+            <Link
+              onClick={() => router.push(`/course/${alias}/${moduleID}`)}
+              sx={{ cursor: "pointer" }}
+              underline="hover"
+              color={""}
+              variant="body1"
+            >
+              ← Volver
+            </Link>
             <Typography component="h1" variant="h4">
               {material?.name}
             </Typography>

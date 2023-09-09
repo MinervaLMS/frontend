@@ -2,7 +2,7 @@ import * as React from "react";
 import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import RegisterForm from "@/components/materials/RegisterForm";
+import RegisterForm from "@/components/features/RegisterForm";
 import styles from "@/styles/RegisterLogin.module.css";
 import bg from "@/public/assets/images/register-bg.png";
 import Image from "next/image";
