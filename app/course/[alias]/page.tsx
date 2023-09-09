@@ -12,7 +12,6 @@ import CircularSpinner from "@/components/common/CircularSpinner";
 import CustomSnackbar from "@/components/common/CustomSnackbar";
 import CourseAppBar from "@/components/layout/CourseAppBar";
 import { CourseDrawer, DrawerHeader } from "@/components/layout/CourseDrawer";
-import CourseModule from "@/components/features/CourseModule";
 
 // Import styles
 import { styled, useTheme } from "@mui/material/styles";
@@ -28,6 +27,8 @@ import { useRouter } from "next/navigation";
 // Import API
 import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
 import { API_CourseObject } from "@/config/interfaces";
+import { AccountCircle } from "@mui/icons-material";
+import Image from "next/image";
 
 // This functional component is the index page for the /course rute.
 // It contains the CourseAppBar and CourseDrawerList components.
@@ -167,13 +168,44 @@ function CourseHome({ params }: { params: { alias: string } }) {
         <Main open={drawerOpen}>
           <DrawerHeader />
           <Box component="section">
-            HOME
-            <Typography component="h1" variant="h4">
-              {courseData?.name}
-            </Typography>
-            <Typography component="h2" variant="h6">
-              {courseData?.description}
-            </Typography>
+            <Box component="div">
+              <Typography component="h1" variant="h4">
+                {courseData?.name}
+              </Typography>
+              <Typography component="p">{courseData?.description}</Typography>
+            </Box>
+            <Box component="div">
+              <Typography component="h2" variant="h6">
+                Universidad
+              </Typography>
+              <Box component="div">
+                <AccountCircle />
+                <Typography component="p">Profesor.Nombre</Typography>
+                <Typography component="caption">Instructor</Typography>
+              </Box>
+              <Box component="div">
+                <Image
+                  src="@/public/assets/images/course-image.png"
+                  alt="Course image"
+                  width={100}
+                  height={100}
+                  priority
+                />
+              </Box>
+            </Box>
+          </Box>
+          <Box component="section">
+            <Box component="div">
+              <Typography component="h2" variant="h6">
+                Detalles
+              </Typography>
+              <Typography component="p">
+                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Esse
+                et nesciunt dicta saepe at vel! Nesciunt sint facere quos
+                ducimus laudantium, ratione exercitationem praesentium ad odio,
+                suscipit non consectetur ut!
+              </Typography>
+            </Box>
           </Box>
         </Main>
       </Box>

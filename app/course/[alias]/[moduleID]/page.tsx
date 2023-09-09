@@ -159,7 +159,7 @@ function Course({ params }: { params: { alias: string , moduleID: number} }) {
       <Box className={styles.course}>
         <CssBaseline />
         <CourseAppBar userName={userName} />
-        <CourseDrawer courseAlias={params.alias} />
+        <CourseDrawer courseAlias={params.alias} moduleID={params.moduleID}/>
         <Main open={drawerOpen}>
           <DrawerHeader />
           <Box component="section">

@@ -32,16 +32,14 @@ export const FAQS: {
 ];
 
 // Constants for user settings menu
-export const USER_SETTINGS: Array<string> = [
-  "Cuenta"
-];
+export const USER_SETTINGS: Array<string> = ["Cuenta"];
 
 // Constants for course navigation
 export const DRAWER_WIDTH: number = 240;
 
-export const COURSE_OPTIONS: Array<string> = [
-  "Posiciones",
-  "Calificaciones",
-  "Syllabus",
-  "Mensajes"
+export const COURSE_OPTIONS: Array<{ title: string; route: string }> = [
+  { title: "Posiciones", route: "/positions" },
+  { title: "Calificaciones", route: "/grades" },
+  { title: "Syllabus", route: "/syllabus" },
+  { title: "Foro", route: "/forum" },
 ];

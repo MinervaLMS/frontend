@@ -102,7 +102,7 @@ function CourseMaterialList({
     setAlertOpen(false);
   };
 
-  const goToSelectedMaterial = (materialId: number) => {
+  const handleGoToSelectedMaterial = (materialId: number) => {
     router.push(`${currentPath}/${materialId}`)
     return undefined
   }
@@ -131,7 +131,7 @@ function CourseMaterialList({
     <List>
       {materialsList.map((material: API_MaterialObject) => (
         <ListItem key={material.id}>
-          <CourseMaterial onSelected={() => goToSelectedMaterial(material.id)} material={material} />
+          <CourseMaterial onSelected={() => handleGoToSelectedMaterial(material.id)} material={material} />
         </ListItem>
       ))}
     </List>

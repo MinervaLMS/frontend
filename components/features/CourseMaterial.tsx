@@ -24,15 +24,11 @@ import { API_MaterialObject } from "@/config/interfaces";
 
 // This interface defines the types of the props object.
 interface CourseMaterialProps {
-	material: API_MaterialObject;
-  onSelected: () => undefined
+  material: API_MaterialObject;
+  onSelected: () => undefined;
 }
 
-function CourseMaterial({
-	material,
-  onSelected
-}: CourseMaterialProps) {
-
+function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
   return (
     <Card
       sx={{
@@ -41,13 +37,9 @@ function CourseMaterial({
         bgcolor: "#E6E6E6",
       }}
     >
-      <CardActionArea onClick={onSelected} >
-        <Box 
-          className={styles.materialInformation}
-        >
-          <Box
-            className={styles.typeOfMaterial}
-          >
+      <CardActionArea onClick={onSelected}>
+        <Box className={styles.materialInformation}>
+          <Box className={styles.typeOfMaterial}>
             <PlayCircleOutlinedIcon
               color="primary"
               sx={{
@@ -57,10 +49,10 @@ function CourseMaterial({
             />
           </Box>
           <Container>
-            <Box
-              className={styles.materialName}
-            >
-              <Typography sx={{ typography: {sm: 'body1', md: 'h6'}}}>{material.name}</Typography>
+            <Box className={styles.materialName}>
+              <Typography sx={{ typography: { sm: "body1", md: "h6" } }}>
+                {material.name}
+              </Typography>
               <Checkbox
                 sx={{
                   color: common["black"],
@@ -71,9 +63,7 @@ function CourseMaterial({
                 defaultChecked={false}
               />
             </Box>
-            <Box
-              className={styles.materialDetails}
-            >
+            <Box className={styles.materialDetails}>
               <Container
                 sx={{
                   display: "flex",
@@ -82,11 +72,11 @@ function CourseMaterial({
                 disableGutters
               >
                 <TimerOutlinedIcon color="primary" />
-                <Typography color="primary" variant="body1">8m, 45s</Typography>
+                <Typography color="primary" variant="body1">
+                  8m, 45s
+                </Typography>
               </Container>
-              <Box
-                className={styles.materialReactions}
-              >
+              <Box className={styles.materialReactions}>
                 {/* Lo siguiente lo dejo con estilos inline porque de igual forma se va a tener que cambiar */}
                 <Container
                   sx={{
@@ -96,7 +86,10 @@ function CourseMaterial({
                   disableGutters
                 >
                   <ModeCommentOutlinedIcon color="primary" />
-                  <Typography variant="body1" color="primary" > 32 </Typography>
+                  <Typography variant="body1" color="primary">
+                    {" "}
+                    32{" "}
+                  </Typography>
                 </Container>
                 <Container
                   sx={{
@@ -106,7 +99,10 @@ function CourseMaterial({
                   disableGutters
                 >
                   <ThumbUpOutlinedIcon color="secondary" />
-                  <Typography variant="body1" color="secondary"> 32 </Typography>
+                  <Typography variant="body1" color="secondary">
+                    {" "}
+                    32{" "}
+                  </Typography>
                 </Container>
                 <Container
                   sx={{
