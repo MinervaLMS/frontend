@@ -55,11 +55,11 @@ function CourseMaterialList({
       };
 
       let response = await fetch(`${API_ENDPOINTS.MODULE}${moduleID}${API_ENDPOINTS.MATERIALS}`, config);
-      console.log(response);
       handleAlertOpen(response.status);
       let data = await response.json();
       // Order the list of materials according to their order property.
-      data.sort((a: API_MaterialObject, b: API_MaterialObject) => (a.order > b.order) ? 1 : -1); 
+      data.sort((a: API_MaterialObject, b: API_MaterialObject) => (a.order > b.order) ? 1 : -1);
+      console.log(data);
       setMaterialsList(data);
     } catch (error) {
       setAlertConfig({

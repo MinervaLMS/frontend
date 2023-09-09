@@ -2,6 +2,7 @@ import { ROLES } from "@/config/enums";
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  id: "",
   first_name: "",
   last_name: "",
   email: "",
@@ -17,6 +18,9 @@ export const userLoginSlice = createSlice({
   name: "register",
   initialState,
   reducers: {
+    setID: (state, action) => {
+      state.id = action.payload;
+    },
     setFirstName: (state, action) => {
       state.first_name = action.payload;
     },
@@ -40,6 +44,7 @@ export const userLoginSlice = createSlice({
 });
 
 export const {
+  setID,
   setFirstName,
   setLastName,
   setUserEmail,
