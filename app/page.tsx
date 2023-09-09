@@ -8,7 +8,7 @@ import { Box, Container, Paper, ThemeProvider, Typography } from "@mui/material"
 
 import styles from "@/styles/RegisterLogin.module.css";
 import Link from "@mui/material/Link";
-import RegisterForm from "@/components/features/RegisterForm";
+import RegisterForm from "@/components/materials/RegisterForm";
 import lightTheme from "@/styles/themes/LightTheme";
 
 export default function Home() {

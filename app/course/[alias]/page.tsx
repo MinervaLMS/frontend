@@ -101,10 +101,8 @@ function CourseHome({ params }: { params: { alias: string } }) {
         `${API_ENDPOINTS.COURSE}${params.alias}`,
         config
       );
-      console.log(response);
       handleAlertOpen(response.status);
       let data = await response.json();
-      console.log(data);
       setCourseData(data);
     } catch (error) {
       setAlertConfig({
@@ -199,7 +197,7 @@ function CourseHome({ params }: { params: { alias: string } }) {
                     <AccountCircle sx={{paddingRight: 1}} />
                     <Box component="div">
                       <Typography component="p">Profesor.Nombre</Typography>
-                      <Typography component="caption">Instructor</Typography>
+                      <Typography component="p">Instructor</Typography>
                     </Box>
                   </Box>
                 </Box>

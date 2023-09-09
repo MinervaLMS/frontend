@@ -99,7 +99,6 @@ function Course({ params }: { params: { alias: string , moduleID: number} }) {
       );
       handleAlertOpen(response.status);
       let data = await response.json();
-      console.log(data);
       setCourseData(data);
     } catch (error) {
       setAlertConfig({

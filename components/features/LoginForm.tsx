@@ -136,7 +136,7 @@ export default function LoginForm() {
       dispatch(setRol(ROLES.USER));
       dispatch(setTokens(data.tokens));
       dispatch(setLogin(true));
-      router.push("/course/ED20241");
+      router.push("/course/ED");
     }
   };
 
