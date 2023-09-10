@@ -6,6 +6,8 @@ import RegisterForm from "@/components/features/RegisterForm";
 import styles from "@/styles/RegisterLogin.module.css";
 import bg from "@/public/assets/images/register-bg.png";
 import Image from "next/image";
+import { Paper } from "@mui/material";
+import lightTheme from "@/styles/themes/LightTheme";
 
 // This functional component is the index page for the /register rute.
 // It contains the RegisterForm component.
@@ -15,17 +17,21 @@ export default function Register() {
   return (
     <Box
       component="main"
-      style={{ backgroundImage: `url(${bg.src})`, backgroundSize: "cover" }}>
-      <Box component="section" className={styles.mainContainer}>
+      style={{ backgroundImage: `url(${bg.src})`, backgroundSize: "cover" }}
+      className={styles.mainContainer}>
         <Image
           src="/vercel.svg"
           alt="Vercel Logo"
           className={styles.logo}
           width={100}
           height={100}
-          priority
         />
-        <Box className={styles.formBox}>
+        <Paper
+        elevation={3}
+        className={styles.formBox}
+        sx={{
+          maxWidth: "sm"
+        }}>
           <Typography component="h1" variant="h4">
             Regístrate
           </Typography>
@@ -35,12 +41,11 @@ export default function Register() {
             algunos detalles para empezar.
           </Typography>
           <RegisterForm />
-        </Box>
+        </Paper>
         <Typography component="p" sx={{ color: "#fff", marginTop: "2rem" }}>
           Si tienes alguna dificultad comunicate con nuestro{" "}
           <Link href="/contact">Centro de atención.</Link>
         </Typography>
       </Box>
-    </Box>
   );
 }

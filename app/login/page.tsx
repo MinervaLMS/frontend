@@ -9,29 +9,30 @@ import styles from "@/styles/RegisterLogin.module.css";
 import bg from "@/public/assets/images/register-bg.png";
 import Image from "next/image";
 
-// Theming
-import lightTheme from "@/styles/themes/LightTheme";
-import { ThemeProvider, Typography } from "@mui/material";
-import CssBaseline from "@mui/material/CssBaseline";
+import { Paper, Typography } from "@mui/material";
 
 export default function Login() {
   return (
-    <ThemeProvider theme={lightTheme}>
       <Box
         component="main"
         style={{ backgroundImage: `url(${bg.src})`, backgroundSize: "cover" }}
-        height={"100vh"}
+        className={styles.mainContainer}
       >
-        <Box component="section" className={styles.mainContainer}>
           <Image
             src="/vercel.svg"
             alt="Vercel Logo"
             className={styles.logo}
             width={100}
             height={100}
-            priority
           />
-          <Box className={styles.formBox}>
+          <Paper
+            elevation = {3}
+            className={styles.formBox}
+            sx={{
+              maxWidth: "sm"
+            }
+            }>
+            
             <Typography component="h1" variant="h4" align="center">
               Bienvenido
             </Typography>
@@ -42,20 +43,17 @@ export default function Login() {
             </Typography>
             <LoginForm />
 
-            <Typography variant="inherit">
+            <Typography variant="body1">
               {"¿Aún no estás registrado? - "}
-              <Link href="/register" variant="body1" color="secondary">
+              <Link href="/register" color="secondary">
                 Regístrate
               </Link>
             </Typography>
-          </Box>
+          </Paper>
           <Typography component="p" sx={{ color: "#fff", marginTop: "2rem" }}>
             Si tienes alguna dificultad comunícate con nuestro{" "}
             <Link href="/contact">Centro de atención.</Link>
           </Typography>
-          <Divider />
         </Box>
-      </Box>
-    </ThemeProvider>
   );
 }
