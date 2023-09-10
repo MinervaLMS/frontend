@@ -15,8 +15,6 @@ import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
 import PasswordForgot from "./PasswordForgot";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
@@ -33,6 +31,11 @@ import CustomSnackbar from "../common/CustomSnackbar";
 import { AUTOHIDE_ALERT_DURATION } from "@/config/constants";
 import { ROLES } from "@/config/enums";
 import { useRouter } from "next/navigation";
+
+// Theming
+import lightTheme from "@/styles/themes/LightTheme";
+import { ThemeProvider } from "@mui/material";
+import CssBaseline from "@mui/material/CssBaseline";
 
 export default function LoginForm() {
   // Router
@@ -108,7 +111,7 @@ export default function LoginForm() {
     }
     setAlertOpen(false);
   };
-  
+
   const handlePasswordForgot = (
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
   ) => {
@@ -140,7 +143,7 @@ export default function LoginForm() {
   const cleanForm = () => {
     setEmail("");
     setPassword("");
-  }
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -184,75 +187,89 @@ export default function LoginForm() {
 
   return (
     <>
-      <CircularSpinner openBackdrop={openBackdrop} />
-      <CustomSnackbar
-        message={alertConfig.message}
-        severity={alertConfig.severity}
-        vertical="top"
-        horizontal="center"
-        autoHideDuration={AUTOHIDE_ALERT_DURATION}
-        open={alertOpen}
-        onClose={handleAlertClose}
-      />
-      <PasswordForgot
-        open={openPasswordForgot}
-        handlePasswordForgot={handlePasswordForgot}
-        setOpen={setOpenPasswordForgot}
-        handleOpenLoader={handleOpenLoader}
-        handleCloseLoader={handleCloseLoader}
-      />
-      <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }} noValidate>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              required
-              id="email"
-              label="Correo"
-              name="email"
-              type="email"
-              autoComplete="email"
-              size="small"
-              value={email}
-              onChange={handleEmailChange}
-              error={emailError}
-              helperText={emailError ? requiredText : ""}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <FormControl
-              variant="outlined"
-              size="small"
-              fullWidth
-              required
-              error={passwordError}
-            >
-              <InputLabel htmlFor="outlined-adornment-password">
-                Contraseña
-              </InputLabel>
-              <OutlinedInput
-                id="outlined-adornment-password"
-                type={showPassword ? "text" : "password"}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                      edge="end"
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-                label="Password"
-                value={password}
-                onChange={handlePasswordChange}
+      <ThemeProvider theme={lightTheme}>
+        <CssBaseline />
+        <CircularSpinner openBackdrop={openBackdrop} />
+        <CustomSnackbar
+          message={alertConfig.message}
+          severity={alertConfig.severity}
+          vertical="top"
+          horizontal="center"
+          autoHideDuration={AUTOHIDE_ALERT_DURATION}
+          open={alertOpen}
+          onClose={handleAlertClose}
+        />
+        <PasswordForgot
+          open={openPasswordForgot}
+          handlePasswordForgot={handlePasswordForgot}
+          setOpen={setOpenPasswordForgot}
+          handleOpenLoader={handleOpenLoader}
+          handleCloseLoader={handleCloseLoader}
+        />
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }} noValidate>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                required
+                id="email"
+                label="Correo"
+                name="email"
+                type="email"
+                autoComplete="email"
+                size="small"
+                value={email}
+                onChange={handleEmailChange}
+                error={emailError}
+                helperText={emailError ? requiredText : ""}
               />
-              <FormHelperText>
-                {passwordError ? requiredText : ""}
-              </FormHelperText>
-            </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl
+                variant="outlined"
+                size="small"
+                fullWidth
+                required
+                error={passwordError}
+              >
+                <InputLabel htmlFor="outlined-adornment-password">
+                  Contraseña
+                </InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-password"
+                  type={showPassword ? "text" : "password"}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  label="Password"
+                  value={password}
+                  onChange={handlePasswordChange}
+                />
+                <FormHelperText>
+                  {passwordError ? requiredText : ""}
+                </FormHelperText>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <Link
+                href="#"
+                onClick={handlePasswordForgot}
+                underline="hover"
+                color="secondary"
+                variant="body1"
+              >
+                Olvidé mi contraseña →
+              </Link>
+            </Grid>
           </Grid>
           <Grid item xs={12}>
             <Link
@@ -265,7 +282,7 @@ export default function LoginForm() {
               Olvidé mi contraseña →
             </Link>
           </Grid>
-        </Grid>
+        </Box>
         <Button
           className="btn btn-primary"
           type="submit"
@@ -276,7 +293,7 @@ export default function LoginForm() {
         >
           Ingresar
         </Button>
-      </Box>
+      </ThemeProvider>
     </>
   );
 }

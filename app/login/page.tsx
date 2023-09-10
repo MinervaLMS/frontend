@@ -1,12 +1,18 @@
+"use client";
+
 import React from "react";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import Divider from "@mui/material/Divider";
-import Typography from "@mui/material/Typography";
 import LoginForm from "@/components/features/LoginForm";
 import styles from "@/styles/RegisterLogin.module.css";
 import bg from "@/public/assets/images/register-bg.png";
 import Image from "next/image";
+
+// Theming
+import lightTheme from "@/styles/themes/LightTheme";
+import { ThemeProvider, Typography } from "@mui/material";
+import CssBaseline from "@mui/material/CssBaseline";
 
 export default function Login() {
   return (
@@ -42,7 +48,9 @@ export default function Login() {
           <Box sx={{ mt: 1 }}>
             <Typography component="p">
               {"¿Aún no estás registrado? - "}
-              <Link href="/register">{"Regístrate"}</Link>
+              <Link href="/register" variant="body1" color="secondary">
+                Regístrate
+              </Link>
             </Typography>
           </Box>
         </Box>
