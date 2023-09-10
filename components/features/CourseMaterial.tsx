@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useState, useEffect } from "react";
+import React, { MouseEvent, useState, useEffect } from "react";
 
 // Import MaterialUI components
 import { Box } from "@mui/material";
@@ -16,6 +16,7 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownOutlinedIcon from "@mui/icons-material/ThumbDownOutlined";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import ModeCommentOutlinedIcon from "@mui/icons-material/ModeCommentOutlined";
+import CircularSpinner from "@/components/common/CircularSpinner";
 
 // Import styles
 import { common } from "@mui/material/colors";
@@ -43,6 +44,7 @@ function CourseMaterial({
   const [materialData, setMaterialData] = useState(material);
   const [reaction, setReaction] = useState<any>(null);
   const [access, setAccess] = useState<any>(null);
+  const [loadingRequest, setLoadingRequest] = useState<boolean>(true);
 
   const userTokens = useAppSelector(
     (state) => state.persistedReducer.userLoginState.tokens
@@ -53,6 +55,7 @@ function CourseMaterial({
   );
 
   const createAccess = async () => {
+    console.log("Creating access to material with id: " + material.id);
     try {
       let config = {
         method: "POST",
@@ -77,6 +80,8 @@ function CourseMaterial({
   };
 
   const getAccess = async () => {
+    console.log("Getting access to material with id: " + material.id);
+    setLoadingRequest(true);
     try {
       let config = {
         method: "GET",
@@ -92,21 +97,41 @@ function CourseMaterial({
 
       if (response.status == API_STATUS_CODE.NOT_FOUND) {
         const access = await createAccess();
+        setLoadingRequest(false);
         return access;
       }
 
       let data = await response.json();
       setAccess(data)
       setReaction(data.like);
+      setLoadingRequest(false);
       return data;
     } catch (error) {
       console.log(error);
+      setLoadingRequest(false);
       return false;
     }
   };
 
   const likeMaterial = async (materialId: number) => {
+    if (loadingRequest) return;
     console.log("Like material with id: " + materialId);
+    setLoadingRequest(true);
+
+    // Update visual likes/dislikes counter
+    if (access.like == null) { // There was no previous reaction
+      setMaterialData({...materialData, likes: materialData.likes + 1})
+      setAccess({...access, like: true})
+      setReaction(true);
+    } else if (access.like == false) { // Previous reaction was dislike -> Delete dislike and add like
+      setAccess({...access, like: true})
+      setMaterialData({...materialData, likes: materialData.likes + 1, dislikes: materialData.dislikes - 1})
+      setReaction(true);
+    } else { // Previous reaction was like -> Delete like
+      setAccess({...access, like: null})
+      setMaterialData({...materialData, likes: materialData.likes - 1})
+      setReaction(null);
+    }
 
     // Make api call to update likes
     try{
@@ -124,30 +149,35 @@ function CourseMaterial({
         config
       );
 
-      // Update visual likes/dislikes counter
-      if (access.like == null) { // There was no previous reaction
-        setMaterialData({...materialData, likes: materialData.likes + 1})
-        setAccess({...access, like: true})
-        setReaction(true);
-      } else if (access.like == false) { // Previous reaction was dislike -> Delete dislike and add like
-        setAccess({...access, like: true})
-        setMaterialData({...materialData, likes: materialData.likes + 1, dislikes: materialData.dislikes - 1})
-        setReaction(true);
-      } else { // Previous reaction was like -> Delete like
-        setAccess({...access, like: null})
-        setMaterialData({...materialData, likes: materialData.likes - 1})
-        setReaction(null);
-      }
+      setLoadingRequest(false);
 
       return true;
     } catch (error) {
+      setLoadingRequest(false);
       console.log(error);
       return false;
     }
   }
 
   const dislikeMaterial = async (materialId: number) => {
+    if (loadingRequest) return;
     console.log("Dislike material with id: " + materialId);
+    setLoadingRequest(true);
+
+    // Update visual likes/dislikes counter
+    if (access.like == null) { // There was no previous reaction
+      setAccess({...access, like: false})
+      setMaterialData({...materialData, dislikes: materialData.dislikes + 1})
+      setReaction(false);
+    } else if (access.like == true) { // Previous reaction was dislike -> Add dislike and delete like
+      setAccess({...access, like: false})
+      setMaterialData({...materialData, dislikes: materialData.dislikes + 1, likes: materialData.likes - 1})
+      setReaction(false);
+    } else { // Previous reaction was dislike -> Delete dislike
+      setAccess({...access, like: null})
+      setMaterialData({...materialData, dislikes: materialData.dislikes - 1})
+      setReaction(null);
+    }
 
     // Make api call to update dislikes
     try{
@@ -165,29 +195,18 @@ function CourseMaterial({
         config
       );
 
-      // Update visual likes/dislikes counter
-      if (access.like == null) { // There was no previous reaction
-        setAccess({...access, like: false})
-        setMaterialData({...materialData, dislikes: materialData.dislikes + 1})
-        setReaction(false);
-      } else if (access.like == true) { // Previous reaction was dislike -> Add dislike and delete like
-        setAccess({...access, like: false})
-        setMaterialData({...materialData, dislikes: materialData.dislikes + 1, likes: materialData.likes - 1})
-        setReaction(false);
-      } else { // Previous reaction was dislike -> Delete dislike
-        setAccess({...access, like: null})
-        setMaterialData({...materialData, dislikes: materialData.dislikes - 1})
-        setReaction(null);
-      }
-
+      setLoadingRequest(false);
       return true;
     } catch (error) {
+      setLoadingRequest(false);
       console.log(error);
       return false;
     }
   }
 
-  useEffect(() => {getAccess()},[])
+  useEffect(() => {
+    getAccess()
+  },[])
 
   return (
     <Card
@@ -197,11 +216,11 @@ function CourseMaterial({
         bgcolor: "#E6E6E6",
       }}
     >
+      <CircularSpinner openBackdrop={loadingRequest} />
       <CardActionArea
-        // onClick={onSelected}
-        onClick={() => console.log("Material with id: " + materialData.id + " selected")}
-      >
-        <Box 
+        onClick={onSelected}
+        >
+        <Box
           className={styles.materialInformation}
         >
           <Box
@@ -228,6 +247,7 @@ function CourseMaterial({
                   },
                 }}
                 defaultChecked={false}
+                onClick={(e) => {e.stopPropagation()}}
               />
             </Box>
             <Box
@@ -254,6 +274,7 @@ function CourseMaterial({
                     gap: "0.25rem",
                   }}
                   disableGutters
+                  onClick={(e) => {e.stopPropagation()}}
                 >
                   <ModeCommentOutlinedIcon />
                   <Typography variant="body1"> {materialData.total_comments} </Typography>
@@ -265,7 +286,10 @@ function CourseMaterial({
                     gap: "0.25rem",
                   }}
                   disableGutters
-                  onClick={() => likeMaterial(material.id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    likeMaterial(material.id);
+                  }}
                 >
                   {reaction == true ? <ThumbUpIcon color="secondary" /> : <ThumbUpOutlinedIcon color="secondary" />}
                   <Typography variant="body1" color="secondary"> {materialData.likes} </Typography>
@@ -277,7 +301,10 @@ function CourseMaterial({
                     gap: "0.25rem",
                   }}
                   disableGutters
-                  onClick={() => dislikeMaterial(material.id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    dislikeMaterial(material.id)
+                  }}
                 >
                   {reaction == false ? <ThumbDownIcon color="primary" /> : <ThumbDownOutlinedIcon color="primary" />}
                   <Typography variant="body1" color="primary"> {materialData.dislikes} </Typography>
