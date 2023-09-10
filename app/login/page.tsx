@@ -18,12 +18,7 @@ export default function Login() {
   return (
     <Box
       component="main"
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems:"center",
-        backgroundImage: `url(${bg.src})`,
-        backgroundSize: "cover"}}
+      style={{ backgroundImage: `url(${bg.src})`, backgroundSize: "cover" }}
       height={"100vh"}
     >
       <Box component="section" className={styles.mainContainer}>
