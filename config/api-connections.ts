@@ -1,5 +1,6 @@
 // Constant for api conection.
-export const API_URL: string = "https://minervalms-develop.onrender.com"; // https://minerva-api-4t0g.onrender.com
+// export const API_URL: string = "https://minervalms-develop.onrender.com"; // https://minerva-api-4t0g.onrender.com
+export const API_URL: string = "http://127.0.0.1:8000"; // https://minerva-api-4t0g.onrender.com
 
 export const API_ENDPOINTS = {
   REGISTER: `${API_URL}/register/`,
@@ -12,7 +13,8 @@ export const API_ENDPOINTS = {
   MODULES: `/modules/`,
   MODULE: `${API_URL}/module/`,
   MATERIALS: `/materials/`,
-  MATERIAL: `${API_URL}/material/`
+  MATERIAL: `${API_URL}/material/`,
+  ACCESS: `${API_URL}/access/`
 };
 
 export const API_STATUS_CODE = {

@@ -59,12 +59,15 @@ const views: any = {
 };
 
 const initialMaterial: API_MaterialObject = {
-  id: 0,
-  name: "",
-  material_type: "",
-  is_extra: false,
-  order: 0,
-  module_id: 0,
+    id: 0,
+    name: "",
+    material_type: "",
+    is_extra: false,
+    order: 0,
+    module_id: 0,
+    likes: 0,
+    dislikes: 0,
+    total_comments: 0,
 };
 
 function Material() {

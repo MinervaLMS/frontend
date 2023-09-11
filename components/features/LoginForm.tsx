@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useAppDispatch } from "@/redux/hook";
 import {
+  setID,
   setFirstName,
   setLastName,
   setUserEmail,
@@ -130,6 +131,7 @@ export default function LoginForm() {
 
   const handleLoginSuccess = (status: number, data: any) => {
     if (status === API_STATUS_CODE.SUCCESS) {
+      dispatch(setID(data.id));
       dispatch(setFirstName(data.first_name));
       dispatch(setLastName(data.last_name));
       dispatch(setUserEmail(data.email));

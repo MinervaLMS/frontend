@@ -45,5 +45,8 @@ export interface API_MaterialObject {
   material_type: string,
   is_extra: boolean,
   order: number,
+  likes: number,
+  dislikes: number,
+  total_comments: number,
   module_id: number
 }
