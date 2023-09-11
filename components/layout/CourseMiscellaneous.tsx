@@ -1,8 +1,6 @@
 import React from "react";
 
 // Import icons
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import StarsIcon from "@mui/icons-material/Stars";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 import TableChartIcon from "@mui/icons-material/TableChart";
@@ -22,7 +20,11 @@ import styles from "@/styles/Course.module.css";
 
 import { COURSE_OPTIONS } from "@/config/constants";
 
+import { useRouter } from "next/navigation";
+
 function CourseMiscellaneous() {
+  const router = useRouter();
+
   const COURSE_OPTIONS_ICONS = [
     <StarsIcon color="secondary" />,
     <FactCheckIcon color="secondary" />,
@@ -33,15 +35,15 @@ function CourseMiscellaneous() {
   return (
     <div>
       <List>
-        {COURSE_OPTIONS.map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
+        {COURSE_OPTIONS.map((item, index) => (
+          <ListItem key={`misc-${item.title}`} disablePadding>
+            <ListItemButton onClick={() => router.push(item.route)}>
               {COURSE_OPTIONS_ICONS[index]}
               <ListItemText
                 className={styles.moduleListItemText}
                 disableTypography
               >
-                <Typography variant="body2">{text}</Typography>
+                <Typography variant="body2">{item.title}</Typography>
               </ListItemText>
             </ListItemButton>
           </ListItem>

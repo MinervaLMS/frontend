@@ -7,7 +7,6 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -32,6 +31,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { setOpen } from "@/redux/features/drawerSlice";
 import { useRouter } from "next/navigation";
 import { logOut } from "@/redux/features/userLoginSlice";
+import { AccountCircle } from "@mui/icons-material";
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -117,7 +117,7 @@ function CourseAppBar({ userName }: CourseAppBarProps) {
           <Typography className={styles.userName} component="h2">
             {userName}
           </Typography>
-          <Avatar alt={userName} src="/static/images/avatar/.jpg" />
+          <AccountCircle />
           <Tooltip title="Open settings">
             <IconButton
               onClick={handleOpenUserMenu}

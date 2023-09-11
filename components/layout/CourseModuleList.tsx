@@ -18,12 +18,7 @@ import CustomSnackbar from "@/components/common/CustomSnackbar";
 import styles from "@/styles/Course.module.css";
 
 // Import icons
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
-import StarsIcon from "@mui/icons-material/Stars";
-import FactCheckIcon from "@mui/icons-material/FactCheck";
-import TableChartIcon from "@mui/icons-material/TableChart";
-import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 
 // Import constants
 import { AUTOHIDE_ALERT_DURATION, COURSE_OPTIONS } from "@/config/constants";
@@ -69,14 +64,12 @@ function CourseDrawerList({
         config
       );
       handleAlertOpen(response.status);
-      const data = await response.json();
-      console.log(data);
+      const data = await response.json()
       // Order the list of modules according to their order property.
       data.sort((a: API_ModuleObject, b: API_ModuleObject) =>
         a.order > b.order ? 1 : -1
       );
       setModulesList(data);
-      changeSelectedModule(data[0].id);
     } catch (error) {
       setAlertConfig({
         message:

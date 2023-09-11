@@ -5,7 +5,6 @@ import bg from "@/public/assets/images/register-bg.png";
 import * as React from "react";
 import { useAppSelector } from "@/redux/hook";
 import { Box, Container, Paper, ThemeProvider, Typography } from "@mui/material";
-import Image from "next/image";
 
 import styles from "@/styles/RegisterLogin.module.css";
 import Link from "@mui/material/Link";
