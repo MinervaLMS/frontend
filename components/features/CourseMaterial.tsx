@@ -32,8 +32,8 @@ import { get } from "http";
 
 // This interface defines the types of the props object.
 interface CourseMaterialProps {
-	material: API_MaterialObject;
-  onSelected: () => undefined
+  material: API_MaterialObject;
+  onSelected: () => undefined;
 }
 
 function CourseMaterial({
@@ -216,6 +216,7 @@ function CourseMaterial({
         bgcolor: "#E6E6E6",
       }}
     >
+
       <CircularSpinner openBackdrop={loadingRequest} />
       <CardActionArea
         onClick={onSelected}
@@ -226,6 +227,7 @@ function CourseMaterial({
           <Box
             className={styles.typeOfMaterial}
           >
+
             <PlayCircleOutlinedIcon
               color="primary"
               sx={{
@@ -239,6 +241,7 @@ function CourseMaterial({
               className={styles.materialName}
             >
               <Typography sx={{ typography: {sm: 'body1', md: 'h6'}}}>{materialData.name}</Typography>
+
               <Checkbox
                 sx={{
                   color: common["black"],
@@ -250,9 +253,7 @@ function CourseMaterial({
                 onClick={(e) => {e.stopPropagation()}}
               />
             </Box>
-            <Box
-              className={styles.materialDetails}
-            >
+            <Box className={styles.materialDetails}>
               <Container
                 sx={{
                   display: "flex",
@@ -261,11 +262,11 @@ function CourseMaterial({
                 disableGutters
               >
                 <TimerOutlinedIcon color="primary" />
-                <Typography color="primary" variant="body1">8m, 45s</Typography>
+                <Typography color="primary" variant="body1">
+                  8m, 45s
+                </Typography>
               </Container>
-              <Box
-                className={styles.materialReactions}
-              >
+              <Box className={styles.materialReactions}>
                 {/* Lo siguiente lo dejo con estilos inline porque de igual forma se va a tener que cambiar */}
                 <Container
                   sx={{
@@ -278,6 +279,7 @@ function CourseMaterial({
                 >
                   <ModeCommentOutlinedIcon />
                   <Typography variant="body1"> {materialData.total_comments} </Typography>
+
                 </Container>
                 <Container
                   sx={{
@@ -291,8 +293,10 @@ function CourseMaterial({
                     likeMaterial(material.id);
                   }}
                 >
+
                   {reaction == true ? <ThumbUpIcon color="secondary" /> : <ThumbUpOutlinedIcon color="secondary" />}
                   <Typography variant="body1" color="secondary"> {materialData.likes} </Typography>
+
                 </Container>
                 <Container
                   sx={{
