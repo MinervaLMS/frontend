@@ -50,3 +50,13 @@ export interface API_MaterialObject {
   total_comments: number,
   module_id: number
 }
+
+export interface API_CommentObject {
+  id: number,
+  content: string,
+  fixed: number,
+  post_date: string,
+  user_name: string,
+  parent_comment_id: number,
+  replies: Array<API_CommentObject>,
+}
