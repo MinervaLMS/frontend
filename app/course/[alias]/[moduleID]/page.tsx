@@ -54,7 +54,7 @@ function Modules({ params }: { params: { alias: string , moduleID: number} }) {
       };
 
       let response = await fetch(
-        `${API_ENDPOINTS.COURSE}${params.alias}`,
+        `${API_ENDPOINTS.COURSE}${params.alias}/`,
         config
       );
       handleAlertOpen(response.status);

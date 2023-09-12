@@ -47,7 +47,7 @@ function CourseHome({ params }: { params: { alias: string } }) {
     (state) => state.persistedReducer.userLoginState.tokens
   );
 
-  const handleFetch = async () => {
+  const handleFetch = async () => {  
     try {
       let config = {
         method: "GET",
@@ -57,7 +57,7 @@ function CourseHome({ params }: { params: { alias: string } }) {
       };
 
       let response = await fetch(
-        `${API_ENDPOINTS.COURSE}${params.alias}`,
+        `${API_ENDPOINTS.COURSE}${params.alias}/`,
         config
       );
       handleAlertOpen(response.status);
