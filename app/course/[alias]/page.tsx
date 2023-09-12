@@ -4,21 +4,21 @@ import React, { useState, useEffect } from "react";
 
 // Import MaterialUI Components
 import Box from "@mui/material/Box";
-import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
 
 // Import own components
 import CircularSpinner from "@/components/common/CircularSpinner";
 import CustomSnackbar from "@/components/common/CustomSnackbar";
-import CourseAppBar from "@/components/layout/CourseAppBar";
-import { CourseDrawer, DrawerHeader } from "@/components/layout/CourseDrawer";
 
 // Import styles
-import { styled, useTheme } from "@mui/material/styles";
 import styles from "@/styles/Course.module.css";
 
 // Import constants
-import { DRAWER_WIDTH, AUTOHIDE_ALERT_DURATION } from "@/config/constants";
+import { AUTOHIDE_ALERT_DURATION } from "@/config/constants";
+
+// Import icons and images
+import { AccountCircle } from "@mui/icons-material";
+import Image from "next/image";
 
 // Import redux and router
 import { useAppSelector } from "@/redux/hook";
@@ -27,31 +27,9 @@ import { useRouter } from "next/navigation";
 // Import API
 import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
 import { API_CourseObject } from "@/config/interfaces";
-import { AccountCircle } from "@mui/icons-material";
-import Image from "next/image";
-
-// This functional component is the index page for the /course rute.
-// It contains the CourseAppBar and CourseDrawerList components.
-
-const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
-  open?: boolean;
-}>(({ theme, open }) => ({
-  flexGrow: 1,
-  transition: theme.transitions.create("margin", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  marginLeft: `-${DRAWER_WIDTH}px`,
-  ...(open && {
-    transition: theme.transitions.create("margin", {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginLeft: 0,
-  }),
-}));
 
 function CourseHome({ params }: { params: { alias: string } }) {
+
   // States related to the alert component
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
@@ -61,32 +39,13 @@ function CourseHome({ params }: { params: { alias: string } }) {
   const [error, setError] = useState(true);
   const [courseData, setCourseData] = useState<API_CourseObject>();
 
-  // For routing when user is not login of the course is not found
+  // For routing when user the course fetching fails
   const router = useRouter();
 
   // Redux states:
-  const isUserLogin = useAppSelector(
-    (state) => state.persistedReducer.userLoginState.login
-  );
-
   const userTokens = useAppSelector(
     (state) => state.persistedReducer.userLoginState.tokens
   );
-
-  const userName = useAppSelector(
-    (state) => state.persistedReducer.userLoginState.first_name
-  );
-
-  const drawerOpen = useAppSelector(
-    (state) => state.persistedReducer.drawerState.open
-  );
-
-  const selectedModule = useAppSelector(
-    (state) => state.persistedReducer.drawerState.selectedModule
-  );
-
-  // For using the theme predefined styles
-  const theme = useTheme();
 
   const handleFetch = async () => {
     try {
@@ -112,19 +71,11 @@ function CourseHome({ params }: { params: { alias: string } }) {
       setAlertOpen(true);
       console.log(error);
     }
+    setIsLoading(false);
   };
 
   useEffect(() => {
-    if (!isUserLogin) {
-      setAlertConfig({
-        message: "Para acceder al curso debes iniciar sesión.",
-        severity: "error",
-      });
-      setAlertOpen(true);
-    } else {
-      handleFetch();
-    }
-    setIsLoading(false);
+    handleFetch();
   }, []);
 
   // Event handlers
@@ -156,61 +107,52 @@ function CourseHome({ params }: { params: { alias: string } }) {
     return <CircularSpinner openBackdrop={isLoading} />;
   }
 
-  if (isUserLogin && !error) {
-    // Render the principal container for the course page.
+  if (!error) {
     return (
-      <Box className={styles.course}>
-        <CssBaseline />
-        <CourseAppBar userName={userName} />
-        <CourseDrawer courseAlias={params.alias} />
-        <Main open={drawerOpen}>
-          <DrawerHeader />
-          <Box component="section" className={styles.courseHomeContainer}>
-            <Box component="section" className={styles.courseHomeSection}>
-              <Box component="div">
-                <Image
-                  src="/assets/images/course-image.png"
-                  alt="Course image"
-                  width={800}
-                  height={400}
-                  priority
-                />
-              </Box>
-              <Box component="div" paddingTop={2}>
-                <Typography component="h1" variant="h4">
-                  {courseData?.name}
-                </Typography>
-                <Typography component="p">{courseData?.description}</Typography>
-              </Box>
-            </Box>
-
-            <Box component="section" className={styles.courseHomeSection}>
-              <Box component="div" className={styles.courseDetailsCard}>
-                <Typography component="h2" variant="h5">
-                  Detalles
-                </Typography>
-                <Box component="div" className={styles.courseOwnerInfo}>
-                  <Typography component='p'>
-                    Universidad
-                  </Typography>
-                  <Box component="div" display='flex' alignItems='center'>
-                    <AccountCircle sx={{paddingRight: 1}} />
-                    <Box component="div">
-                      <Typography component="p">Profesor.Nombre</Typography>
-                      <Typography component="p">Instructor</Typography>
-                    </Box>
-                  </Box>
-                </Box>
-                <Typography component="p">
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit. Esse
-                  et nesciunt dicta saepe at vel! Nesciunt sint facere quos
-                  ducimus laudantium, ratione exercitationem praesentium ad
-                  odio, suscipit non consectetur ut!
-                </Typography>
-              </Box>
-            </Box>
+      <Box component="section" className={styles.courseHomeContainer}>
+        <Box component="section" className={styles.courseHomeSection}>
+          <Box component="div">
+            <Image
+              src="/assets/images/course-image.png"
+              alt="Course image"
+              width={800}
+              height={400}
+              priority
+            />
           </Box>
-        </Main>
+          <Box component="div" paddingTop={2}>
+            <Typography component="h1" variant="h4">
+              {courseData?.name}
+            </Typography>
+            <Typography component="p">{courseData?.description}</Typography>
+          </Box>
+        </Box>
+
+        <Box component="section" className={styles.courseHomeSection}>
+          <Box component="div" className={styles.courseDetailsCard}>
+            <Typography component="h2" variant="h5">
+              Detalles
+            </Typography>
+            <Box component="div" className={styles.courseOwnerInfo}>
+              <Typography component='p'>
+                Universidad
+              </Typography>
+              <Box component="div" display='flex' alignItems='center'>
+                <AccountCircle sx={{paddingRight: 1}} />
+                <Box component="div">
+                  <Typography component="p">Profesor.Nombre</Typography>
+                  <Typography component="p">Instructor</Typography>
+                </Box>
+              </Box>
+            </Box>
+            <Typography component="p">
+              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Esse
+              et nesciunt dicta saepe at vel! Nesciunt sint facere quos
+              ducimus laudantium, ratione exercitationem praesentium ad
+              odio, suscipit non consectetur ut!
+            </Typography>
+          </Box>
+        </Box>
       </Box>
     );
   } else {

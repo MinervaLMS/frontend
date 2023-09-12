@@ -4,21 +4,17 @@ import React, { useState, useEffect } from "react";
 
 // Import MaterialUI Components
 import Box from "@mui/material/Box";
-import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
 
 // Import own components
 import CircularSpinner from "@/components/common/CircularSpinner";
 import CustomSnackbar from "@/components/common/CustomSnackbar";
-import CourseAppBar from "@/components/layout/CourseAppBar";
-import { CourseDrawer, DrawerHeader } from "@/components/layout/CourseDrawer";
 
 // Import styles
-import { styled } from "@mui/material/styles";
 import styles from "@/styles/Course.module.css";
 
 // Import constants
-import { DRAWER_WIDTH, AUTOHIDE_ALERT_DURATION } from "@/config/constants";
+import { AUTOHIDE_ALERT_DURATION } from "@/config/constants";
 
 // Import redux and router
 import { useAppSelector } from "@/redux/hook";
@@ -32,24 +28,6 @@ import VideoMaterial from "@/components/materials/VideoMaterial";
 import MarkDownMaterial from "@/components/materials/MarkDownMaterial";
 import ExerciseMaterial from "@/components/materials/ExerciseMaterial";
 import { Link } from "@mui/material";
-
-const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
-  open?: boolean;
-}>(({ theme, open }) => ({
-  flexGrow: 1,
-  transition: theme.transitions.create("margin", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  marginLeft: `-${DRAWER_WIDTH}px`,
-  ...(open && {
-    transition: theme.transitions.create("margin", {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginLeft: 0,
-  }),
-}));
 
 const views: any = {
   PDF: PdfMaterial,
@@ -70,7 +48,7 @@ const initialMaterial: API_MaterialObject = {
     total_comments: 0,
 };
 
-function Material() {
+function Materials() {
   // States related to the alert component
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
@@ -86,24 +64,8 @@ function Material() {
   console.log(alias, moduleID, materialId);
 
   // Redux states:
-  const isUserLogged = useAppSelector(
-    (state) => state.persistedReducer.userLoginState.login
-  );
-
   const userTokens = useAppSelector(
     (state) => state.persistedReducer.userLoginState.tokens
-  );
-
-  const userName = useAppSelector(
-    (state) => state.persistedReducer.userLoginState.first_name
-  );
-
-  const drawerOpen = useAppSelector(
-    (state) => state.persistedReducer.drawerState.open
-  );
-
-  const selectedModule = useAppSelector(
-    (state) => state.persistedReducer.drawerState.selectedModule
   );
 
   useEffect(() => {
@@ -158,7 +120,7 @@ function Material() {
   };
 
   const handleAlertClose = () => {
-    router.push("/");
+    router.push(`/course/${alias}/`);
   };
 
   const CurrentView = views[material.material_type];
@@ -167,31 +129,23 @@ function Material() {
     return <CircularSpinner openBackdrop={isLoading} />;
   }
 
-  if (isUserLogged && !error) {
+  if (!error) {
     // Render the principal container for the course page.
     return (
-      <Box className={styles.course}>
-        <CssBaseline />
-        <CourseAppBar userName={userName} />
-        <CourseDrawer courseAlias={alias.toString()} />
-        <Main open={drawerOpen}>
-          <DrawerHeader />
-          <Box component="section" style={{ height: "calc(100vh - 130px)" }}>
-            <Link
-              onClick={() => router.push(`/course/${alias}/${moduleID}`)}
-              sx={{ cursor: "pointer" }}
-              underline="hover"
-              color={""}
-              variant="body1"
-            >
-              ← Volver
-            </Link>
-            <Typography component="h1" variant="h4">
-              {material?.name}
-            </Typography>
-            <CurrentView />
-          </Box>
-        </Main>
+      <Box component="section" style={{ height: "calc(100vh - 130px)" }}>
+        <Link
+          onClick={() => router.push(`/course/${alias}/${moduleID}`)}
+          sx={{ cursor: "pointer" }}
+          underline="hover"
+          color={""}
+          variant="body1"
+        >
+          ← Volver
+        </Link>
+        <Typography component="h1" variant="h4">
+          {material?.name}
+        </Typography>
+        <CurrentView />
       </Box>
     );
   } else {
@@ -209,4 +163,4 @@ function Material() {
   }
 }
 
-export default Material;
+export default Materials;
