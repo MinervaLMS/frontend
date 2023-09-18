@@ -5,10 +5,16 @@ import React, { useState, useEffect } from "react";
 // Import MaterialUI Components
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { Link } from "@mui/material";
 
 // Import own components
 import CircularSpinner from "@/components/common/CircularSpinner";
 import CustomSnackbar from "@/components/common/CustomSnackbar";
+import PdfMaterial from "@/components/materials/PdfMaterial";
+import VideoMaterial from "@/components/materials/VideoMaterial";
+import MarkDownMaterial from "@/components/materials/MarkDownMaterial";
+import ExerciseMaterial from "@/components/materials/ExerciseMaterial";
+import CommentSection from "@/components/materials/CommentSection";
 
 // Import styles
 import styles from "@/styles/Course.module.css";
@@ -21,14 +27,9 @@ import { useAppSelector } from "@/redux/hook";
 import { useRouter, useParams } from "next/navigation";
 
 // Import API
-import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
+import useCourseMaterial from "@/hooks/fetching/useCourseMaterial";
+import { API_STATUS_CODE } from "@/config/api-connections";
 import { API_MaterialObject } from "@/config/interfaces";
-import PdfMaterial from "@/components/materials/PdfMaterial";
-import VideoMaterial from "@/components/materials/VideoMaterial";
-import MarkDownMaterial from "@/components/materials/MarkDownMaterial";
-import ExerciseMaterial from "@/components/materials/ExerciseMaterial";
-import CommentSection from "@/components/materials/CommentSection";
-import { Link } from "@mui/material";
 
 const views: any = {
   PDF: PdfMaterial,
@@ -50,109 +51,50 @@ const initialMaterial: API_MaterialObject = {
 };
 
 function Materials() {
-  // States related to the alert component
-  const [alertOpen, setAlertOpen] = useState(false);
-  const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
-
-  // States related to the API Fetch
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(true);
-  const [material, setMaterial] = useState<API_MaterialObject>(initialMaterial);
-
-  // For routing when user is not login or the material is not found
-  const router = useRouter();
-  const { alias, moduleID, materialId } = useParams();
-  console.log(alias, moduleID, materialId);
 
   // Redux states:
   const userTokens = useAppSelector(
     (state) => state.persistedReducer.userLoginState.tokens
   );
 
-  useEffect(() => {
-    setIsLoading(true);
-    handleFetch();
-  }, []);
+  // States related to the alert component
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
 
-  // Fetch function to obtain the data of the material
-  const handleFetch = async () => {
-    try {
-      let config = {
-        method: "GET",
-        headers: {
-          Authorization: "Bearer " + userTokens.access,
-        },
-      };
+  // States related to the API Fetch
+  const { alias, moduleID, materialID } = useParams();
+  const { materialData, isLoading, error } = useCourseMaterial(materialID, userTokens.access)
+  console.log(alias, moduleID, materialID);
 
-      let apiResponse = await fetch(
-        `${API_ENDPOINTS.MATERIAL}${materialId}/`,
-        config
-      );
-
-      handleAlertOpen(apiResponse.status);
-      let dataMaterial = await apiResponse.json();
-      console.log(dataMaterial);
-
-      if (dataMaterial.message) {
-        setAlertConfig({
-          message: dataMaterial.message,
-          severity: "error",
-        });
-        setAlertOpen(true);
-      } else {
-        setMaterial(dataMaterial);
-      }
-    } catch (error) {
-      setAlertConfig({
-        message:
-          "No hay información de este material o hubo un error. Intentalo de nuevo más tarde",
-        severity: "error",
-      });
-      setAlertOpen(true);
-      console.log(error);
-    }
-    setIsLoading(false);
-  };
-
+  // For routing when user is not login or the material is not found
+  const router = useRouter();
+  
+  // Event handlers
   const handleAlertOpen = (status: number) => {
-    if (status === API_STATUS_CODE.SUCCESS) {
-      setError(false);
-    }
+    setAlertConfig({
+      message:
+        "No hay información de este material o hubo un error. Intentalo de nuevo más tarde",
+      severity: "error",
+    });
+    setAlertOpen(true);
+    console.log(error);
   };
 
   const handleAlertClose = () => {
     router.push(`/course/${alias}/`);
   };
 
-  const CurrentView = views[material.material_type];
+  useEffect(() => {
+    if (error) {
+      handleAlertOpen(Number(error.message));
+    };
+  }, [error]);
 
   if (isLoading) {
     return <CircularSpinner openBackdrop={isLoading} />;
   }
 
-  if (!error) {
-    // Render the principal container for the course page.
-    return (
-      <Box component="section" style={{ height: "calc(100vh - 130px)" }}>
-        <Link
-          onClick={() => router.push(`/course/${alias}/${moduleID}`)}
-          sx={{ cursor: "pointer" }}
-          underline="hover"
-          color={""}
-          variant="body1"
-        >
-          ← Volver
-        </Link>
-        <Typography component="h1" variant="h4">
-          {material?.name}
-        </Typography>
-        <CurrentView />
-        <CommentSection
-          material={material}
-        />
-      </Box>
-    );
-  } else {
+  if (error) {
     return (
       <CustomSnackbar
         message={alertConfig.message}
@@ -165,6 +107,30 @@ function Materials() {
       />
     );
   }
+
+  const CurrentView = views[materialData.material_type];
+
+  // Render the principal container for the course page.
+  return (
+    <Box component="section" style={{ height: "calc(100vh - 130px)" }}>
+      <Link
+        onClick={() => router.push(`/course/${alias}/${moduleID}`)}
+        sx={{ cursor: "pointer" }}
+        underline="hover"
+        color={""}
+        variant="body1"
+      >
+        ← Volver
+      </Link>
+      <Typography component="h1" variant="h4">
+        {materialData?.name}
+      </Typography>
+      <CurrentView />
+      <CommentSection
+        material={materialData}
+      />
+    </Box>
+  );
 }
 
 export default Materials;

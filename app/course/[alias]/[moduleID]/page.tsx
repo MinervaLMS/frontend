@@ -22,63 +22,39 @@ import { useAppSelector } from "@/redux/hook";
 import { useRouter } from "next/navigation";
 
 // Import API
-import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
-import { API_CourseObject } from "@/config/interfaces";
+import useCourse from "@/hooks/fetching/useCourse";
+import useCourseModule from "@/hooks/fetching/useCourseModule";
+import useMaterialList from "@/hooks/fetching/useMaterialList";
+import { API_STATUS_CODE } from "@/config/api-connections";
 
 function Modules({ params }: { params: { alias: string , moduleID: number} }) {
-
-  // States related to the alert component
-  const [alertOpen, setAlertOpen] = useState(false);
-  const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
-
-  // States related to the API Fetch
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(true);
-  const [courseData, setCourseData] = useState<API_CourseObject>();
-
-  // For routing when user is not login of the course is not found
-  const router = useRouter();
 
   // Redux states:
   const userTokens = useAppSelector(
     (state) => state.persistedReducer.userLoginState.tokens
   );
 
-  const handleFetch = async () => {
-    try {
-      let config = {
-        method: "GET",
-        headers: {
-          Authorization: "Bearer " + userTokens.access,
-        },
-      };
+  // States related to the alert component
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
 
-      let response = await fetch(
-        `${API_ENDPOINTS.COURSE}${params.alias}/`,
-        config
-      );
-      handleAlertOpen(response.status);
-      let data = await response.json();
-      setCourseData(data);
-    } catch (error) {
+  // States related to the API Fetch
+  const { courseData, isLoading, error } = useCourse(params.alias, userTokens.access)
+  useCourseModule(params.moduleID, userTokens.access)
+  useMaterialList(params.moduleID, userTokens.access)
+
+  // For routing when user is not login of the course is not found
+  const router = useRouter();
+
+  // Event handlers
+  const handleAlertOpen = (status: number) => {
+    if (status === API_STATUS_CODE.BAD_REQUEST) {
       setAlertConfig({
-        message: "Hubo un error. Intentalo de nuevo más tarde",
+        message: "Hubo un error. Intentalo de nuevo más tarde.",
         severity: "error",
       });
       setAlertOpen(true);
-      console.log(error);
-    }
-    setIsLoading(false);
-  };
-
-  useEffect(() => {
-    handleFetch();
-  }, []);
-
-  // Event handlers
-
-  const handleAlertOpen = (status: number) => {
-    if (status === API_STATUS_CODE.NOT_FOUND) {
+    } else if (status === API_STATUS_CODE.NOT_FOUND) {
       setAlertConfig({
         message: "Curso no encontrado.",
         severity: "error",
@@ -91,8 +67,6 @@ function Modules({ params }: { params: { alias: string , moduleID: number} }) {
         severity: "error",
       });
       setAlertOpen(true);
-    } else if (status === API_STATUS_CODE.SUCCESS) {
-      setError(false);
     }
   };
 
@@ -100,21 +74,17 @@ function Modules({ params }: { params: { alias: string , moduleID: number} }) {
     router.push(`/course/${params.alias}/`);
   };
 
+  useEffect(() => {
+    if (error) {
+      handleAlertOpen(Number(error.message));
+    };
+  }, [error]);
+
   if (isLoading) {
     return <CircularSpinner openBackdrop={isLoading} />;
   }
 
-  if (!error) {
-    // Render the principal container for the course page.
-    return (
-      <Box component="section">
-        <Typography component="h1" variant="h4">
-          {courseData?.name}
-        </Typography>
-        <CourseModule moduleID={params.moduleID} accessToken={userTokens.access} />
-      </Box>
-    );
-  } else {
+  if (error) {
     return (
       <CustomSnackbar
         message={alertConfig.message}
@@ -127,6 +97,16 @@ function Modules({ params }: { params: { alias: string , moduleID: number} }) {
       />
     );
   }
+
+  // Render the principal container for the course page.
+  return (
+    <Box component="section">
+      <Typography component="h1" variant="h4">
+        {courseData?.name}
+      </Typography>
+      <CourseModule moduleID={params.moduleID} accessToken={userTokens.access} />
+    </Box>
+  );
 }
 
 export default Modules;

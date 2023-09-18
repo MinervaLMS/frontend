@@ -2,6 +2,7 @@ import React, { useState, useEffect, memo } from "react";
 
 // Import MaterialUI components
 import Typography from "@mui/material/Typography";
+import { Box } from "@mui/material";
 
 // Import own components
 import CircularSpinner from "@/components/common/CircularSpinner";
@@ -15,9 +16,8 @@ import styles from "@/styles/CourseModule.module.css";
 import { AUTOHIDE_ALERT_DURATION } from "@/config/constants";
 
 // Import API
-import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
-import { API_ModuleObject } from "@/config/interfaces";
-import { Box } from "@mui/material";
+import useCourseModule from "@/hooks/fetching/useCourseModule";
+import { API_STATUS_CODE } from "@/config/api-connections";
 
 // This interface defines the types of the props object.
 interface CourseModuleProps {
@@ -31,51 +31,16 @@ const CourseModule = memo(({ moduleID, accessToken }: CourseModuleProps) => {
   const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
 
   // States related to the API Fetch
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(true);
-  const [moduleData, setModuleData] = useState<API_ModuleObject>();
-
-  // Fetch function to obtain the data of the module
-  const handleFetch = async () => {
-    try {
-      let config = {
-        method: "GET",
-        headers: {
-          Authorization: "Bearer " + accessToken,
-        },
-      };
-
-      let responseModule = await fetch(
-        `${API_ENDPOINTS.MODULE}${moduleID}/`,
-        config
-      );
-      console.log(responseModule);
-      handleAlertOpen(responseModule.status);
-      let dataModule = await responseModule.json();
-      setModuleData(dataModule);
-    } catch (error) {
-      setAlertConfig({
-        message:
-          "No hay materiales en este módulo o hubo un error. Intentalo de nuevo más tarde",
-        severity: "error",
-      });
-      setAlertOpen(true);
-      console.log(error);
-    }
-    setIsLoading(false);
-  };
-
-  useEffect(() => {
-    setIsLoading(true);
-    handleFetch();
-  }, [moduleID, accessToken]);
+  const { moduleData, isLoading, error } = useCourseModule(moduleID, accessToken)
 
   // Event handlers
-
   const handleAlertOpen = (status: number) => {
-    if (status === API_STATUS_CODE.SUCCESS) {
-      setError(false);
-    }
+    setAlertConfig({
+      message:
+        "No hay materiales en este módulo o hubo un error. Intentalo de nuevo más tarde",
+      severity: "error",
+    });
+    setAlertOpen(true);
   };
 
   const handleAlertClose = (
@@ -87,6 +52,12 @@ const CourseModule = memo(({ moduleID, accessToken }: CourseModuleProps) => {
     }
     setAlertOpen(false);
   };
+  
+  useEffect(() => {
+    if (error) {
+      handleAlertOpen(Number(error.message));
+    };
+  }, [error]);
 
   if (isLoading) {
     return <CircularSpinner openBackdrop={isLoading} />;

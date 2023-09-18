@@ -24,7 +24,8 @@ import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import { AUTOHIDE_ALERT_DURATION, COURSE_OPTIONS } from "@/config/constants";
 
 // Import API
-import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
+import useModulesList from "@/hooks/fetching/useModulesList";
+import { API_STATUS_CODE } from "@/config/api-connections";
 import { API_ModuleObject } from "@/config/interfaces";
 
 // This interface defines the types of the props object.
@@ -46,49 +47,17 @@ function CourseDrawerList({
   const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
 
   // States related to the API Fetch
-  const [isLoading, setIsLoading] = useState(true);
-  const [modulesList, setModulesList] = useState<Array<API_ModuleObject>>([]);
+  const { modulesList, isLoading, error } = useModulesList(courseAlias, accessToken)
 
-  // Fetch function
-  const handleFetch = async () => {
-    try {
-      let config = {
-        method: "GET",
-        headers: {
-          Authorization: "Bearer " + accessToken,
-        },
-      };
-
-      let response = await fetch(
-        `${API_ENDPOINTS.COURSE}${courseAlias}${API_ENDPOINTS.MODULES}`,
-        config
-      );
-      handleAlertOpen(response.status);
-      const data = await response.json()
-      // Order the list of modules according to their order property.
-      data.sort((a: API_ModuleObject, b: API_ModuleObject) =>
-        a.order > b.order ? 1 : -1
-      );
-      setModulesList(data);
-    } catch (error) {
+  // Event handlers
+  const handleAlertOpen = (status: number) => {
+    if (status === API_STATUS_CODE.BAD_REQUEST) {
       setAlertConfig({
-        message:
-          "No hay módulos en este curso o hubo un error. Inténtalo de nuevo más tarde",
+        message: "Hubo un error. Intentalo de nuevo más tarde.",
         severity: "error",
       });
       setAlertOpen(true);
-    }
-    setIsLoading(false);
-  };
-
-  useEffect(() => {
-    handleFetch();
-  }, [accessToken]);
-
-  // Event handlers
-
-  const handleAlertOpen = (status: number) => {
-    if (status === API_STATUS_CODE.NOT_FOUND) {
+    } else if (status === API_STATUS_CODE.NOT_FOUND) {
       setAlertConfig({
         message: "No hay módulos en este curso.",
         severity: "error",
@@ -107,13 +76,18 @@ function CourseDrawerList({
     setAlertOpen(false);
   };
 
+  useEffect(() => {
+    if (error) {
+      handleAlertOpen(Number(error.message));
+    };
+  }, [error]);
+
   if (isLoading) {
     return <CircularSpinner openBackdrop={isLoading} />;
   }
 
-  return (
-    <>
-      <CustomSnackbar
+  if (error) {
+    <CustomSnackbar
         message={alertConfig.message}
         severity={alertConfig.severity}
         vertical="top"
@@ -122,27 +96,29 @@ function CourseDrawerList({
         open={alertOpen}
         onClose={handleAlertClose}
       />
-      <List>
-        {modulesList.map((module: API_ModuleObject) => (
-          <ListItem key={module.id} disablePadding>
-            <ListItemButton
-              onClick={() => changeSelectedModule(module.id)}
-              selected={moduleID === module.id ? true : false}
+  }
+
+  return (
+    <List>
+      {modulesList.map((module: API_ModuleObject) => (
+        <ListItem key={module.id} disablePadding>
+          <ListItemButton
+            onClick={() => changeSelectedModule(module.id)}
+            selected={moduleID === module.id ? true : false}
+          >
+            <RadioButtonUncheckedIcon color="secondary" />
+            <ListItemText
+              className={styles.moduleListItemText}
+              disableTypography
             >
-              <RadioButtonUncheckedIcon color="secondary" />
-              <ListItemText
-                className={styles.moduleListItemText}
-                disableTypography
-              >
-                <Typography variant="body2">
-                  {(module.order + 1).toString() + ". " + module.name}
-                </Typography>
-              </ListItemText>
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-    </>
+              <Typography variant="body2">
+                {(module.order + 1).toString() + ". " + module.name}
+              </Typography>
+            </ListItemText>
+          </ListItemButton>
+        </ListItem>
+      ))}
+    </List>
   );
 }
 

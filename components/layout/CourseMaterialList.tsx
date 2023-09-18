@@ -16,7 +16,8 @@ import CourseMaterial from "@/components/features/CourseMaterial";
 import { AUTOHIDE_ALERT_DURATION } from "@/config/constants";
 
 // Import API
-import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
+import useMaterialList from '@/hooks/fetching/useMaterialList';
+import { API_STATUS_CODE } from "@/config/api-connections";
 import { API_MaterialObject } from "@/config/interfaces";
 
 // Import router
@@ -39,56 +40,24 @@ function CourseMaterialList({
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
 
-  // States related to the API Fetch
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(true);
-  const [materialsList, setMaterialsList] = useState<Array<API_MaterialObject>>([]);
+  // API Fetch
+  const { materialsList, isLoading, error } = useMaterialList(moduleID, accessToken)
 
-  // Fetch function to obtain the materials of the module
-  const handleFetch = async () => {
-    try {
-      let config = {
-        method: "GET",
-        headers: {
-          Authorization: "Bearer " + accessToken,
-        },
-      };
-
-      let response = await fetch(`${API_ENDPOINTS.MODULE}${moduleID}${API_ENDPOINTS.MATERIALS}`, config);
-      handleAlertOpen(response.status);
-      let data = await response.json();
-      // Order the list of materials according to their order property.
-      data.sort((a: API_MaterialObject, b: API_MaterialObject) => (a.order > b.order) ? 1 : -1);
-      console.log(data);
-      setMaterialsList(data);
-    } catch (error) {
+  // Event handlers
+  const handleAlertOpen = (status: number) => {
+    if (status === API_STATUS_CODE.BAD_REQUEST) {
       setAlertConfig({
         message: "No hay materiales en este módulo o hubo un error. Inténtalo de nuevo más tarde",
         severity: "error",
       });
       setAlertOpen(true);
-      console.log(error);
-    }
-    setIsLoading(false);
-  }
-
-  useEffect(() => {
-    setIsLoading(true);
-    handleFetch();
-  }, [moduleID, accessToken]);
-
-  // Event handlers
-
-  const handleAlertOpen = (status: number) => {
-    if (status === API_STATUS_CODE.NOT_FOUND) {
+    } else if (status === API_STATUS_CODE.NOT_FOUND) {
       setAlertConfig({
         message:
           "Materiales no encontrados.",
         severity: "error",
       });
       setAlertOpen(true);
-    } else if (status === API_STATUS_CODE.SUCCESS) {
-      setError(false);
     }
   };
 
@@ -107,6 +76,12 @@ function CourseMaterialList({
     return undefined
   }
 
+  useEffect(() => {
+    if (error) {
+      handleAlertOpen(Number(error.message));
+    };
+  }, [error]);
+
   if (isLoading) {
     return(
       <CircularSpinner openBackdrop={isLoading} />
@@ -116,14 +91,14 @@ function CourseMaterialList({
   if (error) {
     return(
       <CustomSnackbar
-        message={alertConfig.message}
-        severity={alertConfig.severity}
-        vertical="top"
-        horizontal="center"
-        autoHideDuration={AUTOHIDE_ALERT_DURATION}
-        open={alertOpen}
-        onClose={handleAlertClose}
-      />
+          message={alertConfig.message}
+          severity={alertConfig.severity}
+          vertical="top"
+          horizontal="center"
+          autoHideDuration={AUTOHIDE_ALERT_DURATION}
+          open={alertOpen}
+          onClose={handleAlertClose}
+        />
     );
   }
 
