@@ -41,7 +41,7 @@ function CourseMaterialList({
   const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
 
   // API Fetch
-  const { materialsList, isLoading, error } = useMaterialList(moduleID, accessToken)
+  const { data: materialsList, error } = useMaterialList(moduleID, accessToken)
 
   // Event handlers
   const handleAlertOpen = (status: number) => {
@@ -81,12 +81,6 @@ function CourseMaterialList({
       handleAlertOpen(Number(error.message));
     };
   }, [error]);
-
-  if (isLoading) {
-    return(
-      <CircularSpinner openBackdrop={isLoading} />
-    );
-  }
 
   if (error) {
     return(

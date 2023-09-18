@@ -31,9 +31,9 @@ function useModulesList (courseAlias: string, userAccessToken: string) {
   const { data, error, isLoading } = useSWR(`${API_ENDPOINTS.COURSE}${courseAlias}${API_ENDPOINTS.MODULES}`, fetcher)
 
   return {
-      modulesList: data,
+      data,
       isLoading,
-      error: error
+      error
   }
 }
 

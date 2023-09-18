@@ -23,9 +23,9 @@ function useCourseMaterial (materialID: string | string[], userAccessToken: stri
   const { data, error, isLoading } = useSWR(`${API_ENDPOINTS.MATERIAL}${materialID}/`, fetcher)
 
   return {
-      materialData: data,
+      data,
       isLoading,
-      error: error
+      error
   }
 }
 

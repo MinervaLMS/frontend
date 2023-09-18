@@ -47,7 +47,7 @@ function CourseDrawerList({
   const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
 
   // States related to the API Fetch
-  const { modulesList, isLoading, error } = useModulesList(courseAlias, accessToken)
+  const { data: modulesList, error } = useModulesList(courseAlias, accessToken)
 
   // Event handlers
   const handleAlertOpen = (status: number) => {
@@ -81,10 +81,6 @@ function CourseDrawerList({
       handleAlertOpen(Number(error.message));
     };
   }, [error]);
-
-  if (isLoading) {
-    return <CircularSpinner openBackdrop={isLoading} />;
-  }
 
   if (error) {
     <CustomSnackbar

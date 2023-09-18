@@ -31,7 +31,7 @@ const CourseModule = memo(({ moduleID, accessToken }: CourseModuleProps) => {
   const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
 
   // States related to the API Fetch
-  const { moduleData, isLoading, error } = useCourseModule(moduleID, accessToken)
+  const { data: moduleData, error } = useCourseModule(moduleID, accessToken)
 
   // Event handlers
   const handleAlertOpen = (status: number) => {
@@ -58,10 +58,6 @@ const CourseModule = memo(({ moduleID, accessToken }: CourseModuleProps) => {
       handleAlertOpen(Number(error.message));
     };
   }, [error]);
-
-  if (isLoading) {
-    return <CircularSpinner openBackdrop={isLoading} />;
-  }
 
   if (error) {
     return (

@@ -39,9 +39,9 @@ function Modules({ params }: { params: { alias: string , moduleID: number} }) {
   const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
 
   // States related to the API Fetch
-  const { courseData, isLoading, error } = useCourse(params.alias, userTokens.access)
-  useCourseModule(params.moduleID, userTokens.access)
-  useMaterialList(params.moduleID, userTokens.access)
+  const { data: courseData, isLoading: courseIsLoading, error } = useCourse(params.alias, userTokens.access)
+  const { isLoading: moduleIsLoading } = useCourseModule(params.moduleID, userTokens.access)
+  const { isLoading: materialsIsLoading } = useMaterialList(params.moduleID, userTokens.access)
 
   // For routing when user is not login of the course is not found
   const router = useRouter();
@@ -80,8 +80,8 @@ function Modules({ params }: { params: { alias: string , moduleID: number} }) {
     };
   }, [error]);
 
-  if (isLoading) {
-    return <CircularSpinner openBackdrop={isLoading} />;
+  if (courseIsLoading || moduleIsLoading || materialsIsLoading) {
+    return <CircularSpinner openBackdrop={true} />;
   }
 
   if (error) {

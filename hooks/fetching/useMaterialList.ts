@@ -29,9 +29,9 @@ function useMaterialList (moduleID: number, userAccessToken: string) {
   const { data, error, isLoading } = useSWR(`${API_ENDPOINTS.MODULE}${moduleID}${API_ENDPOINTS.MATERIALS}`, fetcher)
 
   return {
-      materialsList: data,
+      data,
       isLoading,
-      error: error
+      error
   }
 }
 

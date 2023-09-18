@@ -23,9 +23,9 @@ function useCourseModule (moduleID: number, userAccessToken: string) {
   const { data, error, isLoading } = useSWR(`${API_ENDPOINTS.MODULE}${moduleID}/`, fetcher)
 
   return {
-      moduleData: data,
+      data,
       isLoading,
-      error: error
+      error
   }
 }
 

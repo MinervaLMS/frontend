@@ -23,9 +23,9 @@ function useCourse (courseAlias: string, userAccessToken: string) {
   const { data, error, isLoading } = useSWR(`${API_ENDPOINTS.COURSE}${courseAlias}/`, fetcher)
 
   return {
-      courseData: data,
+      data,
       isLoading,
-      error: error
+      error
   }
 }
 

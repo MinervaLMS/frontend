@@ -63,7 +63,7 @@ function Materials() {
 
   // States related to the API Fetch
   const { alias, moduleID, materialID } = useParams();
-  const { materialData, isLoading, error } = useCourseMaterial(materialID, userTokens.access)
+  const { data: materialData, isLoading, error } = useCourseMaterial(materialID, userTokens.access)
   console.log(alias, moduleID, materialID);
 
   // For routing when user is not login or the material is not found

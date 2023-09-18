@@ -26,6 +26,7 @@ import { useRouter } from "next/navigation";
 
 // Import API
 import useCourse from "@/hooks/fetching/useCourse";
+import useModulesList from "@/hooks/fetching/useModulesList";
 import { API_STATUS_CODE } from "@/config/api-connections";
 
 function CourseHome({ params }: { params: { alias: string } }) {
@@ -40,7 +41,8 @@ function CourseHome({ params }: { params: { alias: string } }) {
   const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
 
   // States related to the API Fetch
-  const { courseData, isLoading, error } = useCourse(params.alias, userTokens.access)
+  const { data: courseData, isLoading: courseIsLoading, error } = useCourse(params.alias, userTokens.access)
+  const { isLoading: moduleListIsLoading, } = useModulesList(params.alias, userTokens.access)
 
   // For routing when user the course fetching fails
   const router = useRouter();
@@ -79,8 +81,8 @@ function CourseHome({ params }: { params: { alias: string } }) {
     };
   }, [error]);
 
-  if (isLoading) {
-    return <CircularSpinner openBackdrop={isLoading} />;
+  if (courseIsLoading || moduleListIsLoading) {
+    return <CircularSpinner openBackdrop={true} />;
   }
 
   if (error) {
