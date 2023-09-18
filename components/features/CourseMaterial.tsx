@@ -141,7 +141,7 @@ function CourseMaterial({
           Authorization: "Bearer " + userTokens.access,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({"material_id": material.id, "user_id": userID, "like": true}),
+        body: JSON.stringify({"material_id": material.id, "user_id": userID}),
       };
 
       let response = await fetch(
@@ -187,11 +187,11 @@ function CourseMaterial({
           Authorization: "Bearer " + userTokens.access,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({"material_id": material.id, "user_id": userID, "like": false}),
+        body: JSON.stringify({"material_id": material.id, "user_id": userID}),
       };
 
       let response = await fetch(
-        `${API_ENDPOINTS.ACCESS}update/like/`,
+        `${API_ENDPOINTS.ACCESS}update/dislike/`,
         config
       );
 

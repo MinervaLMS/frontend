@@ -27,6 +27,7 @@ import PdfMaterial from "@/components/materials/PdfMaterial";
 import VideoMaterial from "@/components/materials/VideoMaterial";
 import MarkDownMaterial from "@/components/materials/MarkDownMaterial";
 import ExerciseMaterial from "@/components/materials/ExerciseMaterial";
+import CommentSection from "@/components/materials/CommentSection";
 import { Link } from "@mui/material";
 
 const views: any = {
@@ -146,6 +147,9 @@ function Materials() {
           {material?.name}
         </Typography>
         <CurrentView />
+        <CommentSection
+          material={material}
+        />
       </Box>
     );
   } else {
