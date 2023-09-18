@@ -10,11 +10,14 @@ export const API_ENDPOINTS = {
   CONFIRM_ACCOUNT: `${API_URL}/register/confirm/`,
   CONTACT: `${API_URL}/contact/`,
   COURSE: `${API_URL}/course/`,
+  COURSES: `/courses/`,
+  USERS: `${API_URL}/users/`,
   MODULES: `/modules/`,
   MODULE: `${API_URL}/module/`,
   MATERIALS: `/materials/`,
   MATERIAL: `${API_URL}/material/`,
-  ACCESS: `${API_URL}/access/`
+  ACCESS: `${API_URL}/access/`,
+
 };
 
 export const API_STATUS_CODE = {
@@ -22,5 +25,5 @@ export const API_STATUS_CODE = {
   CREATED: 201,
   BAD_REQUEST: 400,
   UNAUTHORIZED: 401,
-  NOT_FOUND: 404
+  NOT_FOUND: 404,
 };
