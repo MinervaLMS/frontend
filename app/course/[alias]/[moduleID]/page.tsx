@@ -34,6 +34,10 @@ function Modules({ params }: { params: { alias: string , moduleID: number} }) {
     (state) => state.persistedReducer.userLoginState.tokens
   );
 
+  const userID = useAppSelector(
+    (state) => state.persistedReducer.userLoginState.id
+  );
+
   // States related to the alert component
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });

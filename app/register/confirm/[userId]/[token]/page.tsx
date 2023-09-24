@@ -1,7 +1,9 @@
 "use client";
 
 import CustomSnackbar from "@/components/common/CustomSnackbar";
-import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
+import CircularSpinner from "@/components/common/CircularSpinner";
+import { API_STATUS_CODE } from "@/config/api-connections";
+import useConfirmAccount from "@/hooks/fetching/useConfirmAccount";
 import { AUTOHIDE_ALERT_DURATION } from "@/config/constants";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,37 +22,50 @@ function AccountConfirmation({
   // States related to the loader component
   const [confirmText, setconfirmText] = useState(<></>);
 
-  useEffect(() => {
-    try {
-      let config = {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      };
+  // Loader state
+  const [openBackdrop, setOpenBackdrop] = useState(false);
 
-      fetch(
-        `${API_ENDPOINTS.CONFIRM_ACCOUNT}${params.userId}/${params.token}`,
-        config
-      ).then((response) => {
-        console.log(response);
-        handleResponse(response.status);
-      });
-    } catch (error) {
+  // States related to the API Fetch
+  const { data: confirmStatus, isLoading, error } = useConfirmAccount(params.userId, params.token)
+
+  // Event handlers
+  const handleAlertClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setAlertOpen(false);
+  };
+
+  // Loader handlers
+  const handleCloseLoader = () => {
+    setOpenBackdrop(false);
+  };
+  const handleOpenLoader = () => {
+    setOpenBackdrop(true);
+  };
+
+  useEffect(() => {
+    if (error) {
       setAlertConfig({
         message: "Hubo un error. Intentalo de nuevo más tarde",
         severity: "error",
       });
       setAlertOpen(true);
       console.log(error);
-    }
-  }, []);
+    };
+  }, [error]);
 
-  // Event handlers
+  if (isLoading) {
+    handleOpenLoader();
+  } else {
+    handleCloseLoader();
+  }
 
-  const handleResponse = (status: number) => {
-    if (status == API_STATUS_CODE.SUCCESS) {
+  if (confirmStatus) {
+    if (confirmStatus == API_STATUS_CODE.SUCCESS) {
       setconfirmText(
         <>
           <Typography component="h2" variant="h4" my={2}>
@@ -76,20 +91,11 @@ function AccountConfirmation({
         </>
       );
     }
-  };
-
-  const handleAlertClose = (
-    event?: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setAlertOpen(false);
-  };
+  }
 
   return (
     <div className={styles.mainContainer}>
+      <CircularSpinner openBackdrop={openBackdrop} />
       <CustomSnackbar
         message={alertConfig.message}
         severity={alertConfig.severity}

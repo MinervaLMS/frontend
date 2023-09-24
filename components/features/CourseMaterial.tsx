@@ -23,6 +23,7 @@ import { common } from "@mui/material/colors";
 import styles from "@/styles/CourseMaterial.module.css";
 
 // Import API
+import useMaterialAccess from "@/hooks/fetching/useMaterialAccess";
 import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
 import { API_MaterialObject } from "@/config/interfaces";
 
@@ -41,11 +42,7 @@ function CourseMaterial({
   onSelected
 }: CourseMaterialProps) {
 
-  const [materialData, setMaterialData] = useState(material);
-  const [reaction, setReaction] = useState<any>(null);
-  const [access, setAccess] = useState<any>(null);
-  const [loadingRequest, setLoadingRequest] = useState<boolean>(true);
-
+  // Redux states:
   const userTokens = useAppSelector(
     (state) => state.persistedReducer.userLoginState.tokens
   );
@@ -54,67 +51,16 @@ function CourseMaterial({
     (state) => state.persistedReducer.userLoginState.id
   );
 
-  const createAccess = async () => {
-    console.log("Creating access to material with id: " + material.id);
-    try {
-      let config = {
-        method: "POST",
-        headers: {
-          Authorization: "Bearer " + userTokens.access,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({"material_id": material.id, "user_id": userID}),
-      };
+  // States related to the API Fetch
+  const { data: accessData, isLoading: accessIsLoading } = useMaterialAccess(material.id, userID, userTokens.access)
 
-      let response = await fetch(
-        `${API_ENDPOINTS.ACCESS}create/`,
-        config
-      );
-      let data = await response.json();
-      console.log(data);
-      return data;
-    } catch (error) {
-      console.log(error);
-      return false;
-    }
-  };
-
-  const getAccess = async () => {
-    console.log("Getting access to material with id: " + material.id);
-    setLoadingRequest(true);
-    try {
-      let config = {
-        method: "GET",
-        headers: {
-          Authorization: "Bearer " + userTokens.access,
-        },
-      };
-
-      let response = await fetch(
-        `${API_ENDPOINTS.ACCESS}${material.id}/${userID}/`,
-        config
-      );
-
-      if (response.status == API_STATUS_CODE.NOT_FOUND) {
-        const access = await createAccess();
-        setLoadingRequest(false);
-        return access;
-      }
-
-      let data = await response.json();
-      setAccess(data)
-      setReaction(data.like);
-      setLoadingRequest(false);
-      return data;
-    } catch (error) {
-      console.log(error);
-      setLoadingRequest(false);
-      return false;
-    }
-  };
+  const [materialData, setMaterialData] = useState(material);
+  const [reaction, setReaction] = useState<any>(null);
+  const [access, setAccess] = useState<any>(null);
+  const [loadingRequest, setLoadingRequest] = useState<boolean>(true);
 
   const likeMaterial = async (materialId: number) => {
-    if (loadingRequest) return;
+    if (loadingRequest || accessIsLoading) return;
     console.log("Like material with id: " + materialId);
     setLoadingRequest(true);
 
@@ -160,7 +106,7 @@ function CourseMaterial({
   }
 
   const dislikeMaterial = async (materialId: number) => {
-    if (loadingRequest) return;
+    if (loadingRequest || accessIsLoading) return;
     console.log("Dislike material with id: " + materialId);
     setLoadingRequest(true);
 
@@ -205,8 +151,12 @@ function CourseMaterial({
   }
 
   useEffect(() => {
-    getAccess()
-  },[])
+    if(accessData) {
+      setAccess(accessData);
+      setReaction(accessData.like);
+      setLoadingRequest(false);
+    }
+  }, [])
 
   return (
     <Card
@@ -217,7 +167,7 @@ function CourseMaterial({
       }}
     >
 
-      <CircularSpinner openBackdrop={loadingRequest} />
+      <CircularSpinner openBackdrop={loadingRequest || accessIsLoading} />
       <CardActionArea
         onClick={onSelected}
         >

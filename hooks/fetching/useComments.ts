@@ -1,11 +1,11 @@
 import useSWR from "swr"
 import { API_ENDPOINTS } from "@/config/api-connections";
 
-function useCourseMaterial (materialID: number, userAccessToken: string) {
+function useComments (materialID: number, userAccessToken: string) {
   const config = {
     method: "GET",
     headers: {
-      Authorization: "Bearer " + userAccessToken,
+        Authorization: "Bearer " + userAccessToken,
     },
   };
 
@@ -20,7 +20,7 @@ function useCourseMaterial (materialID: number, userAccessToken: string) {
     return response.json()
   }
 
-  const { data, error, isLoading } = useSWR(`${API_ENDPOINTS.MATERIAL}${materialID}/`, fetcher)
+  const { data, error, isLoading } = useSWR(`${API_ENDPOINTS.MATERIAL}${materialID}/comments/`, fetcher)
 
   return {
       data,
@@ -29,4 +29,4 @@ function useCourseMaterial (materialID: number, userAccessToken: string) {
   }
 }
 
-export default useCourseMaterial
+export default useComments

@@ -1,11 +1,13 @@
+import React from "react";
 import useSWR from "swr"
 import { API_ENDPOINTS } from "@/config/api-connections";
 
-function useCourseMaterial (materialID: number, userAccessToken: string) {
+function useConfirmAccount (userID: string, userToken: string, ) {
   const config = {
-    method: "GET",
+    method: "POST",
     headers: {
-      Authorization: "Bearer " + userAccessToken,
+      Accept: "application/json",
+      "Content-Type": "application/json",
     },
   };
 
@@ -17,10 +19,10 @@ function useCourseMaterial (materialID: number, userAccessToken: string) {
       throw error
     }
 
-    return response.json()
+    return response.status
   }
 
-  const { data, error, isLoading } = useSWR(`${API_ENDPOINTS.MATERIAL}${materialID}/`, fetcher)
+  const { data, error, isLoading } = useSWR(`${API_ENDPOINTS.CONFIRM_ACCOUNT}${userID}/${userToken}`, fetcher)
 
   return {
       data,
@@ -29,4 +31,4 @@ function useCourseMaterial (materialID: number, userAccessToken: string) {
   }
 }
 
-export default useCourseMaterial
+export default useConfirmAccount;

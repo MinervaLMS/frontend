@@ -28,6 +28,7 @@ import { useRouter, useParams } from "next/navigation";
 
 // Import API
 import useCourseMaterial from "@/hooks/fetching/useCourseMaterial";
+import useComments from "@/hooks/fetching/useComments";
 import { API_STATUS_CODE } from "@/config/api-connections";
 import { API_MaterialObject } from "@/config/interfaces";
 
@@ -63,7 +64,8 @@ function Materials() {
 
   // States related to the API Fetch
   const { alias, moduleID, materialID } = useParams();
-  const { data: materialData, isLoading, error } = useCourseMaterial(materialID, userTokens.access)
+  const { data: materialData, isLoading: materialIsLoading, error } = useCourseMaterial(Number(materialID), userTokens.access)
+  const { isLoading: commentsIsLoading } = useComments(Number(materialID), userTokens.access)
   console.log(alias, moduleID, materialID);
 
   // For routing when user is not login or the material is not found
@@ -90,8 +92,8 @@ function Materials() {
     };
   }, [error]);
 
-  if (isLoading) {
-    return <CircularSpinner openBackdrop={isLoading} />;
+  if (materialIsLoading || commentsIsLoading) {
+    return <CircularSpinner openBackdrop={true} />;
   }
 
   if (error) {

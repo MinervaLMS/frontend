@@ -37,114 +37,157 @@ function CourseHome({ params }: { params: { alias: string } }) {
   );
 
   // States related to the alert component
-  const [alertOpen, setAlertOpen] = useState(false);
-  const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
+  const [courseAlertOpen, setCourseAlertOpen] = useState(false);
+  const [courseAlertConfig, setCourseAlertConfig] = useState({ message: "", severity: "" });
+  const [modulesAlertOpen, setModulesAlertOpen] = useState(false);
+  const [modulesAlertConfig, setModulesAlertConfig] = useState({ message: "", severity: "" });
 
   // States related to the API Fetch
-  const { data: courseData, isLoading: courseIsLoading, error } = useCourse(params.alias, userTokens.access)
-  const { isLoading: moduleListIsLoading, } = useModulesList(params.alias, userTokens.access)
+  const { data: courseData, isLoading: courseIsLoading, error: courseError } = useCourse(params.alias, userTokens.access)
+  const { isLoading: modulesIsLoading, error: modulesError } = useModulesList(params.alias, userTokens.access)
 
   // For routing when user the course fetching fails
   const router = useRouter();
 
   // Event handlers
-  const handleAlertOpen = (status: number) => {
-    if (status === API_STATUS_CODE.BAD_REQUEST) {
-      setAlertConfig({
-        message: "Hubo un error. Intentalo de nuevo más tarde.",
-        severity: "error",
-      });
-      setAlertOpen(true);
-    } else if (status === API_STATUS_CODE.NOT_FOUND) {
-      setAlertConfig({
-        message: "Curso no encontrado.",
-        severity: "error",
-      });
-      setAlertOpen(true);
-    } else if (status === API_STATUS_CODE.UNAUTHORIZED) {
-      setAlertConfig({
+  const handleCourseAlertOpen = (status: number) => {
+    if (status === API_STATUS_CODE.UNAUTHORIZED) {
+      setCourseAlertConfig({
         message:
           "La sesión es inválida o ha expirado: Vuelve a iniciar sesión.",
         severity: "error",
       });
-      setAlertOpen(true);
+      setCourseAlertOpen(true);
+    } else if (status === API_STATUS_CODE.NOT_FOUND) {
+      setCourseAlertConfig({
+        message: "Curso no encontrado.",
+        severity: "error",
+      });
+      setCourseAlertOpen(true);
+    } else {
+      setCourseAlertConfig({
+        message: "Hubo un error. Intentalo de nuevo más tarde.",
+        severity: "error",
+      });
+      setCourseAlertOpen(true);
     }
   };
 
-  const handleAlertClose = (event?: React.SyntheticEvent | Event) => {
+  const handleCourseAlertClose = (event?: React.SyntheticEvent | Event) => {
     router.push("/");
   };
 
-  useEffect(() => {
-    if (error) {
-      handleAlertOpen(Number(error.message));
-    };
-  }, [error]);
+  const handleModulesAlertOpen = (status: number) => {
+    if (status === API_STATUS_CODE.NOT_FOUND) {
+      setModulesAlertConfig({
+        message: "No hay módulos en este curso.",
+        severity: "error",
+      });
+      setModulesAlertOpen(true);
+    } else {
+      setModulesAlertConfig({
+        message: "Hubo un error al intentar acceder a los módulos. Intentalo de nuevo más tarde.",
+        severity: "error",
+      });
+      setModulesAlertOpen(true);
+    }
+  };
 
-  if (courseIsLoading || moduleListIsLoading) {
+  const handleModulesAlertClose = (
+		event?: React.SyntheticEvent | Event,
+		reason?: string
+  ) => {
+			if (reason === "clickaway") {
+			return;
+		}
+    setModulesAlertOpen(false)
+  };
+
+  useEffect(() => {
+    if (courseError) {
+      handleCourseAlertOpen(Number(courseError.message));
+    };
+
+    if (modulesError) {
+      handleModulesAlertOpen(Number(modulesError.message));
+    };
+  }, [courseError, modulesError]);
+
+  if (courseIsLoading || modulesIsLoading) {
     return <CircularSpinner openBackdrop={true} />;
   }
 
-  if (error) {
+  if (courseError) {
     return (
       <CustomSnackbar
-        message={alertConfig.message}
-        severity={alertConfig.severity}
-        vertical="top"
-        horizontal="center"
-        autoHideDuration={AUTOHIDE_ALERT_DURATION}
-        open={alertOpen}
-        onClose={handleAlertClose}
-      />
+          message={courseAlertConfig.message}
+          severity={courseAlertConfig.severity}
+          vertical="top"
+          horizontal="center"
+          autoHideDuration={AUTOHIDE_ALERT_DURATION}
+          open={courseAlertOpen}
+          onClose={handleCourseAlertClose}
+        />
     );
   }
 
   return (
-    <Box component="section" className={styles.courseHomeContainer}>
-      <Box component="section" className={styles.courseHomeSection}>
-        <Box component="div">
-          <Image
-            src="/assets/images/course-image.png"
-            alt="Course image"
-            width={800}
-            height={400}
-            priority
-          />
-        </Box>
-        <Box component="div" paddingTop={2}>
-          <Typography component="h1" variant="h4">
-            {courseData?.name}
-          </Typography>
-          <Typography component="p">{courseData?.description}</Typography>
-        </Box>
-      </Box>
-
-      <Box component="section" className={styles.courseHomeSection}>
-        <Box component="div" className={styles.courseDetailsCard}>
-          <Typography component="h2" variant="h5">
-            Detalles
-          </Typography>
-          <Box component="div" className={styles.courseOwnerInfo}>
-            <Typography component='p'>
-              Universidad
+    <>
+      <CustomSnackbar
+          message={modulesAlertConfig.message}
+          severity={modulesAlertConfig.severity}
+          vertical="top"
+          horizontal="center"
+          autoHideDuration={AUTOHIDE_ALERT_DURATION}
+          open={modulesAlertOpen}
+          onClose={handleModulesAlertClose}
+        />
+      <Box component="section" className={styles.courseHomeContainer}>
+        <Box component="section" className={styles.courseHomeSection}>
+          <Box component="div">
+            <Image
+              src="/assets/images/course-image.png"
+              alt="Course image"
+              width={800}
+              height={400}
+              priority
+            />
+          </Box>
+          <Box component="div" paddingTop={2}>
+            <Typography component="h1" variant="h4">
+              {courseData?.name}
             </Typography>
-            <Box component="div" display='flex' alignItems='center'>
-              <AccountCircle sx={{paddingRight: 1}} />
-              <Box component="div">
-                <Typography component="p">Profesor.Nombre</Typography>
-                <Typography component="p">Instructor</Typography>
+            <Typography component="p">{courseData?.description}</Typography>
+          </Box>
+        </Box>
+
+        <Box component="section" className={styles.courseHomeSection}>
+          <Box component="div" className={styles.courseDetailsCard}>
+            <Typography component="h2" variant="h5">
+              Detalles
+            </Typography>
+            <Box component="div" className={styles.courseOwnerInfo}>
+              <Typography component='p'>
+                Universidad
+              </Typography>
+              <Box component="div" display='flex' alignItems='center'>
+                <AccountCircle sx={{paddingRight: 1}} />
+                <Box component="div">
+                  <Typography component="p">Profesor.Nombre</Typography>
+                  <Typography component="p">Instructor</Typography>
+                </Box>
               </Box>
             </Box>
+            <Typography component="p">
+              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Esse
+              et nesciunt dicta saepe at vel! Nesciunt sint facere quos
+              ducimus laudantium, ratione exercitationem praesentium ad
+              odio, suscipit non consectetur ut!
+            </Typography>
           </Box>
-          <Typography component="p">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Esse
-            et nesciunt dicta saepe at vel! Nesciunt sint facere quos
-            ducimus laudantium, ratione exercitationem praesentium ad
-            odio, suscipit non consectetur ut!
-          </Typography>
         </Box>
       </Box>
-    </Box>
+    </>
   );
 }
 

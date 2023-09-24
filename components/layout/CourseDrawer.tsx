@@ -7,7 +7,7 @@ import Drawer from "@mui/material/Drawer";
 import { styled, useTheme } from "@mui/material/styles";
 
 // Import own components
-import CourseDrawerList from "./CourseModuleList";
+import CourseModulesList from "./CourseModulesList";
 
 // Import images
 import Image from "next/image";
@@ -42,7 +42,6 @@ export const CourseDrawer = ({ courseAlias, moduleID }: CourseDrawerProps) => {
   const router = useRouter();
 
   // Redux states
-
   const open = useAppSelector(
     (state) => state.persistedReducer.drawerState.open
   );
@@ -81,7 +80,7 @@ export const CourseDrawer = ({ courseAlias, moduleID }: CourseDrawerProps) => {
           priority
         />
       </DrawerHeader>
-      <CourseDrawerList
+      <CourseModulesList
         courseAlias={courseAlias}
         accessToken={userTokens.access}
         moduleID={moduleID ? moduleID : 0}
