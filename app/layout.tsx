@@ -1,21 +1,25 @@
-import Providers from "@/redux/provider";
-import type { Metadata } from "next";
+import MainAppBar from '@/components/layout/MainAppBar'
+import Providers from '@/redux/provider'
+import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: "Minerva LMS",
-  description: "Plataforma de aprendizaje en línea",
-};
+  title: 'Minerva LMS',
+  description: 'Plataforma de aprendizaje en línea'
+}
 
 export default function RootLayout({
-  children,
+  children
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
-    <html lang="es">
+    <html lang='es'>
       <body>
-        <Providers > {children} </Providers>
+        <Providers>
+          <MainAppBar />
+          {children}{' '}
+        </Providers>
       </body>
     </html>
-  );
+  )
 }

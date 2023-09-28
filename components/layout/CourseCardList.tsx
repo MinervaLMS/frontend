@@ -9,6 +9,13 @@ import {
   CardContent,
   CardMedia,
   IconButton,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   Typography
 } from '@mui/material'
 import { useRouter } from 'next/navigation'
@@ -65,65 +72,91 @@ function CourseCardList() {
 
   return (
     <>
-      <Box component='div'>
+      <Box component='div' display='flex' justifyContent='space-between'>
         <Typography component='h1' variant='h5'>
           Selecciona un curso para comenzar
         </Typography>
-        {viewMode === LIST_VIEW_MODE.LIST ? (
-          <IconButton
-            aria-label='view list'
-            onClick={() => handleChangeViewMode(LIST_VIEW_MODE.GRID)}
-          >
-            <ViewList />
-          </IconButton>
-        ) : (
+        {viewMode === LIST_VIEW_MODE.GRID ? (
           <IconButton
             aria-label='view grid'
             onClick={() => handleChangeViewMode(LIST_VIEW_MODE.LIST)}
           >
             <ViewModule />
           </IconButton>
+        ) : (
+          <IconButton
+            aria-label='view list'
+            onClick={() => handleChangeViewMode(LIST_VIEW_MODE.GRID)}
+          >
+            <ViewList />
+          </IconButton>
         )}
       </Box>
       <Box component='div'>
-        {viewMode === LIST_VIEW_MODE.LIST
-          ? courses.map((course) => (
-              <Card
-                sx={{
-                  width: '70%',
-                  height: '100%',
-                  bgcolor: '#E6E6E6'
-                }}
-              >
-                <CardActionArea
-                  onClick={() => handleGoToSelectedCourse(course.alias)}
-                >
+        {viewMode === LIST_VIEW_MODE.GRID ? (
+          courses.map((course) => (
+            <Card sx={{ maxWidth: 345 }}>
+              <CardActionArea>
+                <CardMedia
+                  component='img'
+                  height='140'
+                  image='/assets/images/course-image.png'
+                  alt='green iguana'
+                />
+                <CardContent>
                   <Typography component='h1' variant='h4'>
                     {course.name}
                   </Typography>
-                </CardActionArea>
-              </Card>
-            ))
-          : courses.map((course) => (
-              <Card sx={{ maxWidth: 345 }}>
-                <CardActionArea>
-                  <CardMedia
-                    component='img'
-                    height='140'
-                    image='/assets/images/course-image.png'
-                    alt='green iguana'
-                  />
-                  <CardContent>
-                    <Typography component='h1' variant='h4'>
-                      {course.name}
+                  <Typography variant='body2'>{course.description}</Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+          ))
+        ) : (
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 650 }} aria-label='simple table'>
+              <TableHead>
+                <TableRow>
+                  <TableCell>
+                    <Typography variant='body2' fontWeight='bold'>
+                      Módulo
                     </Typography>
-                    <Typography variant='body2' color='text.secondary'>
-                      {course?.description}
+                  </TableCell>
+                  <TableCell align='left'>
+                    <Typography variant='body2' fontWeight='bold'>
+                      Descripción
                     </Typography>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
-            ))}
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {courses.map((course) => (
+                  <TableRow
+                    hover={true}
+                    component='tr'
+                    key={course.name}
+                    sx={{
+                      '&:last-child td, &:last-child th': { border: 0 },
+                      cursor: 'pointer'
+                    }}
+                    onClick={() => handleGoToSelectedCourse(course.alias)}
+                  >
+                    <TableCell component='th' scope='row'>
+                      <Typography variant='body2' fontWeight='bold'>
+                        {course.name}
+                      </Typography>
+                    </TableCell>
+                    <TableCell align='left'>
+                      <Typography variant='body2'>
+                        {course.description}
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
       </Box>
     </>
   )
