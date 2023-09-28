@@ -1,5 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=Lato&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
 
 * {
   -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
@@ -14,6 +14,10 @@ html {
   height: 100vh;
 }
 
+main {
+  padding: 2rem 6rem;
+}
+
 input::-ms-reveal,
 input::-ms-clear {
   display: none;
@@ -22,7 +26,7 @@ input::-ms-clear {
 a {
   color: #55b328 !important;
   text-decoration: none !important;
-  font-family: "Lato", sans-serif !important;
+  font-family: 'Lato', sans-serif !important;
   text-transform: none !important;
 }
 
