@@ -104,7 +104,7 @@ function CourseCardList() {
                   alt='green iguana'
                 />
                 <CardContent>
-                  <Typography component='h1' variant='h4'>
+                  <Typography component='h1' variant='h5' mb='0.5rem'>
                     {course.name}
                   </Typography>
                   <Typography variant='body2'>{course.description}</Typography>
