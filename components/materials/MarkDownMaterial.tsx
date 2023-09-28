@@ -14,7 +14,8 @@ export default function MarkDownMaterial() {
         <Box 
             sx={{
                 width: 1,
-                height: '95%'
+                height: '95%',
+                overflow: 'auto'
             }} 
         >
             <ReactMarkdown children={markDown} />
