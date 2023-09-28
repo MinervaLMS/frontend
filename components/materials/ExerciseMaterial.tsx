@@ -7,7 +7,7 @@ export default function ExerciseMaterial() {
       component="form"
       sx={{
         width: 1,
-        height: "95%",
+        height: "70%",
       }}
     >
       <iframe

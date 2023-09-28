@@ -115,23 +115,28 @@ function Materials() {
   // Render the principal container for the course page.
   return (
     <Box component="section" style={{ height: "calc(100vh - 130px)" }}>
-      <Link
-        onClick={() => router.push(`/course/${alias}/${moduleID}`)}
-        sx={{ cursor: "pointer" }}
-        underline="hover"
-        color={""}
-        variant="body1"
-      >
-        ← Volver
-      </Link>
-      <Typography component="h1" variant="h4">
-        {materialData?.name}
-      </Typography>
-      <CurrentView />
-      <CommentSection
-        material={materialData}
-      />
-    </Box>
+        <Box sx={{
+          width: 1,
+          height: '90%'
+        }} >
+          <Link
+            onClick={() => router.push(`/course/${alias}/${moduleID}`)}
+            sx={{ cursor: "pointer" }}
+            underline="hover"
+            color={""}
+            variant="body1"
+          >
+            ← Volver
+          </Link>
+          <Typography component="h1" variant="h4">
+            {materialData?.name}
+          </Typography>
+          <CurrentView />
+        </Box>
+        <CommentSection
+          material={materialData}
+        />
+      </Box>
   );
 }
 
