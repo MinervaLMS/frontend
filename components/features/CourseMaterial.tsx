@@ -16,7 +16,6 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownOutlinedIcon from "@mui/icons-material/ThumbDownOutlined";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import ModeCommentOutlinedIcon from "@mui/icons-material/ModeCommentOutlined";
-import CircularSpinner from "@/components/common/CircularSpinner";
 
 // Import styles
 import { common } from "@mui/material/colors";
@@ -158,6 +157,8 @@ function CourseMaterial({
     }
   }, [])
 
+  console.log(loadingRequest, accessIsLoading)
+
   return (
     <Card
       sx={{
@@ -167,7 +168,7 @@ function CourseMaterial({
       }}
     >
 
-      <CircularSpinner openBackdrop={loadingRequest || accessIsLoading} />
+      { /* <CircularSpinner openBackdrop={loadingRequest || accessIsLoading} /> */ }
       <CardActionArea
         onClick={onSelected}
         >

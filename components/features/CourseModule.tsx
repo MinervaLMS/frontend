@@ -5,7 +5,6 @@ import Typography from "@mui/material/Typography";
 import { Box } from "@mui/material";
 
 // Import own components
-import CircularSpinner from "@/components/common/CircularSpinner";
 import CustomSnackbar from "@/components/common/CustomSnackbar";
 import CourseMaterialList from "@/components/layout/CourseMaterialList";
 
@@ -21,17 +20,17 @@ import { API_STATUS_CODE } from "@/config/api-connections";
 
 // This interface defines the types of the props object.
 interface CourseModuleProps {
-  moduleID: number;
+  moduleId: number;
   accessToken: string;
 }
 
-const CourseModule = memo(({ moduleID, accessToken }: CourseModuleProps) => {
+const CourseModule = memo(({ moduleId, accessToken }: CourseModuleProps) => {
   // States related to the alert component
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
 
   // States related to the API Fetch
-  const { data: moduleData, error } = useCourseModule(moduleID, accessToken)
+  const { data: moduleData, error } = useCourseModule(moduleId, accessToken)
 
   // Event handlers
   const handleAlertOpen = (status: number) => {
@@ -73,7 +72,7 @@ const CourseModule = memo(({ moduleID, accessToken }: CourseModuleProps) => {
     );
   }
 
-  if (moduleID > 0) {
+  if (moduleId > 0) {
     return (
       <>
         <Box className={styles.title}>
@@ -89,7 +88,7 @@ const CourseModule = memo(({ moduleID, accessToken }: CourseModuleProps) => {
             Contenidos y evaluaciones
           </Typography>
         </Box>
-        <CourseMaterialList moduleID={moduleID} accessToken={accessToken} />
+        <CourseMaterialList moduleId={moduleId} accessToken={accessToken} />
       </>
     );
   } else {

@@ -27,7 +27,7 @@ import useCourseModule from "@/hooks/fetching/useCourseModule";
 import useMaterialList from "@/hooks/fetching/useMaterialList";
 import { API_STATUS_CODE } from "@/config/api-connections";
 
-function Modules({ params }: { params: { alias: string , moduleID: number} }) {
+function Modules({ params }: { params: { alias: string , moduleId: number} }) {
 
   // Redux states:
   const userTokens = useAppSelector(
@@ -44,8 +44,8 @@ function Modules({ params }: { params: { alias: string , moduleID: number} }) {
 
   // States related to the API Fetch
   const { data: courseData, isLoading: courseIsLoading, error } = useCourse(params.alias, userTokens.access)
-  const { isLoading: moduleIsLoading } = useCourseModule(params.moduleID, userTokens.access)
-  const { isLoading: materialsIsLoading } = useMaterialList(params.moduleID, userTokens.access)
+  const { isLoading: moduleIsLoading } = useCourseModule(params.moduleId, userTokens.access)
+  const { isLoading: materialsIsLoading } = useMaterialList(params.moduleId, userTokens.access)
 
   // For routing when user is not login of the course is not found
   const router = useRouter();
@@ -108,7 +108,7 @@ function Modules({ params }: { params: { alias: string , moduleID: number} }) {
       <Typography component="h1" variant="h4">
         {courseData?.name}
       </Typography>
-      <CourseModule moduleID={params.moduleID} accessToken={userTokens.access} />
+      <CourseModule moduleId={params.moduleId} accessToken={userTokens.access} />
     </Box>
   );
 }

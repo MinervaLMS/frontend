@@ -1,7 +1,7 @@
 import useSWR from "swr"
 import { API_ENDPOINTS } from "@/config/api-connections";
 
-function useComments (materialID: number, userAccessToken: string) {
+function useComments (materialId: string, userAccessToken: string) {
   const config = {
     method: "GET",
     headers: {
@@ -20,7 +20,7 @@ function useComments (materialID: number, userAccessToken: string) {
     return response.json()
   }
 
-  const { data, error, isLoading } = useSWR(`${API_ENDPOINTS.MATERIAL}${materialID}/comments/`, fetcher)
+  const { data, error, isLoading } = useSWR(`${API_ENDPOINTS.MATERIAL}${materialId}/comments/`, fetcher)
 
   return {
       data,

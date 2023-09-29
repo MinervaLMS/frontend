@@ -8,7 +8,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 
 // Import own components
-import CircularSpinner from "@/components/common/CircularSpinner";
 import CustomSnackbar from "@/components/common/CustomSnackbar";
 import CourseMaterial from "@/components/features/CourseMaterial";
 
@@ -25,12 +24,12 @@ import { useRouter, usePathname } from "next/navigation";
 
 // This interface defines the types of the props object.
 interface CourseMaterialListProps {
-	moduleID: number;
+	moduleId: number;
   accessToken: string;
 }
 
 function CourseMaterialList({
-	moduleID,
+	moduleId,
   accessToken,
 }: CourseMaterialListProps) {
   const router = useRouter();
@@ -41,7 +40,7 @@ function CourseMaterialList({
   const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
 
   // API Fetch
-  const { data: materialsList, error } = useMaterialList(moduleID, accessToken)
+  const { data: materialsList, error } = useMaterialList(moduleId, accessToken)
 
   // Event handlers
   const handleAlertOpen = (status: number) => {

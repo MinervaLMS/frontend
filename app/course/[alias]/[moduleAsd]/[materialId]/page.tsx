@@ -63,11 +63,11 @@ function Materials() {
   const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
 
   // States related to the API Fetch
-  const { alias, moduleID, materialID } = useParams();
-  const { data: materialData, isLoading: materialIsLoading, error } = useCourseMaterial(Number(materialID), userTokens.access)
-  const { isLoading: commentsIsLoading } = useComments(Number(materialID), userTokens.access)
-  console.log(alias, moduleID, materialID);
-
+  const { alias, moduleID, materialId } = useParams();
+  console.log(alias, moduleID, materialId);
+  const { data: materialData, isLoading: materialIsLoading, error } = useCourseMaterial(String(materialId), userTokens.access)
+  const { isLoading: commentsIsLoading } = useComments(String(materialId), userTokens.access)
+  
   // For routing when user is not login or the material is not found
   const router = useRouter();
   
