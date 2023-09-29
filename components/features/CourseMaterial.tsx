@@ -46,12 +46,12 @@ function CourseMaterial({
     (state) => state.persistedReducer.userLoginState.tokens
   );
 
-  const userID = useAppSelector(
+  const userId = useAppSelector(
     (state) => state.persistedReducer.userLoginState.id
   );
 
   // States related to the API Fetch
-  const { data: accessData, isLoading: accessIsLoading } = useMaterialAccess(material.id, userID, userTokens.access)
+  const { data: accessData, isLoading: accessIsLoading } = useMaterialAccess(material.id, userId, userTokens.access)
 
   const [materialData, setMaterialData] = useState(material);
   const [reaction, setReaction] = useState<any>(null);
@@ -86,7 +86,7 @@ function CourseMaterial({
           Authorization: "Bearer " + userTokens.access,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({"material_id": material.id, "user_id": userID}),
+        body: JSON.stringify({"material_id": material.id, "user_id": userId}),
       };
 
       let response = await fetch(
@@ -132,7 +132,7 @@ function CourseMaterial({
           Authorization: "Bearer " + userTokens.access,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({"material_id": material.id, "user_id": userID}),
+        body: JSON.stringify({"material_id": material.id, "user_id": userId}),
       };
 
       let response = await fetch(

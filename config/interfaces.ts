@@ -60,3 +60,11 @@ export interface API_CommentObject {
   parent_comment_id: number,
   replies: Array<API_CommentObject>,
 }
+
+export interface API_ModuleProgressObject {
+  id: number,
+  user_id: string,
+  module_id: number,
+  module_instructional_progress: number,
+  module_assessment_progress: number,
+}

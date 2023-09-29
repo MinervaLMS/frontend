@@ -2,7 +2,7 @@ import React from "react";
 import useSWR from "swr"
 import { API_ENDPOINTS } from "@/config/api-connections";
 
-function useConfirmAccount (userID: string, userToken: string, ) {
+function useConfirmAccount (userId: string, userToken: string, ) {
   const config = {
     method: "POST",
     headers: {
@@ -22,7 +22,7 @@ function useConfirmAccount (userID: string, userToken: string, ) {
     return response.status
   }
 
-  const { data, error, isLoading } = useSWR(`${API_ENDPOINTS.CONFIRM_ACCOUNT}${userID}/${userToken}`, fetcher)
+  const { data, error, isLoading } = useSWR(`${API_ENDPOINTS.CONFIRM_ACCOUNT}${userId}/${userToken}`, fetcher)
 
   return {
       data,

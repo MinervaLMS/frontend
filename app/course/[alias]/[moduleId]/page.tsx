@@ -24,6 +24,7 @@ import { useRouter } from "next/navigation";
 // Import API
 import useCourse from "@/hooks/fetching/useCourse";
 import useCourseModule from "@/hooks/fetching/useCourseModule";
+import useModuleProgress from "@/hooks/fetching/useModuleProgress";
 import useMaterialList from "@/hooks/fetching/useMaterialList";
 import { API_STATUS_CODE } from "@/config/api-connections";
 
@@ -34,7 +35,7 @@ function Modules({ params }: { params: { alias: string , moduleId: number} }) {
     (state) => state.persistedReducer.userLoginState.tokens
   );
 
-  const userID = useAppSelector(
+  const userId = useAppSelector(
     (state) => state.persistedReducer.userLoginState.id
   );
 
@@ -45,6 +46,7 @@ function Modules({ params }: { params: { alias: string , moduleId: number} }) {
   // States related to the API Fetch
   const { data: courseData, isLoading: courseIsLoading, error } = useCourse(params.alias, userTokens.access)
   const { isLoading: moduleIsLoading } = useCourseModule(params.moduleId, userTokens.access)
+  const { isLoading: progressIsLoading } = useModuleProgress(params.moduleId, userId, userTokens.access)
   const { isLoading: materialsIsLoading } = useMaterialList(params.moduleId, userTokens.access)
 
   // For routing when user is not login of the course is not found
@@ -84,7 +86,7 @@ function Modules({ params }: { params: { alias: string , moduleId: number} }) {
     };
   }, [error]);
 
-  if (courseIsLoading || moduleIsLoading || materialsIsLoading) {
+  if (courseIsLoading || moduleIsLoading || progressIsLoading || materialsIsLoading) {
     return <CircularSpinner openBackdrop={true} />;
   }
 
@@ -108,7 +110,12 @@ function Modules({ params }: { params: { alias: string , moduleId: number} }) {
       <Typography component="h1" variant="h4">
         {courseData?.name}
       </Typography>
-      <CourseModule moduleId={params.moduleId} accessToken={userTokens.access} />
+      <CourseModule 
+        moduleId={params.moduleId}
+        userId={userId}
+        accessToken={userTokens.access}
+        minAssessmentProgress={courseData?.min_assessment_progress}
+      />
     </Box>
   );
 }

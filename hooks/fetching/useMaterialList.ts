@@ -2,7 +2,7 @@ import useSWR from "swr"
 import { API_ENDPOINTS } from "@/config/api-connections";
 import { API_MaterialObject } from "@/config/interfaces";
 
-function useMaterialList (moduleID: number, userAccessToken: string) {
+function useMaterialList (moduleId: number, userAccessToken: string) {
   const config = {
     method: "GET",
     headers: {
@@ -26,7 +26,7 @@ function useMaterialList (moduleID: number, userAccessToken: string) {
     return data
   }
 
-  const { data, error, isLoading } = useSWR(`${API_ENDPOINTS.MODULE}${moduleID}${API_ENDPOINTS.MATERIALS}`, fetcher)
+  const { data, error, isLoading } = useSWR(`${API_ENDPOINTS.MODULE}${moduleId}${API_ENDPOINTS.MATERIALS}`, fetcher)
 
   return {
       data,

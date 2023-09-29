@@ -1,7 +1,7 @@
 import useSWR from "swr"
 import { API_ENDPOINTS } from "@/config/api-connections";
 
-function useCourseModule (moduleID: number, userAccessToken: string) {
+function useCourseModule (moduleId: number, userAccessToken: string) {
   const config = {
     method: "GET",
     headers: {
@@ -20,7 +20,7 @@ function useCourseModule (moduleID: number, userAccessToken: string) {
     return response.json()
   }
 
-  const { data, error, isLoading } = useSWR(`${API_ENDPOINTS.MODULE}${moduleID}/`, fetcher)
+  const { data, error, isLoading } = useSWR(`${API_ENDPOINTS.MODULE}${moduleId}/`, fetcher)
 
   return {
       data,
