@@ -63,8 +63,8 @@ function Materials() {
   const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
 
   // States related to the API Fetch
-  const { alias, moduleID, materialId } = useParams();
-  console.log(alias, moduleID, materialId);
+  const { alias, moduleId, materialId } = useParams();
+  console.log(alias, moduleId, materialId);
   const { data: materialData, isLoading: materialIsLoading, error } = useCourseMaterial(String(materialId), userTokens.access)
   const { isLoading: commentsIsLoading } = useComments(String(materialId), userTokens.access)
   
@@ -120,7 +120,7 @@ function Materials() {
           height: '90%'
         }} >
           <Link
-            onClick={() => router.push(`/course/${alias}/${moduleID}`)}
+            onClick={() => router.push(`/course/${alias}/${moduleId}`)}
             sx={{ cursor: "pointer" }}
             underline="hover"
             color={""}
