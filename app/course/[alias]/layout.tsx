@@ -9,7 +9,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 // Import own components
 import CircularSpinner from "@/components/common/CircularSpinner";
 import CustomSnackbar from "@/components/common/CustomSnackbar";
-import CourseAppBar from "@/components/layout/CourseAppBar";
+import MainAppBar from "@/components/layout/MainAppBar";
 import { CourseDrawer, DrawerHeader } from "@/components/layout/CourseDrawer";
 
 // Import styles
@@ -27,8 +27,8 @@ import { useRouter } from "next/navigation";
 import useCourse from "@/hooks/fetching/useCourse";
 import { API_STATUS_CODE } from "@/config/api-connections";
 
-// This functional component is the index page for the /course rute.
-// It contains the CourseAppBar and CourseModulesList components.
+// This functional component is the layout of the pages for the /course rute.
+// It contains the MaineAppBar and CourseDrawer components.
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
   open?: boolean;
@@ -148,7 +148,7 @@ function CourseLayout({ children, params
   return (
     <Box className={styles.course}>
       <CssBaseline />
-      <CourseAppBar userName={userName} />
+      <MainAppBar />
       <CourseDrawer courseAlias={params.alias} />
       <Main open={drawerOpen}>
         <DrawerHeader />
