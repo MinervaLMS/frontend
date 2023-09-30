@@ -1,16 +1,16 @@
-import useSWR from "swr"
-import { API_ENDPOINTS } from "@/config/api-connections";
+import useSWR from 'swr'
+import { API_ENDPOINTS } from '@/config/api-connections'
 
-function useComments (materialId: string, userAccessToken: string) {
+function useComments(materialId: number, userAccessToken: string) {
   const config = {
-    method: "GET",
+    method: 'GET',
     headers: {
-        Authorization: "Bearer " + userAccessToken,
-    },
-  };
+      Authorization: 'Bearer ' + userAccessToken
+    }
+  }
 
   const fetcher = async (url: string) => {
-    const response = await fetch(url, config);
+    const response = await fetch(url, config)
 
     if (!response.ok) {
       const error = new Error(response.status.toString())
@@ -20,12 +20,15 @@ function useComments (materialId: string, userAccessToken: string) {
     return response.json()
   }
 
-  const { data, error, isLoading } = useSWR(`${API_ENDPOINTS.MATERIAL}${materialId}/comments/`, fetcher)
+  const { data, error, isLoading } = useSWR(
+    `${API_ENDPOINTS.MATERIAL}${materialId}/comments/`,
+    fetcher
+  )
 
   return {
-      data,
-      isLoading,
-      error
+    data,
+    isLoading,
+    error
   }
 }
 
