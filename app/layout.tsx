@@ -1,4 +1,3 @@
-import MainAppBar from '@/components/layout/MainAppBar'
 import Providers from '@/redux/provider'
 import type { Metadata } from 'next'
 
