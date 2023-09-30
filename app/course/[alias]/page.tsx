@@ -25,90 +25,123 @@ import { useAppSelector } from "@/redux/hook";
 import { useRouter } from "next/navigation";
 
 // Import API
-import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
-import { API_CourseObject } from "@/config/interfaces";
+import useCourse from "@/hooks/fetching/useCourse";
+import useModulesList from "@/hooks/fetching/useModulesList";
+import { API_STATUS_CODE } from "@/config/api-connections";
 
 function CourseHome({ params }: { params: { alias: string } }) {
-
-  // States related to the alert component
-  const [alertOpen, setAlertOpen] = useState(false);
-  const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
-
-  // States related to the API Fetch
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(true);
-  const [courseData, setCourseData] = useState<API_CourseObject>();
-
-  // For routing when user the course fetching fails
-  const router = useRouter();
 
   // Redux states:
   const userTokens = useAppSelector(
     (state) => state.persistedReducer.userLoginState.tokens
   );
 
-  const handleFetch = async () => {  
-    try {
-      let config = {
-        method: "GET",
-        headers: {
-          Authorization: "Bearer " + userTokens.access,
-        },
-      };
+  // States related to the alert component
+  const [courseAlertOpen, setCourseAlertOpen] = useState(false);
+  const [courseAlertConfig, setCourseAlertConfig] = useState({ message: "", severity: "" });
+  const [modulesAlertOpen, setModulesAlertOpen] = useState(false);
+  const [modulesAlertConfig, setModulesAlertConfig] = useState({ message: "", severity: "" });
 
-      let response = await fetch(
-        `${API_ENDPOINTS.COURSE}${params.alias}/`,
-        config
-      );
-      handleAlertOpen(response.status);
-      let data = await response.json();
-      setCourseData(data);
-    } catch (error) {
-      setAlertConfig({
-        message: "Hubo un error. Intentalo de nuevo más tarde",
-        severity: "error",
-      });
-      setAlertOpen(true);
-      console.log(error);
-    }
-    setIsLoading(false);
-  };
+  // States related to the API Fetch
+  const { data: courseData, isLoading: courseIsLoading, error: courseError } = useCourse(params.alias, userTokens.access)
+  const { isLoading: modulesIsLoading, error: modulesError } = useModulesList(params.alias, userTokens.access)
 
-  useEffect(() => {
-    handleFetch();
-  }, []);
+  // For routing when user the course fetching fails
+  const router = useRouter();
 
   // Event handlers
-
-  const handleAlertOpen = (status: number) => {
-    if (status === API_STATUS_CODE.NOT_FOUND) {
-      setAlertConfig({
-        message: "Curso no encontrado.",
-        severity: "error",
-      });
-      setAlertOpen(true);
-    } else if (status === API_STATUS_CODE.UNAUTHORIZED) {
-      setAlertConfig({
+  const handleCourseAlertOpen = (status: number) => {
+    if (status === API_STATUS_CODE.UNAUTHORIZED) {
+      setCourseAlertConfig({
         message:
           "La sesión es inválida o ha expirado: Vuelve a iniciar sesión.",
         severity: "error",
       });
-      setAlertOpen(true);
-    } else if (status === API_STATUS_CODE.SUCCESS) {
-      setError(false);
+      setCourseAlertOpen(true);
+    } else if (status === API_STATUS_CODE.NOT_FOUND) {
+      setCourseAlertConfig({
+        message: "Curso no encontrado.",
+        severity: "error",
+      });
+      setCourseAlertOpen(true);
+    } else {
+      setCourseAlertConfig({
+        message: "Hubo un error. Intentalo de nuevo más tarde.",
+        severity: "error",
+      });
+      setCourseAlertOpen(true);
     }
   };
 
-  const handleAlertClose = (event?: React.SyntheticEvent | Event) => {
+  const handleCourseAlertClose = (event?: React.SyntheticEvent | Event) => {
     router.push("/");
   };
 
-  if (isLoading) {
-    return <CircularSpinner openBackdrop={isLoading} />;
+  const handleModulesAlertOpen = (status: number) => {
+    if (status === API_STATUS_CODE.NOT_FOUND) {
+      setModulesAlertConfig({
+        message: "No hay módulos en este curso.",
+        severity: "error",
+      });
+      setModulesAlertOpen(true);
+    } else {
+      setModulesAlertConfig({
+        message: "Hubo un error al intentar acceder a los módulos. Intentalo de nuevo más tarde.",
+        severity: "error",
+      });
+      setModulesAlertOpen(true);
+    }
+  };
+
+  const handleModulesAlertClose = (
+		event?: React.SyntheticEvent | Event,
+		reason?: string
+  ) => {
+			if (reason === "clickaway") {
+			return;
+		}
+    setModulesAlertOpen(false)
+  };
+
+  useEffect(() => {
+    if (courseError) {
+      handleCourseAlertOpen(Number(courseError.message));
+    };
+
+    if (modulesError) {
+      handleModulesAlertOpen(Number(modulesError.message));
+    };
+  }, [courseError, modulesError]);
+
+  if (courseIsLoading || modulesIsLoading) {
+    return <CircularSpinner openBackdrop={true} />;
   }
 
-  if (!error) {
+  if (courseError) {
     return (
+      <CustomSnackbar
+          message={courseAlertConfig.message}
+          severity={courseAlertConfig.severity}
+          vertical="top"
+          horizontal="center"
+          autoHideDuration={AUTOHIDE_ALERT_DURATION}
+          open={courseAlertOpen}
+          onClose={handleCourseAlertClose}
+        />
+    );
+  }
+
+  return (
+    <>
+      <CustomSnackbar
+          message={modulesAlertConfig.message}
+          severity={modulesAlertConfig.severity}
+          vertical="top"
+          horizontal="center"
+          autoHideDuration={AUTOHIDE_ALERT_DURATION}
+          open={modulesAlertOpen}
+          onClose={handleModulesAlertClose}
+        />
       <Box component="section" className={styles.courseHomeContainer}>
         <Box component="section" className={styles.courseHomeSection}>
           <Box component="div">
@@ -154,20 +187,8 @@ function CourseHome({ params }: { params: { alias: string } }) {
           </Box>
         </Box>
       </Box>
-    );
-  } else {
-    return (
-      <CustomSnackbar
-        message={alertConfig.message}
-        severity={alertConfig.severity}
-        vertical="top"
-        horizontal="center"
-        autoHideDuration={AUTOHIDE_ALERT_DURATION}
-        open={alertOpen}
-        onClose={handleAlertClose}
-      />
-    );
-  }
+    </>
+  );
 }
 
 export default CourseHome;

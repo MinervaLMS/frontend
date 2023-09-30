@@ -23,8 +23,12 @@ import { DRAWER_WIDTH, AUTOHIDE_ALERT_DURATION } from "@/config/constants";
 import { useAppSelector } from "@/redux/hook";
 import { useRouter } from "next/navigation";
 
+// Import API
+import useCourse from "@/hooks/fetching/useCourse";
+import { API_STATUS_CODE } from "@/config/api-connections";
+
 // This functional component is the index page for the /course rute.
-// It contains the CourseAppBar and CourseDrawerList components.
+// It contains the CourseAppBar and CourseModulesList components.
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
   open?: boolean;
@@ -49,16 +53,6 @@ function CourseLayout({ children, params
   children: React.ReactNode,
   params: { alias: string }
 }) {
-  // States related to the alert component
-  const [alertOpen, setAlertOpen] = useState(false);
-  const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
-
-  // States related to the API Fetch
-  const [isLoading, setIsLoading] = useState(true);
-  
-  // For routing when user is not login of the course is not found
-  const router = useRouter();
-
   // Redux states:
   const isUserLogin = useAppSelector(
     (state) => state.persistedReducer.userLoginState.login
@@ -68,9 +62,57 @@ function CourseLayout({ children, params
     (state) => state.persistedReducer.userLoginState.first_name
   );
 
+  const userTokens = useAppSelector(
+    (state) => state.persistedReducer.userLoginState.tokens
+  );
+
   const drawerOpen = useAppSelector(
     (state) => state.persistedReducer.drawerState.open
   );
+  
+  // States related to the alert component
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
+
+  // States related to the API Fetch
+  const { isLoading, error } = useCourse(params.alias, userTokens.access)
+  
+  // For routing when user is not login or the credentials are invalid
+  const router = useRouter();
+
+  // Event handlers
+  const handleAlertOpen = (status: number) => {
+    if (status === API_STATUS_CODE.UNAUTHORIZED) {
+      setAlertConfig({
+        message:
+          "La sesión es inválida o ha expirado: Vuelve a iniciar sesión.",
+        severity: "error",
+      });
+      setAlertOpen(true);
+    } else if (status === API_STATUS_CODE.NOT_FOUND) {
+      setAlertConfig({
+        message: "Curso no encontrado.",
+        severity: "error",
+      });
+      setAlertOpen(true);
+    } else {
+      setAlertConfig({
+        message: "Hubo un error. Intentalo de nuevo más tarde.",
+        severity: "error",
+      });
+      setAlertOpen(true);
+    }
+  };
+
+  const handleAlertClose = (
+    event?: React.SyntheticEvent | Event, 
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    router.push("/login");
+  };
 
   useEffect(() => {
     if (!isUserLogin) {
@@ -79,32 +121,16 @@ function CourseLayout({ children, params
         severity: "error",
       });
       setAlertOpen(true);
-    }
-    setIsLoading(false);
-  }, [params.alias]);
-
-  const handleAlertClose = (event?: React.SyntheticEvent | Event) => {
-    router.push("/login");
-  };
+    } else if (error) {
+      handleAlertOpen(Number(error.message));
+    };
+  }, [params.alias, error]);
 
   if (isLoading) {
     return <CircularSpinner openBackdrop={isLoading} />;
   }
 
-  if (isUserLogin) {
-    // Render the principal container for the course page.
-    return (
-      <Box className={styles.course}>
-        <CssBaseline />
-        <CourseAppBar userName={userName} />
-        <CourseDrawer courseAlias={params.alias} />
-        <Main open={drawerOpen}>
-          <DrawerHeader />
-          {children}
-        </Main>
-      </Box>
-    );
-  } else {
+  if (error || !isUserLogin) {
     return (
       <CustomSnackbar
         message={alertConfig.message}
@@ -117,6 +143,18 @@ function CourseLayout({ children, params
       />
     );
   }
+
+  // Render the principal container for the course page.
+  return (
+    <Box className={styles.course}>
+      <CssBaseline />
+      <CourseAppBar userName={userName} />
+      <CourseDrawer courseAlias={params.alias} />
+      <Main open={drawerOpen}>
+        {children}
+      </Main>
+    </Box>
+  );
 }
 
 export default CourseLayout;

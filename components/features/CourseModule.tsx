@@ -1,12 +1,15 @@
 import React, { useState, useEffect, memo } from "react";
 
 // Import MaterialUI components
+import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
+import Divider from "@mui/material/Divider";
 
 // Import own components
-import CircularSpinner from "@/components/common/CircularSpinner";
 import CustomSnackbar from "@/components/common/CustomSnackbar";
 import CourseMaterialList from "@/components/layout/CourseMaterialList";
+import ModuleProgressBar from "@/components/features/ModuleProgressBar";
 
 // Import styles
 import styles from "@/styles/CourseModule.module.css";
@@ -15,67 +18,35 @@ import styles from "@/styles/CourseModule.module.css";
 import { AUTOHIDE_ALERT_DURATION } from "@/config/constants";
 
 // Import API
-import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
-import { API_ModuleObject } from "@/config/interfaces";
-import { Box } from "@mui/material";
+import useCourseModule from "@/hooks/fetching/useCourseModule";
+import useModuleProgress from "@/hooks/fetching/useModuleProgress";
+import { API_STATUS_CODE } from "@/config/api-connections";
 
 // This interface defines the types of the props object.
 interface CourseModuleProps {
-  moduleID: number;
+  moduleId: number;
+  userId: string;
   accessToken: string;
+  minAssessmentProgress: number;
 }
 
-const CourseModule = memo(({ moduleID, accessToken }: CourseModuleProps) => {
+const CourseModule = memo(({ moduleId, userId, accessToken, minAssessmentProgress }: CourseModuleProps) => {
   // States related to the alert component
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
 
   // States related to the API Fetch
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(true);
-  const [moduleData, setModuleData] = useState<API_ModuleObject>();
-
-  // Fetch function to obtain the data of the module
-  const handleFetch = async () => {
-    try {
-      let config = {
-        method: "GET",
-        headers: {
-          Authorization: "Bearer " + accessToken,
-        },
-      };
-
-      let responseModule = await fetch(
-        `${API_ENDPOINTS.MODULE}${moduleID}/`,
-        config
-      );
-      console.log(responseModule);
-      handleAlertOpen(responseModule.status);
-      let dataModule = await responseModule.json();
-      setModuleData(dataModule);
-    } catch (error) {
-      setAlertConfig({
-        message:
-          "No hay materiales en este módulo o hubo un error. Intentalo de nuevo más tarde",
-        severity: "error",
-      });
-      setAlertOpen(true);
-      console.log(error);
-    }
-    setIsLoading(false);
-  };
-
-  useEffect(() => {
-    setIsLoading(true);
-    handleFetch();
-  }, [moduleID, accessToken]);
+  const { data: moduleData, error: moduleError } = useCourseModule(moduleId, accessToken)
+  const { data: progressData } = useModuleProgress(moduleId, userId, accessToken)
 
   // Event handlers
-
   const handleAlertOpen = (status: number) => {
-    if (status === API_STATUS_CODE.SUCCESS) {
-      setError(false);
-    }
+    setAlertConfig({
+      message:
+        "No hay materiales en este módulo o hubo un error. Intentalo de nuevo más tarde",
+      severity: "error",
+    });
+    setAlertOpen(true);
   };
 
   const handleAlertClose = (
@@ -87,12 +58,14 @@ const CourseModule = memo(({ moduleID, accessToken }: CourseModuleProps) => {
     }
     setAlertOpen(false);
   };
+  
+  useEffect(() => {
+    if (moduleError) {
+      handleAlertOpen(Number(moduleError.message));
+    };
+  }, [moduleError]);
 
-  if (isLoading) {
-    return <CircularSpinner openBackdrop={isLoading} />;
-  }
-
-  if (error) {
+  if (moduleError) {
     return (
       <CustomSnackbar
         message={alertConfig.message}
@@ -106,23 +79,64 @@ const CourseModule = memo(({ moduleID, accessToken }: CourseModuleProps) => {
     );
   }
 
-  if (moduleID > 0) {
+  if (moduleId > 0) {
     return (
       <>
         <Box className={styles.title}>
-          <Typography component="h5" variant="h5">
-            {moduleData?.name}
-          </Typography>
+          <Grid container justifyContent="space-between" spacing={2}>
+            <Grid item sm={12} md={8}>
+              <Typography component="h5" variant="h5">
+                {moduleData?.name}
+              </Typography>
+              <Typography align="justify" paragraph>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                In varius ligula vel turpis tincidunt dignissim. 
+                Donec rutrum ut dolor in consequat. 
+                Nullam fringilla tincidunt metus vitae rutrum. 
+                Suspendisse ligula lorem, sodales sed tellus at, lobortis maximus neque. 
+                Nam lobortis ante nec laoreet efficitur. 
+                Integer sed imperdiet nibh, id dapibus tortor. 
+                Morbi eu facilisis tortor, quis eleifend ligula. 
+                Sed nunc lectus, luctus sed justo vitae, vehicula iaculis nisi. 
+                In sodales vulputate magna in tincidunt.
+              </Typography>
+            </Grid>
+            <Grid item sm={12} md="auto">
+              <Box>
+                <Typography variant="h5" color="text.primary">
+                  Progreso del módulo
+                </Typography>
+                <Box mt={1}>
+                  <Typography variant="body2" color="text.primary">
+                    Material instructivo
+                  </Typography>
+                  <ModuleProgressBar
+                    color="primary"
+                    progress={progressData ? progressData.module_instructional_progress : 0} />
+                </Box>
+                <Box mt={1}>
+                  <Typography variant="body2" color="text.primary">
+                    Material evaluativo
+                  </Typography>
+                  <ModuleProgressBar
+                    color="secondary"
+                    progress={progressData ? progressData.module_assessment_progress : 0}
+                    minProgress={minAssessmentProgress}
+                  />
+                </Box>
+              </Box>
+            </Grid>
+          </Grid>
         </Box>
-        <Typography>
-          En la API los módulos aún no tienen descripción.
-        </Typography>
         <Box className={styles.title}>
           <Typography component="h5" variant="h5">
             Contenidos y evaluaciones
           </Typography>
         </Box>
-        <CourseMaterialList moduleID={moduleID} accessToken={accessToken} />
+        <CourseMaterialList
+          moduleId={moduleId}
+          accessToken={accessToken}
+        />
       </>
     );
   } else {

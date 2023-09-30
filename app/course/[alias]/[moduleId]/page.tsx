@@ -22,63 +22,45 @@ import { useAppSelector } from "@/redux/hook";
 import { useRouter } from "next/navigation";
 
 // Import API
-import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
-import { API_CourseObject } from "@/config/interfaces";
+import useCourse from "@/hooks/fetching/useCourse";
+import useCourseModule from "@/hooks/fetching/useCourseModule";
+import useModuleProgress from "@/hooks/fetching/useModuleProgress";
+import useMaterialList from "@/hooks/fetching/useMaterialList";
+import { API_STATUS_CODE } from "@/config/api-connections";
 
-function Modules({ params }: { params: { alias: string , moduleID: number} }) {
-
-  // States related to the alert component
-  const [alertOpen, setAlertOpen] = useState(false);
-  const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
-
-  // States related to the API Fetch
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(true);
-  const [courseData, setCourseData] = useState<API_CourseObject>();
-
-  // For routing when user is not login of the course is not found
-  const router = useRouter();
+function Modules({ params }: { params: { alias: string , moduleId: number} }) {
 
   // Redux states:
   const userTokens = useAppSelector(
     (state) => state.persistedReducer.userLoginState.tokens
   );
 
-  const handleFetch = async () => {
-    try {
-      let config = {
-        method: "GET",
-        headers: {
-          Authorization: "Bearer " + userTokens.access,
-        },
-      };
+  const userId = useAppSelector(
+    (state) => state.persistedReducer.userLoginState.id
+  );
 
-      let response = await fetch(
-        `${API_ENDPOINTS.COURSE}${params.alias}/`,
-        config
-      );
-      handleAlertOpen(response.status);
-      let data = await response.json();
-      setCourseData(data);
-    } catch (error) {
+  // States related to the alert component
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
+
+  // States related to the API Fetch
+  const { data: courseData, isLoading: courseIsLoading, error } = useCourse(params.alias, userTokens.access)
+  const { isLoading: moduleIsLoading } = useCourseModule(params.moduleId, userTokens.access)
+  const { isLoading: progressIsLoading } = useModuleProgress(params.moduleId, userId, userTokens.access)
+  const { isLoading: materialsIsLoading } = useMaterialList(params.moduleId, userTokens.access)
+
+  // For routing when user is not login of the course is not found
+  const router = useRouter();
+
+  // Event handlers
+  const handleAlertOpen = (status: number) => {
+    if (status === API_STATUS_CODE.BAD_REQUEST) {
       setAlertConfig({
-        message: "Hubo un error. Intentalo de nuevo más tarde",
+        message: "Hubo un error. Intentalo de nuevo más tarde.",
         severity: "error",
       });
       setAlertOpen(true);
-      console.log(error);
-    }
-    setIsLoading(false);
-  };
-
-  useEffect(() => {
-    handleFetch();
-  }, []);
-
-  // Event handlers
-
-  const handleAlertOpen = (status: number) => {
-    if (status === API_STATUS_CODE.NOT_FOUND) {
+    } else if (status === API_STATUS_CODE.NOT_FOUND) {
       setAlertConfig({
         message: "Curso no encontrado.",
         severity: "error",
@@ -91,8 +73,6 @@ function Modules({ params }: { params: { alias: string , moduleID: number} }) {
         severity: "error",
       });
       setAlertOpen(true);
-    } else if (status === API_STATUS_CODE.SUCCESS) {
-      setError(false);
     }
   };
 
@@ -100,21 +80,17 @@ function Modules({ params }: { params: { alias: string , moduleID: number} }) {
     router.push(`/course/${params.alias}/`);
   };
 
-  if (isLoading) {
-    return <CircularSpinner openBackdrop={isLoading} />;
+  useEffect(() => {
+    if (error) {
+      handleAlertOpen(Number(error.message));
+    };
+  }, [error]);
+
+  if (courseIsLoading || moduleIsLoading || progressIsLoading || materialsIsLoading) {
+    return <CircularSpinner openBackdrop={true} />;
   }
 
-  if (!error) {
-    // Render the principal container for the course page.
-    return (
-      <Box component="section">
-        <Typography component="h1" variant="h4">
-          {courseData?.name}
-        </Typography>
-        <CourseModule moduleID={params.moduleID} accessToken={userTokens.access} />
-      </Box>
-    );
-  } else {
+  if (error) {
     return (
       <CustomSnackbar
         message={alertConfig.message}
@@ -127,6 +103,21 @@ function Modules({ params }: { params: { alias: string , moduleID: number} }) {
       />
     );
   }
+
+  // Render the principal container for the course page.
+  return (
+    <Box component="section">
+      <Typography component="h1" variant="h4">
+        {courseData?.name}
+      </Typography>
+      <CourseModule 
+        moduleId={params.moduleId}
+        userId={userId}
+        accessToken={userTokens.access}
+        minAssessmentProgress={courseData?.min_assessment_progress}
+      />
+    </Box>
+  );
 }
 
 export default Modules;

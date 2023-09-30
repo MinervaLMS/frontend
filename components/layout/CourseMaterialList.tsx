@@ -8,7 +8,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 
 // Import own components
-import CircularSpinner from "@/components/common/CircularSpinner";
 import CustomSnackbar from "@/components/common/CustomSnackbar";
 import CourseMaterial from "@/components/features/CourseMaterial";
 
@@ -16,7 +15,8 @@ import CourseMaterial from "@/components/features/CourseMaterial";
 import { AUTOHIDE_ALERT_DURATION } from "@/config/constants";
 
 // Import API
-import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
+import useMaterialList from '@/hooks/fetching/useMaterialList';
+import { API_STATUS_CODE } from "@/config/api-connections";
 import { API_MaterialObject } from "@/config/interfaces";
 
 // Import router
@@ -24,12 +24,12 @@ import { useRouter, usePathname } from "next/navigation";
 
 // This interface defines the types of the props object.
 interface CourseMaterialListProps {
-	moduleID: number;
+	moduleId: number;
   accessToken: string;
 }
 
 function CourseMaterialList({
-	moduleID,
+	moduleId,
   accessToken,
 }: CourseMaterialListProps) {
   const router = useRouter();
@@ -39,56 +39,24 @@ function CourseMaterialList({
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
 
-  // States related to the API Fetch
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(true);
-  const [materialsList, setMaterialsList] = useState<Array<API_MaterialObject>>([]);
+  // API Fetch
+  const { data: materialsList, error } = useMaterialList(moduleId, accessToken)
 
-  // Fetch function to obtain the materials of the module
-  const handleFetch = async () => {
-    try {
-      let config = {
-        method: "GET",
-        headers: {
-          Authorization: "Bearer " + accessToken,
-        },
-      };
-
-      let response = await fetch(`${API_ENDPOINTS.MODULE}${moduleID}${API_ENDPOINTS.MATERIALS}`, config);
-      handleAlertOpen(response.status);
-      let data = await response.json();
-      // Order the list of materials according to their order property.
-      data.sort((a: API_MaterialObject, b: API_MaterialObject) => (a.order > b.order) ? 1 : -1);
-      console.log(data);
-      setMaterialsList(data);
-    } catch (error) {
+  // Event handlers
+  const handleAlertOpen = (status: number) => {
+    if (status === API_STATUS_CODE.BAD_REQUEST) {
       setAlertConfig({
         message: "No hay materiales en este módulo o hubo un error. Inténtalo de nuevo más tarde",
         severity: "error",
       });
       setAlertOpen(true);
-      console.log(error);
-    }
-    setIsLoading(false);
-  }
-
-  useEffect(() => {
-    setIsLoading(true);
-    handleFetch();
-  }, [moduleID, accessToken]);
-
-  // Event handlers
-
-  const handleAlertOpen = (status: number) => {
-    if (status === API_STATUS_CODE.NOT_FOUND) {
+    } else if (status === API_STATUS_CODE.NOT_FOUND) {
       setAlertConfig({
         message:
           "Materiales no encontrados.",
         severity: "error",
       });
       setAlertOpen(true);
-    } else if (status === API_STATUS_CODE.SUCCESS) {
-      setError(false);
     }
   };
 
@@ -107,23 +75,23 @@ function CourseMaterialList({
     return undefined
   }
 
-  if (isLoading) {
-    return(
-      <CircularSpinner openBackdrop={isLoading} />
-    );
-  }
+  useEffect(() => {
+    if (error) {
+      handleAlertOpen(Number(error.message));
+    };
+  }, [error]);
 
   if (error) {
     return(
       <CustomSnackbar
-        message={alertConfig.message}
-        severity={alertConfig.severity}
-        vertical="top"
-        horizontal="center"
-        autoHideDuration={AUTOHIDE_ALERT_DURATION}
-        open={alertOpen}
-        onClose={handleAlertClose}
-      />
+          message={alertConfig.message}
+          severity={alertConfig.severity}
+          vertical="top"
+          horizontal="center"
+          autoHideDuration={AUTOHIDE_ALERT_DURATION}
+          open={alertOpen}
+          onClose={handleAlertClose}
+        />
     );
   }
 
