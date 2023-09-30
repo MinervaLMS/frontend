@@ -151,6 +151,7 @@ function CourseLayout({ children, params
       <CourseAppBar userName={userName} />
       <CourseDrawer courseAlias={params.alias} />
       <Main open={drawerOpen}>
+        <DrawerHeader />
         {children}
       </Main>
     </Box>

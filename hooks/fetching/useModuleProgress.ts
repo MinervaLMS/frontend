@@ -18,9 +18,7 @@ function useModuleProgress (moduleId: number, userId: string, userAccessToken: s
         `${API_ENDPOINTS.PROGRESS}create/`,
         config
       );
-      let data = await response.json();
-      console.log(data);
-      return data;
+      return response.ok;
     } catch (error) {
       console.log(error);
       return false;
@@ -36,19 +34,25 @@ function useModuleProgress (moduleId: number, userId: string, userAccessToken: s
 
   const fetcher = async (url: string) => {
     const response = await fetch(url, config);
-
     if (response.status == API_STATUS_CODE.NOT_FOUND) {
-      await createProgress();
-      const error = new Error(API_STATUS_CODE.NOT_FOUND.toString())
-      throw error
+      const progress = await createProgress(); 
+      if (!progress) {
+        const error = new Error(API_STATUS_CODE.BAD_REQUEST.toString())
+        throw error
+      }
+      const newResponse = await fetch(url, config);
+      if (!newResponse.ok) {
+        const error = new Error(response.status.toString())
+        throw error
+      }
+      return newResponse.json()
+    } else {
+      if (!response.ok) {
+        const error = new Error(response.status.toString())
+        throw error
+      }
+      return response.json()
     }
-
-    if (!response.ok) {
-      const error = new Error(response.status.toString())
-      throw error
-    }
-
-    return response.json()
   }
 
   const { data, error, isLoading } = useSWR(`${API_ENDPOINTS.PROGRESS}${moduleId}/${userId}/`, fetcher)

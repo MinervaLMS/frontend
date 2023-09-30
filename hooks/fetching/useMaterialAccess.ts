@@ -18,9 +18,7 @@ function useMaterialAccess (materialId: number, userId: string, userAccessToken:
         `${API_ENDPOINTS.ACCESS}create/`,
         config
       );
-      let data = await response.json();
-      console.log(data);
-      return data;
+      return response.ok;
     } catch (error) {
       console.log(error);
       return false;
@@ -36,18 +34,25 @@ function useMaterialAccess (materialId: number, userId: string, userAccessToken:
 
   const fetcher = async (url: string) => {
     const response = await fetch(url, config);
-
     if (response.status == API_STATUS_CODE.NOT_FOUND) {
       const access = await createAccess();
-      return access;
+      if (!access) {
+        const error = new Error(API_STATUS_CODE.BAD_REQUEST.toString())
+        throw error
+      }
+      const newResponse = await fetch(url, config);
+      if (!newResponse.ok) {
+        const error = new Error(response.status.toString())
+        throw error
+      }
+      return newResponse.json()
+    } else { 
+      if (!response.ok) {
+        const error = new Error(response.status.toString())
+        throw error
+      }
+      return response.json()
     }
-
-    if (!response.ok) {
-      const error = new Error(response.status.toString())
-      throw error
-    }
-
-    return response.json()
   }
 
   const { data, error, isLoading } = useSWR(`${API_ENDPOINTS.ACCESS}${materialId}/${userId}/`, fetcher)
