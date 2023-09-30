@@ -15,10 +15,7 @@ export default function RootLayout({
   return (
     <html lang='es'>
       <body>
-        <Providers>
-          <MainAppBar />
-          {children}{' '}
-        </Providers>
+        <Providers>{children} </Providers>
       </body>
     </html>
   )
