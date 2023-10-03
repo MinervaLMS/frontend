@@ -2,9 +2,10 @@
 
 import React from 'react'
 import { useAppSelector } from '@/redux/hook'
-import { Box, Container, Stack, Typography } from '@mui/material'
+import { Box, Button, Container, Stack, Typography } from '@mui/material'
 import MainAppBar from '@/components/layout/MainAppBar'
 import CourseCardList from '@/components/layout/CourseCardList'
+import styles from "@/styles/Home.module.css";
 
 export default function Home() {
   const userLoginState = useAppSelector(
@@ -34,24 +35,26 @@ export default function Home() {
             <Box
               component='section'
               sx={{
-                background: '#F6F6F6'
               }}
+              id={styles.hero}
             >
               <Container
                 sx={{
-                  display: 'flex',
                   justifyContent: 'center',
-                  paddingY: '15%',
-                  alignItems: 'center',
-                  alignContent: 'center'
+                  paddingY: { xs: "4rem", sm: "8rem"},
+                  alignContent: 'center',
                 }}
               >
-                <Stack direction={{ xs: 'column', sm: 'row' }}>
-                  <Box>
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={5}>
+                  <Box
+                  width={{
+                    xs: '100%', sm: '50%' 
+                  }}>
                     <Typography
                       component='h1'
                       variant='h2'
                       align='left'
+                      fontWeight={600}
                       gutterBottom
                     >
                       Ingeniería gamificada
@@ -63,17 +66,32 @@ export default function Home() {
                       align='left'
                       gutterBottom
                     >
-                      Minerva es un LMS enfocado en la enseñanza de la
+                      Minerva es un LMS enfocado en el aprendizaje de la
                       ingeniería, enseñando mediante retos en una experiencia
                       gamificada.
                     </Typography>
+
+                    <Stack my="1rem" direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                      <Button variant="contained" color="primary" size="large">
+                        Ingresa
+                      </Button>
+                      <Button variant="outlined" color="primary"  size="large">
+                        Regístrate
+                      </Button>
+                    </Stack>
+
                   </Box>
 
+                  <Box
+                  width={{
+                    xs: '100%', sm: '50%', lg: "40%"
+                  }}>
                   <img
                     src='https://img.freepik.com/free-vector/kids-reading-illustration_114360-8533.jpg?w=740&t=st=1694756330~exp=1694756930~hmac=12b32d8b006335dd066a1e2dac6c4218e8a671bf826e043af9d3e6ab3cdf6942'
                     alt='Ilustración de personas estudiando'
-                    style={{ width: '30%' }}
+                    style={{ width: '100%'}}
                   />
+                  </Box>
                 </Stack>
               </Container>
             </Box>

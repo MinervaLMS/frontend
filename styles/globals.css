@@ -14,9 +14,11 @@ html {
   height: 100vh;
 }
 
+/*
 main {
   padding: 2rem 6rem;
 }
+*/
 
 input::-ms-reveal,
 input::-ms-clear {
@@ -35,36 +37,3 @@ a:hover {
   text-decoration-color: #40881f !important;
   transition: ease 0.5s;
 }
-
-/*
-
-
-
-.btn-primary {
-  background-color: #55b328 !important;
-  color: #fff !important;
-}
-
-.btn-primary:hover {
-  background-color: #40881f !important;
-  color: #fff !important;
-  transition: ease 0.5s;
-}
-
-.btn-secondary {
-  background-color: #fff !important;
-  color: #55b328 !important;
-
-  transition: ease 0.5s;
-}
-
-.btn-secondary:hover {
-  color: #40881f !important;
-  background-color: #e8e8e8 !important;
-}
-
-#header {
-  height: 9%;
-}
-
-*/
