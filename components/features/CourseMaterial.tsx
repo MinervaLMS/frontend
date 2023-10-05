@@ -16,6 +16,8 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownOutlinedIcon from "@mui/icons-material/ThumbDownOutlined";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import ModeCommentOutlinedIcon from "@mui/icons-material/ModeCommentOutlined";
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 
 // Import styles
 import { common } from "@mui/material/colors";
@@ -192,17 +194,7 @@ function CourseMaterial({
               className={styles.materialName}
             >
               <Typography sx={{ typography: {sm: 'body1', md: 'h6'}}}>{materialData.name}</Typography>
-
-              <Checkbox
-                sx={{
-                  color: common["black"],
-                  "&.Mui-checked": {
-                    color: common["black"],
-                  },
-                }}
-                defaultChecked={false}
-                onClick={(e) => {e.stopPropagation()}}
-              />
+              { materialData.id < 3 ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon /> }
             </Box>
             <Box className={styles.materialDetails}>
               <Container
