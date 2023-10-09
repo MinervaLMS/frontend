@@ -23,9 +23,8 @@ import React, { useEffect, useState } from 'react'
 
 function CourseCardList() {
   const router = useRouter()
-  const [courses, setCourses] = useState([
-    { name: '', alias: '', description: '' }
-  ])
+  const [courses, setCourses] =
+    useState<[{ name: string; alias: string; description: string }]>()
   const [viewMode, setViewMode] = useState<LIST_VIEW_MODE>(LIST_VIEW_MODE.LIST)
 
   const userId = useAppSelector(
@@ -54,8 +53,10 @@ function CourseCardList() {
         config
       )
       let data = await response.json()
-      console.log(data)
-      setCourses(data)
+      if (data.length > 0) {
+        setCourses(data)
+      }
+      console.log(courses)
     } catch (error) {
       console.log(error)
     }
@@ -94,6 +95,7 @@ function CourseCardList() {
       </Box>
       <Box component='div'>
         {viewMode === LIST_VIEW_MODE.GRID ? (
+          courses &&
           courses.map((course) => (
             <Card sx={{ maxWidth: 345 }}>
               <CardActionArea>
@@ -130,29 +132,30 @@ function CourseCardList() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {courses.map((course) => (
-                  <TableRow
-                    hover={true}
-                    component='tr'
-                    key={course.name}
-                    sx={{
-                      '&:last-child td, &:last-child th': { border: 0 },
-                      cursor: 'pointer'
-                    }}
-                    onClick={() => handleGoToSelectedCourse(course.alias)}
-                  >
-                    <TableCell component='th' scope='row'>
-                      <Typography variant='body2' fontWeight='bold'>
-                        {course.name}
-                      </Typography>
-                    </TableCell>
-                    <TableCell align='left'>
-                      <Typography variant='body2'>
-                        {course.description}
-                      </Typography>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {courses &&
+                  courses.map((course) => (
+                    <TableRow
+                      hover={true}
+                      component='tr'
+                      key={course.name}
+                      sx={{
+                        '&:last-child td, &:last-child th': { border: 0 },
+                        cursor: 'pointer'
+                      }}
+                      onClick={() => handleGoToSelectedCourse(course.alias)}
+                    >
+                      <TableCell component='th' scope='row'>
+                        <Typography variant='body2' fontWeight='bold'>
+                          {course.name}
+                        </Typography>
+                      </TableCell>
+                      <TableCell align='left'>
+                        <Typography variant='body2'>
+                          {course.description}
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
           </TableContainer>
