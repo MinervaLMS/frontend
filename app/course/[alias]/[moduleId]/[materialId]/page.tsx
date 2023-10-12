@@ -31,6 +31,7 @@ import useCourseMaterial from '@/hooks/fetching/useCourseMaterial'
 import useComments from '@/hooks/fetching/useComments'
 import { API_STATUS_CODE } from '@/config/api-connections'
 import { API_MaterialObject } from '@/config/interfaces'
+import { MATERIAL_TYPES } from '@/config/enums'
 
 const views: any = {
   PDF: PdfMaterial,
@@ -42,13 +43,16 @@ const views: any = {
 const initialMaterial: API_MaterialObject = {
   id: 0,
   name: '',
-  material_type: '',
+  material_type: MATERIAL_TYPES.NONE,
   is_extra: false,
   order: 0,
   module_id: 0,
   likes: 0,
   dislikes: 0,
-  total_comments: 0
+  total_comments: 0,
+  attempts: 0,
+  correct_attempts: 0,
+  isCompleted: false
 }
 
 function Materials() {
