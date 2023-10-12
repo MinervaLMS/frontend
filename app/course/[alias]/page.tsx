@@ -221,7 +221,7 @@ function CourseHome({ params }: { params: { alias: string } }) {
                 </Typography>
                 <Stack direction="row" alignItems="center" spacing={4} pt={2}>
                   <Typography component="p" variant="body1">
-                    {`${courseData?.min_assessment_progress} de los materiales de aprobación en cada módulo.`}
+                    {`${courseData?.min_assessment_progress}% de los materiales de aprobación en cada módulo.`}
                   </Typography>
                 </Stack>
               </CardContent>
