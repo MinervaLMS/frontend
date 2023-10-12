@@ -7,7 +7,7 @@ import Drawer from '@mui/material/Drawer'
 import { styled, useTheme } from '@mui/material/styles'
 
 // Import own components
-import CourseModulesList from "./CourseModulesList";
+import CourseModuleList from "./CourseModuleList";
 
 // Import images
 import Image from 'next/image'
@@ -80,7 +80,7 @@ export const CourseDrawer = ({ courseAlias, moduleID }: CourseDrawerProps) => {
           priority
         />
       </DrawerHeader>
-      <CourseModulesList
+      <CourseModuleList
         courseAlias={courseAlias}
         accessToken={userTokens.access}
         moduleID={moduleID ? moduleID : 0}

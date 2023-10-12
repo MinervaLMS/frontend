@@ -4,25 +4,17 @@ import React, { useState, useEffect } from "react";
 
 // Import MaterialUI components
 import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
-import Typography from "@mui/material/Typography";
 
 // Import own components
 import CustomSnackbar from "@/components/common/CustomSnackbar";
-
-// Import styles
-import styles from "@/styles/Course.module.css";
-
-// Import icons
-import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
+import CourseModuleListItem from "./CourseModuleListItem";
 
 // Import constants
 import { AUTOHIDE_ALERT_DURATION } from "@/config/constants";
 
 // Import API
 import useModulesList from "@/hooks/fetching/useModulesList";
+import useCourse from "@/hooks/fetching/useCourse";
 import { API_STATUS_CODE } from "@/config/api-connections";
 import { API_ModuleObject } from "@/config/interfaces";
 
@@ -46,6 +38,7 @@ function CourseModulesList({
 
   // States related to the API Fetch
   const { data: modulesList, isLoading, error } = useModulesList(courseAlias, accessToken)
+  const { data: courseData } = useCourse(courseAlias, accessToken)
 
   // Event handlers
   const handleAlertOpen = (status: number) => {
@@ -102,22 +95,14 @@ function CourseModulesList({
     return (
       <List>
         {modulesList.map((module: API_ModuleObject) => (
-          <ListItem key={module.id} disablePadding>
-            <ListItemButton
-              onClick={() => changeSelectedModule(module.id)}
-              selected={moduleID === module.id ? true : false}
-            >
-              <RadioButtonUncheckedIcon color="secondary" />
-              <ListItemText
-                className={styles.moduleListItemText}
-                disableTypography
-              >
-                <Typography variant="body2">
-                  {(module.order + 1).toString() + ". " + module.name}
-                </Typography>
-              </ListItemText>
-            </ListItemButton>
-          </ListItem>
+          <CourseModuleListItem 
+            key={module.id}
+            module={module}
+            accessToken={accessToken}
+            minAssessmentProgress={courseData?.min_assessment_progress}
+            selectedModuleID={moduleID}
+            changeSelectedModule={changeSelectedModule}
+          />
         ))}
       </List>
     );

@@ -12,7 +12,7 @@ import CourseMaterialList from "@/components/layout/CourseMaterialList";
 import ModuleProgressBar from "@/components/features/ModuleProgressBar";
 
 // Import styles
-import styles from "@/styles/CourseModule.module.css";
+import styles from "@/styles/Course.module.css";
 
 // Import constants
 import { AUTOHIDE_ALERT_DURATION } from "@/config/constants";
@@ -82,7 +82,7 @@ const CourseModule = memo(({ moduleId, userId, accessToken, minAssessmentProgres
   if (moduleId > 0) {
     return (
       <>
-        <Box className={styles.title}>
+        <Box className={styles.titleSeparation}>
           <Grid container justifyContent="space-between" spacing={2}>
             <Grid item sm={12} md={8}>
               <Typography component="h5" variant="h5">
@@ -128,7 +128,7 @@ const CourseModule = memo(({ moduleId, userId, accessToken, minAssessmentProgres
             </Grid>
           </Grid>
         </Box>
-        <Box className={styles.title}>
+        <Box className={styles.titleSeparation}>
           <Typography component="h5" variant="h5">
             Contenidos y evaluaciones
           </Typography>
