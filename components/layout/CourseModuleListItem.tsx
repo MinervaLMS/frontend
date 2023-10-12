@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import styles from "@/styles/Course.module.css";
 
 // Import icons
-import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
 import VerifiedRoundedIcon from '@mui/icons-material/VerifiedRounded';
@@ -46,7 +46,7 @@ function CourseModuleListItem({
   const { data: moduleProgress } = useModuleProgress(module.id, userId, accessToken)
 
   // To change de icon depending on the progress
-  let Icon = <QuestionMarkIcon color="secondary" />
+  let Icon = <HelpOutlineIcon color="secondary" />
 
   if(moduleProgress) {
     const progress = moduleProgress.module_assessment_progress

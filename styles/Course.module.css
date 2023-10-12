@@ -31,3 +31,24 @@
   display: flex;
   justify-content: space-between;
 }
+
+.separation {
+  margin-top: 2rem;
+}
+
+.courseImage {
+  height:100%;
+  width: 100%;
+  display:flex;
+}
+
+.courseImage img{
+  height:100%;
+  object-fit:cover;
+  width: 100%;
+}
+
+.courseInstitution {
+  display: flex;
+  align-items: center;
+}
