@@ -5,10 +5,16 @@ import React, { useState, useEffect } from "react";
 // Import MaterialUI Components
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
+import CardContent from '@mui/material/CardContent';
+import Stack from '@mui/material/Stack';
+import Avatar from '@mui/material/Avatar';
 
 // Import own components
 import CircularSpinner from "@/components/common/CircularSpinner";
 import CustomSnackbar from "@/components/common/CustomSnackbar";
+import ModulesAccordion from "@/components/layout/ModulesAccordion";
 
 // Import styles
 import styles from "@/styles/Course.module.css";
@@ -17,7 +23,9 @@ import styles from "@/styles/Course.module.css";
 import { AUTOHIDE_ALERT_DURATION } from "@/config/constants";
 
 // Import icons and images
-import { AccountCircle } from "@mui/icons-material";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import StarRateIcon from '@mui/icons-material/StarRate';
+import CommentIcon from '@mui/icons-material/Comment';
 import Image from "next/image";
 
 // Import redux and router
@@ -120,72 +128,141 @@ function CourseHome({ params }: { params: { alias: string } }) {
   if (courseError) {
     return (
       <CustomSnackbar
-          message={courseAlertConfig.message}
-          severity={courseAlertConfig.severity}
-          vertical="top"
-          horizontal="center"
-          autoHideDuration={AUTOHIDE_ALERT_DURATION}
-          open={courseAlertOpen}
-          onClose={handleCourseAlertClose}
-        />
+        message={courseAlertConfig.message}
+        severity={courseAlertConfig.severity}
+        vertical="top"
+        horizontal="center"
+        autoHideDuration={AUTOHIDE_ALERT_DURATION}
+        open={courseAlertOpen}
+        onClose={handleCourseAlertClose}
+      />
     );
   }
 
   return (
     <>
       <CustomSnackbar
-          message={modulesAlertConfig.message}
-          severity={modulesAlertConfig.severity}
-          vertical="top"
-          horizontal="center"
-          autoHideDuration={AUTOHIDE_ALERT_DURATION}
-          open={modulesAlertOpen}
-          onClose={handleModulesAlertClose}
-        />
-      <Box component="section" className={styles.courseHomeContainer}>
-        <Box component="section" className={styles.courseHomeSection}>
-          <Box component="div">
-            <Image
-              src="/assets/images/course-image.png"
-              alt="Course image"
-              width={800}
-              height={400}
-              priority
-            />
-          </Box>
-          <Box component="div" paddingTop={2}>
-            <Typography component="h1" variant="h4">
-              {courseData?.name}
-            </Typography>
-            <Typography component="p">{courseData?.description}</Typography>
-          </Box>
-        </Box>
+        message={modulesAlertConfig.message}
+        severity={modulesAlertConfig.severity}
+        vertical="top"
+        horizontal="center"
+        autoHideDuration={AUTOHIDE_ALERT_DURATION}
+        open={modulesAlertOpen}
+        onClose={handleModulesAlertClose}
+      />
 
-        <Box component="section" className={styles.courseHomeSection}>
-          <Box component="div" className={styles.courseDetailsCard}>
-            <Typography component="h2" variant="h5">
-              Detalles
+      <Typography component="h1" variant="h4">
+        {courseData?.name}
+      </Typography>
+
+      <Box component="section" id="course_details" className={styles.separation}>
+        <Grid container justifyContent="space-between" spacing={2}>
+          <Grid item sm={12} md={7}>
+            <Typography align="justify" paragraph>
+              {courseData?.description}
             </Typography>
-            <Box component="div" className={styles.courseOwnerInfo}>
-              <Typography component='p'>
-                Universidad
-              </Typography>
-              <Box component="div" display='flex' alignItems='center'>
-                <AccountCircle sx={{paddingRight: 1}} />
-                <Box component="div">
-                  <Typography component="p">Profesor.Nombre</Typography>
-                  <Typography component="p">Instructor</Typography>
+            <Typography component="h3" variant="h6">
+              Ofrecido por:
+            </Typography>
+            <Grid container spacing={2} alignItems="center">
+              <Grid item xs={12} sm={4}>
+                <Box className={styles.courseImage}>
+                  <img src="/assets/images/institution-image.png" alt="Institution image" />
                 </Box>
-              </Box>
+              </Grid>
+              <Grid item xs={12} sm={8}>
+                <Typography component="p" variant="h6">
+                  {courseData?.institution.name}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item sm={12} md={5}>
+            <Box className={styles.courseImage}>
+              <img src="/assets/images/course-image.png" alt="Course image" />
             </Box>
-            <Typography component="p">
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Esse
-              et nesciunt dicta saepe at vel! Nesciunt sint facere quos
-              ducimus laudantium, ratione exercitationem praesentium ad
-              odio, suscipit non consectetur ut!
-            </Typography>
-          </Box>
-        </Box>
+          </Grid>
+        </Grid>
+      </Box>
+      
+      <Box component="section" id="course_social" className={styles.separation}>
+        <Grid container justifyContent="space-between" spacing={4}>
+          <Grid item sm={12} md={6}>
+            <Card raised>
+              <CardContent>
+                <Typography component="h3" variant="h6">
+                  Valoraciones del curso
+                </Typography>
+                <Stack direction="row" alignItems="center" spacing={4} pt={2}>
+                  <Stack direction="row" alignItems="center" spacing={2}>
+                    <StarRateIcon style={{color: "#FF9800"}} />
+                    <Typography component="p" variant="body1">
+                      {`
+                        ${courseData?.average_stars != null ? courseData?.average_stars : "NaN"} 
+                        (${courseData?.appraisals} calificaciones)
+                      `}
+                    </Typography>
+                  </Stack>
+                  <Stack direction="row" alignItems="center" spacing={2}>
+                    <CommentIcon style={{color: "#01579B"}} />
+                    <Typography component="p" variant="body1">
+                      {`${courseData?.comments} comentarios`}
+                    </Typography>
+                  </Stack>
+                </Stack>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item sm={12} md={6}>
+            <Card raised>
+              <CardContent>
+                <Typography component="h3" variant="h6">
+                  Criterios de aprobación
+                </Typography>
+                <Stack direction="row" alignItems="center" spacing={4} pt={2}>
+                  <Typography component="p" variant="body1">
+                    {`${courseData?.min_assessment_progress}% de los materiales de aprobación en cada módulo.`}
+                  </Typography>
+                </Stack>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+      </Box>
+
+      <Box component="section" id="course_instructors" className={styles.separation}>
+        <Typography component="h3" variant="h6">
+          Docentes
+        </Typography>
+        <Grid container justifyContent="space-between" spacing={2} pt={2}>
+          {courseData?.instructors?.length != 0 ? 
+            courseData?.instructors.map((intructor: string) => (
+              <Grid item xs={12} sm={6} md={3}>
+                <Stack direction="row" alignItems="center" spacing={2}>
+                  <Avatar alt={intructor} src=".jpg" />
+                  <Typography component="p" variant="body1">
+                    <strong>{intructor}</strong>
+                  </Typography>
+                </Stack>
+              </Grid>
+            )) :
+            <Grid item xs={12} sm={6} md={3}>
+              <Stack direction="row" alignItems="center" spacing={2}>
+                <Avatar alt="Julián Moreno" src=".jpg" />
+                <Typography component="p" variant="body1">
+                  <strong>Julián Moreno</strong>
+                </Typography>
+              </Stack>
+            </Grid>
+          }
+        </Grid>
+      </Box>
+
+      <Box component="section" id="course_modules_description" className={styles.separation}>
+        <Typography component="h2" variant="h5">
+          Contenido detallado
+        </Typography>
+        <ModulesAccordion courseAlias={params.alias} accessToken={userTokens.access} />
       </Box>
     </>
   );

@@ -35,10 +35,16 @@ export interface API_CourseObject {
 }
 
 export interface API_ModuleObject {
-  id: number
-  name: string
-  order: number
-  course_id: string
+
+  id: number,
+  name: string,
+  order: number,
+  module_total_materials: number,
+  module_instructional_materials: number,
+  module_assessment_materials: number,
+  module_extra_materials: number,
+  course_id: string,
+  parent_module_id: undefined | number,
 }
 
 export interface API_MaterialObject {
