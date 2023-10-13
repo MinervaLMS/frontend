@@ -36,7 +36,7 @@ export default function ExerciseMaterial() {
     e.preventDefault()
     const submission = {
       material_id: 4,
-      user_id: UserIdState,
+      user_id: Number(UserIdState),
       code: submissionCode,
       language: 'py3'
     }
