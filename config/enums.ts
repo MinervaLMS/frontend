@@ -10,3 +10,11 @@ export enum LIST_VIEW_MODE {
   LIST = 'list',
   GRID = 'grid'
 }
+
+export enum MATERIAL_TYPES {
+  PDF = 'PDF',
+  VIDEO = 'VID',
+  MARKDOWN = 'HTM',
+  EXERCISE = 'IOC',
+  NONE = ''
+}

@@ -1,43 +1,43 @@
-"use client"
+'use client'
 
-import React, { useState, useEffect, SetStateAction } from 'react';
+import React, { useState, useEffect, SetStateAction } from 'react'
 
 // Import MaterialUI components
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import ListItemButton from '@mui/material/ListItemButton'
 
 // Import own components
-import CustomSnackbar from "@/components/common/CustomSnackbar";
-import CourseMaterial from "@/components/features/CourseMaterial";
+import CustomSnackbar from '@/components/common/CustomSnackbar'
+import CourseMaterial from '@/components/features/CourseMaterial'
 
 // Import constants
-import { AUTOHIDE_ALERT_DURATION } from "@/config/constants";
+import { AUTOHIDE_ALERT_DURATION } from '@/config/constants'
 
 // Import API
-import useMaterialList from '@/hooks/fetching/useMaterialList';
-import { API_STATUS_CODE } from "@/config/api-connections";
-import { API_MaterialObject } from "@/config/interfaces";
+import useMaterialList from '@/hooks/fetching/useMaterialList'
+import { API_STATUS_CODE } from '@/config/api-connections'
+import { API_MaterialObject } from '@/config/interfaces'
 
 // Import router
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname } from 'next/navigation'
 
 // This interface defines the types of the props object.
 interface CourseMaterialListProps {
-	moduleId: number;
-  accessToken: string;
+  moduleId: number
+  accessToken: string
 }
 
 function CourseMaterialList({
-	moduleId,
-  accessToken,
+  moduleId,
+  accessToken
 }: CourseMaterialListProps) {
-  const router = useRouter();
-  const currentPath: string = usePathname();
+  const router = useRouter()
+  const currentPath: string = usePathname()
 
   // States related to the alert component
-  const [alertOpen, setAlertOpen] = useState(false);
-  const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
+  const [alertOpen, setAlertOpen] = useState(false)
+  const [alertConfig, setAlertConfig] = useState({ message: '', severity: '' })
 
   // API Fetch
   const { data: materialsList, error } = useMaterialList(moduleId, accessToken)
@@ -46,29 +46,29 @@ function CourseMaterialList({
   const handleAlertOpen = (status: number) => {
     if (status === API_STATUS_CODE.BAD_REQUEST) {
       setAlertConfig({
-        message: "No hay materiales en este módulo o hubo un error. Inténtalo de nuevo más tarde",
-        severity: "error",
-      });
-      setAlertOpen(true);
+        message:
+          'No hay materiales en este módulo o hubo un error. Inténtalo de nuevo más tarde',
+        severity: 'error'
+      })
+      setAlertOpen(true)
     } else if (status === API_STATUS_CODE.NOT_FOUND) {
       setAlertConfig({
-        message:
-          "Materiales no encontrados.",
-        severity: "error",
-      });
-      setAlertOpen(true);
+        message: 'Materiales no encontrados.',
+        severity: 'error'
+      })
+      setAlertOpen(true)
     }
-  };
+  }
 
   const handleAlertClose = (
     event?: React.SyntheticEvent | Event,
     reason?: string
   ) => {
-    if (reason === "clickaway") {
-      return;
+    if (reason === 'clickaway') {
+      return
     }
-    setAlertOpen(false);
-  };
+    setAlertOpen(false)
+  }
 
   const handleGoToSelectedMaterial = (materialId: number) => {
     router.push(`${currentPath}/${materialId}`)
@@ -77,33 +77,41 @@ function CourseMaterialList({
 
   useEffect(() => {
     if (error) {
-      handleAlertOpen(Number(error.message));
-    };
-  }, [error]);
+      handleAlertOpen(Number(error.message))
+    }
+  }, [error])
 
   if (error) {
-    return(
+    return (
       <CustomSnackbar
-          message={alertConfig.message}
-          severity={alertConfig.severity}
-          vertical="top"
-          horizontal="center"
-          autoHideDuration={AUTOHIDE_ALERT_DURATION}
-          open={alertOpen}
-          onClose={handleAlertClose}
-        />
-    );
+        message={alertConfig.message}
+        severity={alertConfig.severity}
+        vertical='top'
+        horizontal='center'
+        autoHideDuration={AUTOHIDE_ALERT_DURATION}
+        open={alertOpen}
+        onClose={handleAlertClose}
+      />
+    )
   }
 
-	return(
+  return (
     <List>
       {materialsList.map((material: API_MaterialObject) => (
         <ListItem key={material.id}>
-          <CourseMaterial onSelected={() => handleGoToSelectedMaterial(material.id)} material={material} />
+          <CourseMaterial
+            onSelected={() => handleGoToSelectedMaterial(material.id)}
+            material={{
+              ...material,
+              attempts: 0,
+              correct_attempts: 0,
+              isCompleted: false
+            }}
+          />
         </ListItem>
       ))}
     </List>
-	);
+  )
 }
 
-export default CourseMaterialList;
+export default CourseMaterialList
