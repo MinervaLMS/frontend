@@ -1,3 +1,5 @@
+'use client'
+
 import { JUDGE_ENDPOINTS } from '@/config/api-connections'
 import { useAppSelector } from '@/redux/hook'
 import { Box, Button, TextField } from '@mui/material'
@@ -7,8 +9,8 @@ export default function ExerciseMaterial() {
   const UserIdState = useAppSelector(
     (state) => state.persistedReducer.userLoginState.id
   )
-  const userAccessToken = useAppSelector(
-    (state) => state.persistedReducer.userLoginState.tokens.access
+  const userTokens = useAppSelector(
+    (state) => state.persistedReducer.userLoginState.tokens
   )
 
   const [submissionCode, setsubmissionCode] = useState('')
@@ -32,19 +34,20 @@ export default function ExerciseMaterial() {
 
   const handleSubmit = (e: React.SyntheticEvent<HTMLButtonElement, Event>) => {
     e.preventDefault()
+    const submission = {
+      material_id: 4,
+      user_id: UserIdState,
+      code: submissionCode,
+      language: 'py3'
+    }
     const config = {
       method: 'POST',
       headers: {
-        Authorization: 'Bearer ' + userAccessToken,
+        Authorization: 'Bearer ' + userTokens.access,
         Accept: 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        material_id: 1,
-        user_id: UserIdState,
-        code: submissionCode,
-        language: 'py3'
-      })
+      body: JSON.stringify(submission)
     }
     console.log(config)
     fetcher(JUDGE_ENDPOINTS.SUBMISSION_CREATE, config)
