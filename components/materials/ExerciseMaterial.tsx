@@ -48,6 +48,7 @@ export default function ExerciseMaterial() {
   ) => {
     const response = await fetch(url, config)
     const data = await response.json()
+    console.log(data)
     setsubmissionResult(data?.verdict)
   }
 
