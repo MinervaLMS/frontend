@@ -6,6 +6,7 @@ import { Box, Button, TextField } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import CustomSnackbar from '../common/CustomSnackbar'
 import { AUTOHIDE_ALERT_DURATION } from '@/config/constants'
+import ExerciseModalResult from './ExerciseModalResult'
 
 export default function ExerciseMaterial() {
   //Redux states
@@ -18,20 +19,15 @@ export default function ExerciseMaterial() {
 
   // Local states related to the submission
   const [submissionCode, setsubmissionCode] = useState('')
-  const [submissionResult, setsubmissionResult] = useState('')
+  const [submissionResult, setsubmissionResult] = useState('unknow')
+
+  // Local states related to the modal component to show the result of the submission
+  const [openModal, setOpenModal] = useState(false)
+  const [modalMessage, setModalMessage] = useState('')
 
   // Local states related to the alert component
   const [alertConfig, setAlertConfig] = useState({ message: '', severity: '' })
   const [alertOpen, setAlertOpen] = useState(false)
-
-  // Alert to show the result of the submission
-  useEffect(() => {
-    if (submissionResult === 'W') {
-      handleAlertOpen(API_STATUS_CODE.CREATED)
-    } else if (submissionResult === 'R') {
-      handleAlertOpen(API_STATUS_CODE.NOT_FOUND)
-    }
-  }, [submissionResult])
 
   // Function to send the submission to the judge api
   const fetcher = async (
@@ -48,7 +44,6 @@ export default function ExerciseMaterial() {
   ) => {
     const response = await fetch(url, config)
     const data = await response.json()
-    console.log(data)
     setsubmissionResult(data?.verdict)
   }
 
@@ -70,7 +65,14 @@ export default function ExerciseMaterial() {
       },
       body: JSON.stringify(submission)
     }
+    setOpenModal(true)
     fetcher(JUDGE_ENDPOINTS.SUBMISSION_CREATE, config)
+  }
+
+  // Function to handle the submission result
+  const handleCloseModal = () => {
+    setOpenModal(false)
+    setsubmissionResult('unknow')
   }
 
   // Alert handlers functions
@@ -110,6 +112,11 @@ export default function ExerciseMaterial() {
         autoHideDuration={AUTOHIDE_ALERT_DURATION}
         open={alertOpen}
         onClose={handleAlertClose}
+      />
+      <ExerciseModalResult
+        open={openModal}
+        CloseModal={handleCloseModal}
+        result={submissionResult}
       />
       <Box
         component='form'
