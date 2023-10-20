@@ -1,0 +1,15 @@
+.contentContainer {
+    width: 100%;
+    height: calc(100vh - 64px);
+    padding: 48px;
+}
+
+.titleContainer {
+    height: 20%;
+}
+
+.tableContainer {
+    width: 80%;
+    height: 80%;
+    margin: auto;
+}
