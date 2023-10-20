@@ -14,12 +14,6 @@ html {
   height: 100vh;
 }
 
-/*
-main {
-  padding: 2rem 6rem;
-}
-*/
-
 input::-ms-reveal,
 input::-ms-clear {
   display: none;

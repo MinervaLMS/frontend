@@ -74,8 +74,8 @@ function CourseCardList() {
   return (
     <>
       <Box component='div' display='flex' justifyContent='space-between'>
-        <Typography component='h1' variant='h5'>
-          Selecciona un curso para comenzar
+        <Typography component='h1' variant='h2' gutterBottom>
+          Mis Cursos
         </Typography>
         {viewMode === LIST_VIEW_MODE.GRID ? (
           <IconButton
@@ -121,7 +121,7 @@ function CourseCardList() {
                 <TableRow>
                   <TableCell>
                     <Typography variant='body2' fontWeight='bold'>
-                      Módulo
+                      Curso
                     </Typography>
                   </TableCell>
                   <TableCell align='left'>

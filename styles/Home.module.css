@@ -1,3 +1,7 @@
-#hero {
+.hero {
     background-color: #F2F2F2;
+}
+
+.coursesSection {
+    padding: 2rem 6rem;
 }
