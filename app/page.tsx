@@ -2,15 +2,31 @@
 
 import React from 'react'
 import { useAppSelector } from '@/redux/hook'
-import { Box, Button, Container, Stack, Typography } from '@mui/material'
+import { Box, Button, Container, Stack, Theme, Typography } from '@mui/material'
+import { useTheme } from '@mui/material/styles';
+import styles from "@/styles/Home.module.css";
+
+import { useRouter, useParams } from 'next/navigation'
+
 import MainAppBar from '@/components/layout/MainAppBar'
 import CourseCardList from '@/components/layout/CourseCardList'
-import styles from "@/styles/Home.module.css";
 
 export default function Home() {
   const userLoginState = useAppSelector(
     (state) => state.persistedReducer.userLoginState.login
   )
+
+  // To determine if you are in or out of course pages
+  const params = useParams()
+
+  // Router
+  const router = useRouter()
+
+  const handleNavigate = (rute: string) => {
+    router.push(rute)
+  }
+
+  const theme: Theme = useTheme()
 
   return (
     <>
@@ -27,7 +43,7 @@ export default function Home() {
       )}
 
       {!userLoginState && (
-        <Box component='main'>
+        <Box component='main' className={styles.unloggedMain}>
           
           <Box
             component='section'
@@ -69,12 +85,19 @@ export default function Home() {
                   </Typography>
 
                   <Stack my="1rem" direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-                    <Button variant="contained" color="primary" size="large">
+                    
+                    <Button variant="contained" color="primary" size="large"
+                      onClick={() => handleNavigate('/login')}
+                    >
                       Ingresa
                     </Button>
-                    <Button variant="outlined" color="primary"  size="large">
+                    
+                    <Button variant="outlined" color="primary"  size="large"
+                      onClick={() => handleNavigate('/register')}
+                    >
                       Regístrate
                     </Button>
+                  
                   </Stack>
 
                 </Box>
@@ -84,7 +107,7 @@ export default function Home() {
                   xs: '100%', sm: '50%', lg: "40%"
                 }}>
                 <img
-                  src='https://img.freepik.com/free-vector/kids-reading-illustration_114360-8533.jpg?w=740&t=st=1694756330~exp=1694756930~hmac=12b32d8b006335dd066a1e2dac6c4218e8a671bf826e043af9d3e6ab3cdf6942'
+                  src='/assets/images/undraw_pair_programming.svg'
                   alt='Ilustración de personas estudiando'
                   style={{ width: '100%'}}
                 />
