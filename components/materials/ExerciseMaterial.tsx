@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react'
 import CustomSnackbar from '../common/CustomSnackbar'
 import { AUTOHIDE_ALERT_DURATION } from '@/config/constants'
 import ExerciseModalResult from './ExerciseModalResult'
+import styles from '@/styles/CourseMaterial.module.css'
 
 export default function ExerciseMaterial() {
   //Redux states
@@ -118,40 +119,36 @@ export default function ExerciseMaterial() {
         CloseModal={handleCloseModal}
         result={submissionResult}
       />
-      <Box
-        component='form'
-        sx={{
-          width: 1,
-          height: '70%'
-        }}
-      >
+      <Box component='form' className={styles.IOCMaterial}>
         <iframe
           src='https://www.africau.edu/images/default/sample.pdf'
-          style={{ width: '100%', height: '100%' }}
+          className={styles.IOCPDFColumn}
         ></iframe>
-        <TextField
-          fullWidth
-          rows={4}
-          multiline
-          label='Escribe tu respuesta aquí...'
-          name='answerCode'
-          type='text'
-          size='small'
-          value={submissionCode}
-          onChange={(e) => setsubmissionCode(e.target.value)}
-        />
-        <Button
-          className='btn btn-primary'
-          type='submit'
-          variant='contained'
-          color='secondary'
-          sx={{ my: 2 }}
-          onClick={(e) => {
-            handleSubmit(e)
-          }}
-        >
-          Enviar
-        </Button>
+        <div className={styles.IOCodeColumn}>
+          <TextField
+            fullWidth
+            rows={15}
+            multiline
+            label='Escribe tu respuesta aquí...'
+            name='answerCode'
+            type='text'
+            size='small'
+            value={submissionCode}
+            onChange={(e) => setsubmissionCode(e.target.value)}
+          />
+          <Button
+            className='btn btn-primary'
+            type='submit'
+            variant='contained'
+            color='secondary'
+            sx={{ my: 2 }}
+            onClick={(e) => {
+              handleSubmit(e)
+            }}
+          >
+            Enviar
+          </Button>
+        </div>
       </Box>
     </>
   )
