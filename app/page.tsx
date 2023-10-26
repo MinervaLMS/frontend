@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { useAppSelector } from '@/redux/hook'
-import { Box, Button, Container, Paper, Stack, Theme, Typography } from '@mui/material'
+import { Box, Button, Container, Grid, Paper, Stack, Theme, Typography } from '@mui/material'
 import { useTheme } from '@mui/material/styles';
 import styles from "@/styles/Home.module.css";
 
@@ -25,7 +25,8 @@ export default function Home() {
 
   const theme: Theme = useTheme()
 
-  interface FeaturesProps {
+  // Feature section
+  interface FeatureProps {
     feature: {
       title: string;
       description: string;
@@ -33,6 +34,52 @@ export default function Home() {
       imageLabel: string;
     };
   }
+
+  function Feature ({ feature }: FeatureProps) {
+    const { title, description, image, imageLabel } = feature;
+    return (
+      <Stack alignItems={"center"} spacing={2}>
+        <Typography component="h3" variant="h6" fontWeight={800} gutterBottom>
+          { title }
+        </Typography>
+        <img src={image} alt={imageLabel} height={"100px"}/>
+        <Typography component="p" variant="body1">
+          { description }
+        </Typography>
+      </Stack>
+    );
+  }
+
+  const features = [
+    {
+      title: 'Feature 1',
+      description:
+        'This is a wider card with supporting text below as a natural lead-in to additional content.',
+      image: 'https://source.unsplash.com/random?wallpapers',
+      imageLabel: 'Image Text',
+    },
+    {
+      title: 'Feature 2',
+      description:
+        'This is a wider card with supporting text below as a natural lead-in to additional content.',
+      image: 'https://source.unsplash.com/random?wallpapers',
+      imageLabel: 'Image Text',
+    },
+    {
+      title: 'Feature 3',
+      description:
+        'This is a wider card with supporting text below as a natural lead-in to additional content.',
+      image: 'https://source.unsplash.com/random?wallpapers',
+      imageLabel: 'Image Text',
+    },
+    {
+      title: 'Feature 4',
+      description:
+        'This is a wider card with supporting text below as a natural lead-in to additional content.',
+      image: 'https://source.unsplash.com/random?wallpapers',
+      imageLabel: 'Image Text',
+    },
+  ];
 
   return (
     <>
@@ -132,14 +179,18 @@ export default function Home() {
             className={styles.hero}
           >
             <Container
-              sx={{paddingY: { xs: "4rem", sm: "8rem"}}}
+              sx={{paddingY: { xs: "2rem", sm: "4rem"}}}
               className={styles.features_container}
               id="features_container"
             >
 
-              <Stack direction="row">
-
-              </Stack>
+              <Grid container direction="row" spacing={4}>
+                {features.map((feature) => (
+                  <Grid item xs={12} sm={6} md={3}>
+                    <Feature key={feature.title} feature={feature} />
+                  </Grid>
+                ))}
+              </Grid>
 
             </Container>
 
