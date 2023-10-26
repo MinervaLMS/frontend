@@ -1,6 +1,17 @@
 import { Theme, createTheme, responsiveFontSizes } from "@mui/material/styles";
 import "@/styles/globals.css";
 
+// Augment the palette to include new background colors
+declare module '@mui/material/styles' {
+  interface TypeBackground {
+    surface1: string;
+  }
+
+  interface TypeBackgroundOptions {
+    surface1?: string;
+  }
+}
+
 let lightTheme: Theme = createTheme({
   palette: {
     mode: "light",
@@ -14,6 +25,9 @@ let lightTheme: Theme = createTheme({
     info: {
       main: "#fff",
       contrastText: "#4348A7",
+    },
+    background: {
+      surface1: "#F8F8F8",
     },
   },
   typography: {

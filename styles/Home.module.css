@@ -1,6 +1,8 @@
-.hero {
-    background-color: #F2F2F2;
+.main_hero_container {
+    justify-content: center;
+    align-content: center;
 }
+
 
 .coursesSection {
     padding: 2rem 6rem;

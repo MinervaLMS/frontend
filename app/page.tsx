@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { useAppSelector } from '@/redux/hook'
-import { Box, Button, Container, Stack, Theme, Typography } from '@mui/material'
+import { Box, Button, Container, Paper, Stack, Theme, Typography } from '@mui/material'
 import { useTheme } from '@mui/material/styles';
 import styles from "@/styles/Home.module.css";
 
@@ -16,9 +16,6 @@ export default function Home() {
     (state) => state.persistedReducer.userLoginState.login
   )
 
-  // To determine if you are in or out of course pages
-  const params = useParams()
-
   // Router
   const router = useRouter()
 
@@ -27,6 +24,15 @@ export default function Home() {
   }
 
   const theme: Theme = useTheme()
+
+  interface FeaturesProps {
+    feature: {
+      title: string;
+      description: string;
+      image: string;
+      imageLabel: string;
+    };
+  }
 
   return (
     <>
@@ -43,26 +49,25 @@ export default function Home() {
       )}
 
       {!userLoginState && (
-        <Box component='main' className={styles.unloggedMain}>
+        <Stack component='main' id="unlogged_main">
           
           <Box
-            component='section'
-            sx={{
-            }}
-            className={styles.hero}
+            component="section"
+            id="main_hero"
+            sx = {{backgroundColor: theme.palette.background.surface1}}
           >
+
             <Container
-              sx={{
-                justifyContent: 'center',
-                paddingY: { xs: "4rem", sm: "8rem"},
-                alignContent: 'center',
-              }}
+              sx={{paddingY: { xs: "4rem", sm: "8rem"}}}
+              className={styles.main_hero_container}
+              id="main_hero_container"
             >
-              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={5}>
-                <Box
-                width={{
-                  xs: '100%', sm: '50%' 
-                }}>
+              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={5}
+                id="main_hero_container_stack"
+              >
+                <Box width={{ xs: '100%', sm: '50%' }}
+                  id="main_hero_information_box"
+                >
                   <Typography
                     component='h1'
                     variant='h2'
@@ -84,7 +89,11 @@ export default function Home() {
                     gamificada.
                   </Typography>
 
-                  <Stack my="1rem" direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                  <Stack my="1rem"
+                    direction={{ xs: 'column', sm: 'row' }}
+                    spacing={2}
+                    id="main_hero_buttons_stack"
+                  >
                     
                     <Button variant="contained" color="primary" size="large"
                       onClick={() => handleNavigate('/login')}
@@ -103,9 +112,9 @@ export default function Home() {
                 </Box>
 
                 <Box
-                width={{
-                  xs: '100%', sm: '50%', lg: "40%"
-                }}>
+                  width={{ xs: '100%', sm: '50%', lg: "40%" }}
+                  id="main_hero_image_box"
+                >
                 <img
                   src='/assets/images/undraw_pair_programming.svg'
                   alt='Ilustración de personas estudiando'
@@ -117,7 +126,40 @@ export default function Home() {
 
           </Box>
 
-        </Box>
+          <Box 
+            component="section"
+            id="features"
+            className={styles.hero}
+          >
+            <Container
+              sx={{paddingY: { xs: "4rem", sm: "8rem"}}}
+              className={styles.features_container}
+              id="features_container"
+            >
+
+              <Stack direction="row">
+
+              </Stack>
+
+            </Container>
+
+          </Box>
+
+          <Box 
+            component="section"
+            id="help_hero"
+            className={styles.hero}
+          >
+
+          </Box>
+
+          <footer className={styles.footer}>
+              <Typography component="p" variant="body1">
+                Minerva 2021
+              </Typography>
+          </footer>
+
+        </Stack>
       )}
 
     </>
