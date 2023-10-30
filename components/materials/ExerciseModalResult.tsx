@@ -11,6 +11,33 @@ function ExerciseModalResult({
   CloseModal: () => void
   result: string
 }) {
+  const message = () => {
+    switch (result) {
+      case 'unknow':
+        return 'Estamos calificando tu ejercicio'
+      case 'A':
+        return 'Tu respuesta es correcta. ¡Felicitaciones!'
+      case 'WA':
+        return 'Tu respuesta es incorrecta.. Revisa tu código y vuelve a intentarlo'
+      case 'I':
+        return 'Hubo un error en la ejecución de tu código. Revisalo y vuelve a intentarlo'
+      case 'R':
+        return 'Hubo un error en la ejecución de tu código. Revisalo y vuelve a intentarlo'
+      case 'O':
+        return 'Limites de salida excedidos'
+      case 'M':
+        return 'Limites de memoria excedidos'
+      case 'T':
+        return 'Limites de tiempo excedidos'
+      case 'E':
+        return 'Encontramos un error en tu código que nos impide ejecutarlo. Revisalo y vuelve a intentarlo'
+      case 'C':
+        return 'Error de compilación. Revisa tu código y vuelve a intentarlo'
+      default:
+        return 'Estamos calificando tu ejercicio'
+    }
+  }
+
   return (
     <Modal
       open={open}
