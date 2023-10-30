@@ -2,14 +2,14 @@
 
 import React from 'react'
 import { useAppSelector } from '@/redux/hook'
-import { Box, Button, Container, Grid, Paper, Stack, Theme, Typography } from '@mui/material'
-import { useTheme } from '@mui/material/styles';
+import { Box, Button, Container, Grid, Link, Stack, Typography } from '@mui/material'
 import styles from "@/styles/Home.module.css";
 
-import { useRouter, useParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 import MainAppBar from '@/components/layout/MainAppBar'
 import CourseCardList from '@/components/layout/CourseCardList'
+import HomeFeature from '@/components/layout/HomeFeature';
 
 export default function Home() {
   const userLoginState = useAppSelector(
@@ -23,61 +23,73 @@ export default function Home() {
     router.push(rute)
   }
 
-  const theme: Theme = useTheme()
-
   // Feature section
-  interface FeatureProps {
-    feature: {
-      title: string;
-      description: string;
-      image: string;
-      imageLabel: string;
-    };
-  }
-
-  function Feature ({ feature }: FeatureProps) {
-    const { title, description, image, imageLabel } = feature;
-    return (
-      <Stack alignItems={"center"} spacing={2}>
-        <Typography component="h3" variant="h6" fontWeight={800} gutterBottom>
-          { title }
-        </Typography>
-        <img src={image} alt={imageLabel} height={"100px"}/>
-        <Typography component="p" variant="body1">
-          { description }
-        </Typography>
-      </Stack>
-    );
-  }
 
   const features = [
     {
       title: 'Feature 1',
       description:
-        'This is a wider card with supporting text below as a natural lead-in to additional content.',
+        'This is a wider card with supporting text below.',
       image: 'https://source.unsplash.com/random?wallpapers',
       imageLabel: 'Image Text',
     },
     {
       title: 'Feature 2',
       description:
-        'This is a wider card with supporting text below as a natural lead-in to additional content.',
+        'This is a wider card with supporting text below.',
       image: 'https://source.unsplash.com/random?wallpapers',
       imageLabel: 'Image Text',
     },
     {
       title: 'Feature 3',
       description:
-        'This is a wider card with supporting text below as a natural lead-in to additional content.',
+        'This is a wider card with supporting text below.',
       image: 'https://source.unsplash.com/random?wallpapers',
       imageLabel: 'Image Text',
     },
     {
       title: 'Feature 4',
       description:
-        'This is a wider card with supporting text below as a natural lead-in to additional content.',
+        'This is a wider card with supporting text below.',
       image: 'https://source.unsplash.com/random?wallpapers',
       imageLabel: 'Image Text',
+    },
+  ];
+
+  const footers = [
+    {
+      title: "Acerca de",
+      elements: [
+        {
+          name:"Desarrollo",
+          link: "/",
+        },
+        {
+          name:"Equipo",
+          link: "/",
+        },
+        {
+          name:"Universidad Nacional de Colombia",
+          link: "https://unal.edu.co/",
+        },
+      ],
+    },
+    {
+      title: "Planeación",
+      elements: [
+        {
+          name:"Visión",
+          link: "/",
+        },
+        {
+          name:"Equipo",
+          link: "/",
+        },
+        {
+          name:"Próximas actualizaciones",
+          link: "/",
+        },
+      ],
     },
   ];
 
@@ -96,12 +108,15 @@ export default function Home() {
       )}
 
       {!userLoginState && (
+        <React.Fragment>
         <Stack component='main' id="unlogged_main">
           
           <Box
             component="section"
             id="main_hero"
-            sx = {{backgroundColor: theme.palette.background.surface1}}
+            sx = {{
+              backgroundColor: (t) => t.palette.background.surface1
+            }}
           >
 
             <Container
@@ -187,7 +202,7 @@ export default function Home() {
               <Grid container direction="row" spacing={4}>
                 {features.map((feature) => (
                   <Grid item xs={12} sm={6} md={3}>
-                    <Feature key={feature.title} feature={feature} />
+                    <HomeFeature key={feature.title} feature={feature} />
                   </Grid>
                 ))}
               </Grid>
@@ -199,18 +214,82 @@ export default function Home() {
           <Box 
             component="section"
             id="help_hero"
-            className={styles.hero}
+            className={styles.help_hero_container}
+            sx={{
+              paddingY: { xs: "2rem", sm: "4rem" },
+              backgroundColor: (t) => t.palette.background.surface1,
+            }}
           >
+              <Typography
+                component='h2'
+                variant='h4'
+                align='center'
+                fontWeight={600}
+                gutterBottom>
+                ¿Necesitas ayuda?
+                </Typography>
 
+                <Button variant="contained" color="info" size="large" 
+                  onClick={() => handleNavigate('/contact')}
+                >
+                  Contáctanos
+                </Button>
+            
           </Box>
 
-          <footer className={styles.footer}>
-              <Typography component="p" variant="body1">
-                Minerva 2021
-              </Typography>
-          </footer>
-
         </Stack>
+
+        {/* Footer */}
+
+        <Box component={"footer"} className={styles.footer} id="footer">
+
+          <Container sx={{paddingY: { xs: "2rem", sm: "4rem"}}}>
+            
+            <Grid container rowSpacing={5} columnSpacing={2} justifyContent="space-evenly">
+              
+              <Grid item xs={12} sm={6} md={3}>
+                <Stack direction="column" spacing={3}>
+                  <Typography component="h3" variant="h6" fontWeight={800} gutterBottom>
+                      {"Minerva"}
+                  </Typography>
+                  <img src="/assets/images/institution-image.png" alt="Logo Minerva" width={"200rem"}/>
+                  <Typography component="p" variant="body1" gutterBottom>
+                    {'Copyright © '}
+                    <Link color="inherit" href="/">
+                      Minerva
+                    </Link>{' '}
+                    {new Date().getFullYear()}
+                    {'.'}
+                  </Typography>
+                </Stack>
+              </Grid>
+
+              {footers.map((footer) => (
+                <Grid item xs={6} sm={3}>
+                  <Stack direction="column" spacing={1}>
+                    <Typography component="h3" variant="h6" fontWeight={800} gutterBottom>
+                      { footer.title }
+                    </Typography>
+                    {footer.elements.map((element) => (
+                      <Typography component="p" variant="body1" textAlign="left">
+                        <a href={element.link}>{element.name}</a>
+                      </Typography>
+                    ))}
+                  </Stack>
+                </Grid>
+              ))
+
+              }
+            </Grid>
+
+          </Container>
+
+        </Box>
+
+        {/* End footer */}
+        
+        </React.Fragment>
+
       )}
 
     </>
