@@ -1,4 +1,4 @@
-import { Box } from '@mui/material'
+import { Box, Button, TextField } from '@mui/material'
 import Typography from '@mui/material/Typography'
 import React from 'react'
 import { API_MaterialObject, API_CommentObject } from '@/config/interfaces'
@@ -25,11 +25,46 @@ export default function CommentSection({ material }: CommentSectionProps) {
     userTokens.access
   )
 
+  // Comment state
+  const [commentText, setCommentText] = React.useState('')
+
   return (
-    <Box style={{ marginTop: '2rem' }}>
+    <Box style={{ marginTop: '3rem' }}>
       <Typography component='h2' variant='h5'>
         Comentarios
       </Typography>
+
+      <Box
+        style={{
+          marginTop: '1rem',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1rem',
+        } }
+      >
+        <TextField
+          fullWidth
+          rows={3}
+          multiline
+          label='Escribe un comentario'
+          name='commentInput'
+          type='text'
+          size='small'
+          value={commentText}
+          onChange={(e) => setCommentText(e.target.value)}
+        />
+        <Button
+          className='btn btn-primary'
+          type='submit'
+          variant='contained'
+          color='secondary'
+          onClick={(e) => { console.log(e) }}
+          style={{ alignSelf: 'flex-end' }}
+        >
+          Publicar
+        </Button>
+      </Box>
+
 
       {commentsData && (
         <List style={{ padding: '0' }}>
