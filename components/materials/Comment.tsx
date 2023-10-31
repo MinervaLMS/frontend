@@ -12,10 +12,11 @@ interface CommentProps {
     comment: API_CommentObject;
     material: API_MaterialObject;
     level: number;
+    parentReplies?: API_CommentObject[];
     setParentReplies?: React.Dispatch<React.SetStateAction<API_CommentObject[]>>
 }
 
-export function Comment({ comment, level, material, setParentReplies }: CommentProps) {
+export function Comment({ comment, level, material, parentReplies,setParentReplies }: CommentProps) {
     const UserIdState = useAppSelector((state) => state.persistedReducer.userLoginState.id)
 
     const userTokens = useAppSelector((state) => state.persistedReducer.userLoginState.tokens)
@@ -71,9 +72,7 @@ export function Comment({ comment, level, material, setParentReplies }: CommentP
         const response = await fetcher(`${API_ENDPOINTS.COMMENT}delete/${comment.id}`, config);
 
         // Delete the comment from the view
-        setCommentVisibility(false);
-        setParentReplies && setParentReplies(replies.filter((reply) => reply.id !== comment.id));
-        setReplies([])
+        parentReplies && setParentReplies && setParentReplies(parentReplies?.filter((reply) => reply.id !== comment.id));
     }
 
     // Response a comment
@@ -229,7 +228,13 @@ export function Comment({ comment, level, material, setParentReplies }: CommentP
 
             {/* Recursively render the replies of the comment */}
             {replies.map((reply: API_CommentObject) => (
-                <Comment comment={reply} level={1} material={material} setParentReplies={setReplies}/>
+                <Comment
+                    comment={reply}
+                    level={1}
+                    material={material}
+                    parentReplies={replies}
+                    setParentReplies={setReplies}
+                />
             ))}
         </Box>
     );
