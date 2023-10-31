@@ -1,6 +1,6 @@
-import { Avatar, Box, Card, Grid } from "@mui/material";
+import { Avatar, Box, Button, Card, Grid, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { API_CommentObject } from "@/config/interfaces";
+import { API_CommentObject, API_MaterialObject } from "@/config/interfaces";
 import { AccountCircle, PushPin } from "@mui/icons-material";
 import Typography from "@mui/material/Typography";
 import { useAppSelector } from "@/redux/hook";
@@ -10,17 +10,15 @@ import { API_ENDPOINTS } from "@/config/api-connections";
 // This interface defines the types of the props object.
 interface CommentProps {
     comment: API_CommentObject;
+    material: API_MaterialObject;
     level: number;
+    setParentReplies?: React.Dispatch<React.SetStateAction<API_CommentObject[]>>
 }
 
-export function Comment({ comment, level }: CommentProps) {
-    const UserIdState = useAppSelector(
-        (state) => state.persistedReducer.userLoginState.id
-    )
+export function Comment({ comment, level, material, setParentReplies }: CommentProps) {
+    const UserIdState = useAppSelector((state) => state.persistedReducer.userLoginState.id)
 
-    const userTokens = useAppSelector(
-        (state) => state.persistedReducer.userLoginState.tokens
-    )
+    const userTokens = useAppSelector((state) => state.persistedReducer.userLoginState.tokens)
 
     const getDate = () => {
         const date = new Date(comment.post_date);
@@ -35,6 +33,9 @@ export function Comment({ comment, level }: CommentProps) {
 
         return date.toLocaleDateString("es-ES", optionsDate);
     };
+
+    // Manage replies list
+    const [replies, setReplies] = useState(comment?.replies || []);
 
     // Delete a comment
     const [commentVisibility, setCommentVisibility] = useState(true);
@@ -71,6 +72,42 @@ export function Comment({ comment, level }: CommentProps) {
 
         // Delete the comment from the view
         setCommentVisibility(false);
+        setParentReplies && setParentReplies(replies.filter((reply) => reply.id !== comment.id));
+        setReplies([])
+    }
+
+    // Response a comment
+    const [responseVisibility, setResponseVisibility] = useState(false);
+    const [responseText, setResponseText] = React.useState('')
+
+    const handleSubmit = async (e: React.SyntheticEvent<HTMLButtonElement, Event>) => {
+        e.preventDefault()
+
+        const commentParams = {
+            material_id: String(material.id),
+            user_id: Number(UserIdState),
+            content: responseText,
+            parent_comment_id: comment.id
+        }
+
+        const config = {
+            method: 'POST',
+            headers: {
+                Authorization: 'Bearer ' + userTokens.access,
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(commentParams)
+        }
+
+        const response = await fetcher(`${API_ENDPOINTS.COMMENT}create/`, config)
+
+        // Reset the comment text and hide the response input
+        setResponseText('')
+        setResponseVisibility(false)
+
+        // Append the new comment to the start of the replies array
+        setReplies([response, ...replies])
     }
 
     if (!commentVisibility) {
@@ -92,15 +129,22 @@ export function Comment({ comment, level }: CommentProps) {
                     justifyContent: "space-between",
                 }}
             >
-                <Box>
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "0.5rem",
+                        alignItems: "flex-start",
+                        justifyContent: "space-between",
+                        width: "100%",
+                    }}
+                >
                     {comment?.fixed && (
                         <Typography component="p" sx={{ fontSize: "0.8rem", color: "#707070", display: "flex", alignItems: "center" }}>
                             <PushPin sx={{ width: "1rem", height: "1rem", marginRight: "0.25rem", }} />
                             Comentario fijado por el profesor
                         </Typography>
                     )}
-
-
 
                     <Box style={{ display: "flex", gap: "0.5rem", alignItems: "center", }} >
                         <AccountCircle sx={{ width: "3rem", height: "3rem" }} />
@@ -117,8 +161,20 @@ export function Comment({ comment, level }: CommentProps) {
                     </Box>
 
                     <Box>
-                        <Typography component="p">{comment?.content}</Typography>
+                        <Typography component="p" sx={{ marginLeft: "0.5rem" }}>
+                            {comment?.content}
+                        </Typography>
                     </Box>
+
+                    <Button
+                        className='btn btn-primary'
+                        type='submit'
+                        variant='text'
+                        color='secondary'
+                        onClick={() => { setResponseVisibility(!responseVisibility) }}
+                    >
+                        {responseVisibility ? "Cancelar" : "Responder"}
+                    </Button>
                 </Box>
 
                 {String(comment?.user_id) === String(UserIdState) && (
@@ -136,12 +192,45 @@ export function Comment({ comment, level }: CommentProps) {
                 )}
             </Card>
 
+            {/* Show response input */}
+            {responseVisibility && (
+                <Box
+                    sx={{
+                        marginTop: '1rem',
+                        display: 'flex',
+                        flexDirection: 'row',
+                        gap: '1rem',
+                    }}
+                >
+                    <TextField
+                        fullWidth
+                        rows={1}
+                        multiline
+                        label='Escribe una respuesta'
+                        name='responseInput'
+                        type='text'
+                        size='small'
+                        value={responseText}
+                        onChange={(e) => setResponseText(e.target.value)}
+                    />
+
+                    <Button
+                        className='btn btn-primary'
+                        type='submit'
+                        variant='contained'
+                        color='secondary'
+                        onClick={(e) => { handleSubmit(e) }}
+                        style={{ alignSelf: 'flex-end' }}
+                    >
+                        Publicar
+                    </Button>
+                </Box>
+            )}
+
             {/* Recursively render the replies of the comment */}
-            {comment?.replies !== null &&
-                comment?.replies.map((reply: API_CommentObject) => (
-                    <Comment comment={reply} level={1}/>
-                ))
-            }
+            {replies.map((reply: API_CommentObject) => (
+                <Comment comment={reply} level={1} material={material} setParentReplies={setReplies}/>
+            ))}
         </Box>
     );
 }
