@@ -10,6 +10,10 @@ import Typography from '@mui/material/Typography'
 
 // Import icons
 import PlayCircleOutlinedIcon from '@mui/icons-material/PlayCircleOutlined'
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+import DataObjectIcon from '@mui/icons-material/DataObject';
+import SubjectOutlinedIcon from '@mui/icons-material/SubjectOutlined';
+
 import TimerOutlinedIcon from '@mui/icons-material/TimerOutlined'
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined'
 import ThumbUpIcon from '@mui/icons-material/ThumbUp'
@@ -37,6 +41,13 @@ import { MATERIAL_TYPES } from '@/config/enums'
 interface CourseMaterialProps {
   material: API_MaterialObject
   onSelected: () => undefined
+}
+
+const iconByMaterialType: {[key: string]: any} = {
+  [MATERIAL_TYPES.VIDEO]: <PlayCircleOutlinedIcon color='primary' sx={{ width: "95%", height: "95%" }}/>,
+  [MATERIAL_TYPES.PDF]: <DescriptionOutlinedIcon color='primary' sx={{ width: "95%", height: "95%" }}/>,
+  [MATERIAL_TYPES.MARKDOWN]: <SubjectOutlinedIcon color='primary' sx={{ width: "95%", height: "95%" }}/>,
+  [MATERIAL_TYPES.EXERCISE]: <DataObjectIcon color='primary' sx={{ width: "95%", height: "95%" }}/>
 }
 
 function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
@@ -183,13 +194,7 @@ function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
       <CardActionArea onClick={onSelected}>
         <Box className={styles.materialInformation}>
           <Box className={styles.typeOfMaterial}>
-            <PlayCircleOutlinedIcon
-              color='primary'
-              sx={{
-                width: '95%',
-                height: '95%'
-              }}
-            />
+            {iconByMaterialType[materialData.material_type]}
           </Box>
           <Container>
             <Box className={styles.materialName}>

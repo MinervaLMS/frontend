@@ -68,6 +68,7 @@ export interface API_CommentObject {
   fixed: number
   post_date: string
   user_name: string
+  user_id: number
   parent_comment_id: number
   replies: Array<API_CommentObject>
 }
