@@ -34,6 +34,7 @@ function useMaterialList(
 
   const { data, error, isLoading } = useSWR(
     `${API_URL}/users/1/module/1/materials/`,
+    // `${API_ENDPOINTS.USERS}${userId}/module/${moduleId}/materials/`,
     fetcher
   )
 

@@ -60,7 +60,7 @@ export interface API_MaterialObject {
   access: {
     id: number
     views: number
-    last_view: ''
+    last_view: string
     completed: boolean | null
     like: boolean
     material_id: number
