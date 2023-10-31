@@ -6,6 +6,8 @@ import Typography from "@mui/material/Typography";
 import { useAppSelector } from "@/redux/hook";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { API_ENDPOINTS } from "@/config/api-connections";
+import CustomSnackbar from "../common/CustomSnackbar";
+import { AUTOHIDE_ALERT_DURATION } from "@/config/constants";
 
 // This interface defines the types of the props object.
 interface CommentProps {
@@ -33,6 +35,15 @@ export function Comment({ comment, level, material, parentReplies,setParentRepli
         };
 
         return date.toLocaleDateString("es-ES", optionsDate);
+    };
+
+    // States related to the alert component
+    const [alertOpen, setAlertOpen] = useState(false);
+    const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
+
+    const handleAlertClose = ( event?: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === "clickaway") { return }
+        setAlertOpen(false);
     };
 
     // Manage replies list
@@ -72,7 +83,17 @@ export function Comment({ comment, level, material, parentReplies,setParentRepli
         const response = await fetcher(`${API_ENDPOINTS.COMMENT}delete/${comment.id}`, config);
 
         // Delete the comment from the view
+        !parentReplies && setCommentVisibility(false);
+
+        // If the comment is a reply, delete it from the replies array
         parentReplies && setParentReplies && setParentReplies(parentReplies?.filter((reply) => reply.id !== comment.id));
+
+        // Show the alert
+        setAlertOpen(true);
+        setAlertConfig({
+            message: "El comentario se ha eliminado correctamente",
+            severity: "success",
+        });
     }
 
     // Response a comment
@@ -107,6 +128,13 @@ export function Comment({ comment, level, material, parentReplies,setParentRepli
 
         // Append the new comment to the start of the replies array
         setReplies([response, ...replies])
+
+        // Show the alert
+        setAlertOpen(true);
+        setAlertConfig({
+            message: "La respuesta se ha publicado correctamente",
+            severity: "success",
+        });
     }
 
     if (!commentVisibility) {
@@ -116,126 +144,138 @@ export function Comment({ comment, level, material, parentReplies,setParentRepli
     return (
         // The level of the comment is used to indent the comment
         // Maybe this style has to be inline to be able to use the level variable
-        <Box style={{ marginTop: "1.5rem", marginLeft: `${3*level}rem`, width: `calc(100% - ${3*level}rem)` }}>
-            <Card
-                sx={{
-                    bgcolor: "#EEE",
-                    padding: "1.5rem",
-                    display: "flex",
-                    flexDirection: "row",
-                    gap: "0.5rem",
-                    alignItems: "flex-start",
-                    justifyContent: "space-between",
-                }}
-            >
-                <Box
+        <>
+            <CustomSnackbar
+                message={alertConfig.message}
+                severity={alertConfig.severity}
+                vertical="top"
+                horizontal="center"
+                autoHideDuration={AUTOHIDE_ALERT_DURATION}
+                open={alertOpen}
+                onClose={handleAlertClose}
+            />
+
+            <Box style={{ marginTop: "1.5rem", marginLeft: `${3*level}rem`, width: `calc(100% - ${3*level}rem)` }}>
+                <Card
                     sx={{
+                        bgcolor: "#EEE",
+                        padding: "1.5rem",
                         display: "flex",
-                        flexDirection: "column",
+                        flexDirection: "row",
                         gap: "0.5rem",
                         alignItems: "flex-start",
                         justifyContent: "space-between",
-                        width: "100%",
                     }}
                 >
-                    {comment?.fixed && (
-                        <Typography component="p" sx={{ fontSize: "0.8rem", color: "#707070", display: "flex", alignItems: "center" }}>
-                            <PushPin sx={{ width: "1rem", height: "1rem", marginRight: "0.25rem", }} />
-                            Comentario fijado por el profesor
-                        </Typography>
-                    )}
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "0.5rem",
+                            alignItems: "flex-start",
+                            justifyContent: "space-between",
+                            width: "100%",
+                        }}
+                    >
+                        {comment?.fixed && (
+                            <Typography component="p" sx={{ fontSize: "0.8rem", color: "#707070", display: "flex", alignItems: "center" }}>
+                                <PushPin sx={{ width: "1rem", height: "1rem", marginRight: "0.25rem", }} />
+                                Comentario fijado por el profesor
+                            </Typography>
+                        )}
 
-                    <Box style={{ display: "flex", gap: "0.5rem", alignItems: "center", }} >
-                        <AccountCircle sx={{ width: "3rem", height: "3rem" }} />
+                        <Box style={{ display: "flex", gap: "0.5rem", alignItems: "center", }} >
+                            <AccountCircle sx={{ width: "3rem", height: "3rem" }} />
+
+                            <Box>
+                                <Typography component="p" sx={{ fontWeight: "bold" }}>
+                                    {comment?.user_name}
+                                </Typography>
+
+                                <Typography component="p" sx={{ fontSize: "0.8rem", color: "#707070", }} >
+                                    {getDate()}
+                                </Typography>
+                            </Box>
+                        </Box>
 
                         <Box>
-                            <Typography component="p" sx={{ fontWeight: "bold" }}>
-                                {comment?.user_name}
-                            </Typography>
-
-                            <Typography component="p" sx={{ fontSize: "0.8rem", color: "#707070", }} >
-                                {getDate()}
+                            <Typography component="p" sx={{ marginLeft: "0.5rem" }}>
+                                {comment?.content}
                             </Typography>
                         </Box>
+
+                        <Button
+                            className='btn btn-primary'
+                            type='submit'
+                            variant='text'
+                            color='secondary'
+                            onClick={() => { setResponseVisibility(!responseVisibility) }}
+                        >
+                            {responseVisibility ? "Cancelar" : "Responder"}
+                        </Button>
                     </Box>
 
-                    <Box>
-                        <Typography component="p" sx={{ marginLeft: "0.5rem" }}>
-                            {comment?.content}
-                        </Typography>
-                    </Box>
+                    {String(comment?.user_id) === String(UserIdState) && (
+                        <button
+                            style={{
+                                border: "none",
+                                background: "none",
+                                cursor: "pointer",
+                                color: "#F77777"
+                            }}
+                            onClick={handleDeleteComment}
+                        >
+                            <DeleteIcon/>
+                        </button>
+                    )}
+                </Card>
 
-                    <Button
-                        className='btn btn-primary'
-                        type='submit'
-                        variant='text'
-                        color='secondary'
-                        onClick={() => { setResponseVisibility(!responseVisibility) }}
-                    >
-                        {responseVisibility ? "Cancelar" : "Responder"}
-                    </Button>
-                </Box>
-
-                {String(comment?.user_id) === String(UserIdState) && (
-                    <button
-                        style={{
-                            border: "none",
-                            background: "none",
-                            cursor: "pointer",
-                            color: "#F77777"
+                {/* Show response input */}
+                {responseVisibility && (
+                    <Box
+                        sx={{
+                            marginTop: '1rem',
+                            display: 'flex',
+                            flexDirection: 'row',
+                            gap: '1rem',
                         }}
-                        onClick={handleDeleteComment}
                     >
-                        <DeleteIcon/>
-                    </button>
+                        <TextField
+                            fullWidth
+                            rows={1}
+                            multiline
+                            label='Escribe una respuesta'
+                            name='responseInput'
+                            type='text'
+                            size='small'
+                            value={responseText}
+                            onChange={(e) => setResponseText(e.target.value)}
+                        />
+
+                        <Button
+                            className='btn btn-primary'
+                            type='submit'
+                            variant='contained'
+                            color='secondary'
+                            onClick={(e) => { handleSubmit(e) }}
+                            style={{ alignSelf: 'flex-end' }}
+                        >
+                            Publicar
+                        </Button>
+                    </Box>
                 )}
-            </Card>
 
-            {/* Show response input */}
-            {responseVisibility && (
-                <Box
-                    sx={{
-                        marginTop: '1rem',
-                        display: 'flex',
-                        flexDirection: 'row',
-                        gap: '1rem',
-                    }}
-                >
-                    <TextField
-                        fullWidth
-                        rows={1}
-                        multiline
-                        label='Escribe una respuesta'
-                        name='responseInput'
-                        type='text'
-                        size='small'
-                        value={responseText}
-                        onChange={(e) => setResponseText(e.target.value)}
+                {/* Recursively render the replies of the comment */}
+                {replies.map((reply: API_CommentObject) => (
+                    <Comment
+                        comment={reply}
+                        level={1}
+                        material={material}
+                        parentReplies={replies}
+                        setParentReplies={setReplies}
                     />
-
-                    <Button
-                        className='btn btn-primary'
-                        type='submit'
-                        variant='contained'
-                        color='secondary'
-                        onClick={(e) => { handleSubmit(e) }}
-                        style={{ alignSelf: 'flex-end' }}
-                    >
-                        Publicar
-                    </Button>
-                </Box>
-            )}
-
-            {/* Recursively render the replies of the comment */}
-            {replies.map((reply: API_CommentObject) => (
-                <Comment
-                    comment={reply}
-                    level={1}
-                    material={material}
-                    parentReplies={replies}
-                    setParentReplies={setReplies}
-                />
-            ))}
-        </Box>
+                ))}
+            </Box>
+        </>
     );
 }
