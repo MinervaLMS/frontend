@@ -32,7 +32,7 @@ function useMaterialList(
     return data
   }
 
-  const { data, error, isLoading } = useSWR(
+  const { data, error, isLoading, mutate } = useSWR(
     `${API_ENDPOINTS.USERS}${userId}/module/${moduleId}/materials/`,
     // `${API_URL}/users/1/module/1/materials/`,
     fetcher
@@ -41,7 +41,8 @@ function useMaterialList(
   return {
     data,
     isLoading,
-    error
+    error,
+    mutate
   }
 }
 
