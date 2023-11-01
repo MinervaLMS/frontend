@@ -25,11 +25,13 @@ import { useRouter, usePathname } from 'next/navigation'
 // This interface defines the types of the props object.
 interface CourseMaterialListProps {
   moduleId: number
+  userId: number
   accessToken: string
 }
 
 function CourseMaterialList({
   moduleId,
+  userId,
   accessToken
 }: CourseMaterialListProps) {
   const router = useRouter()
@@ -40,7 +42,12 @@ function CourseMaterialList({
   const [alertConfig, setAlertConfig] = useState({ message: '', severity: '' })
 
   // API Fetch
-  const { data: materialsList, error } = useMaterialList(moduleId, accessToken)
+  console.log('token', accessToken)
+  const { data: materialsList, error } = useMaterialList(
+    userId,
+    moduleId,
+    accessToken
+  )
 
   // Event handlers
   const handleAlertOpen = (status: number) => {
@@ -101,12 +108,7 @@ function CourseMaterialList({
         <ListItem key={material.id}>
           <CourseMaterial
             onSelected={() => handleGoToSelectedMaterial(material.id)}
-            material={{
-              ...material,
-              attempts: 0,
-              correct_attempts: 0,
-              isCompleted: false
-            }}
+            material={material}
           />
         </ListItem>
       ))}

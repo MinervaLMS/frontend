@@ -40,21 +40,6 @@ const views: any = {
   IOC: ExerciseMaterial
 }
 
-const initialMaterial: API_MaterialObject = {
-  id: 0,
-  name: '',
-  material_type: MATERIAL_TYPES.NONE,
-  is_extra: false,
-  order: 0,
-  module_id: 0,
-  likes: 0,
-  dislikes: 0,
-  total_comments: 0,
-  attempts: 0,
-  correct_attempts: 0,
-  isCompleted: false
-}
-
 function Materials() {
   // Redux states:
   const userTokens = useAppSelector(
