@@ -96,3 +96,11 @@ export interface API_ModuleProgressObject {
   module_instructional_progress: number
   module_assessment_progress: number
 }
+
+export interface API_ModuleListProgressObject {
+  module_id: number
+  module_name: string
+  module_instructional_progress: number
+  module_assessment_progress: number
+  order: number
+}

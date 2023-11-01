@@ -46,10 +46,6 @@ export const CourseDrawer = ({ courseAlias, moduleID }: CourseDrawerProps) => {
     (state) => state.persistedReducer.drawerState.open
   )
 
-  const userTokens = useAppSelector(
-    (state) => state.persistedReducer.userLoginState.tokens
-  )
-
   const handleChangeModule = (moduleID: number) => {
     router.push(`/course/${courseAlias}/${moduleID}`)
   }
@@ -82,7 +78,6 @@ export const CourseDrawer = ({ courseAlias, moduleID }: CourseDrawerProps) => {
       </DrawerHeader>
       <CourseModuleList
         courseAlias={courseAlias}
-        accessToken={userTokens.access}
         moduleID={moduleID ? moduleID : 0}
         changeSelectedModule={handleChangeModule}
       />
