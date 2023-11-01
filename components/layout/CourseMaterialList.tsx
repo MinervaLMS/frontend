@@ -29,6 +29,7 @@ import { useAppSelector } from '@/redux/hook'
 // This interface defines the types of the props object.
 interface CourseMaterialListProps {
   moduleId: number
+  userId: number
   accessToken: string
 }
 
@@ -44,7 +45,7 @@ function CourseMaterialList({ moduleId, accessToken }: CourseMaterialListProps) 
   const [alertConfig, setAlertConfig] = useState({ message: '', severity: '' })
 
   // API Fetch
-  const { data: materialsList, error } = useMaterialList(moduleId, accessToken)
+  const { data: materialsList, error } = useMaterialList(Number(userId), moduleId, accessToken)
   const { data: accessData, isLoading: accessIsLoading } = useModuleAccess(moduleId, userId, accessToken)
 
   // Event handlers
@@ -106,12 +107,7 @@ function CourseMaterialList({ moduleId, accessToken }: CourseMaterialListProps) 
         <ListItem key={material.id}>
           <CourseMaterial
             onSelected={() => handleGoToSelectedMaterial(material.id)}
-            material={{
-              ...material,
-              attempts: 0,
-              correct_attempts: 0,
-              isCompleted: false
-            }}
+            material={material}
             access={accessData?.find((access: API_AccessProgressObject) => access.id === material.id)}
             accessIsLoading={accessIsLoading}
           />

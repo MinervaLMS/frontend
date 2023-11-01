@@ -199,7 +199,7 @@ function CourseMaterial({ material, onSelected, access, accessIsLoading }: Cours
               <Typography sx={{ typography: { sm: 'body1', md: 'h6' } }}>
                 {materialData.name}
               </Typography>
-              {materialData.isCompleted ? (
+              {materialData?.access?.completed ? (
                 <CheckBoxIcon />
               ) : (
                 <CheckBoxOutlineBlankIcon />
@@ -212,8 +212,8 @@ function CourseMaterial({ material, onSelected, access, accessIsLoading }: Cours
               >
                 {materialData.material_type === MATERIAL_TYPES.EXERCISE ? (
                   <Typography color='primary' variant='body1'>
-                    Aciertos: {materialData.correct_attempts}/
-                    {materialData.attempts}
+                    Aciertos: {materialData.access?.summary?.hits}/
+                    {materialData.access?.summary?.attempts}
                   </Typography>
                 ) : (
                   <>
