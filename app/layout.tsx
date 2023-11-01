@@ -1,5 +1,6 @@
 import Providers from '@/redux/provider'
 import type { Metadata } from 'next'
+import SWRFetchConfig from '@/swr/config'
 
 export const metadata: Metadata = {
   title: 'Minerva LMS',
@@ -14,7 +15,11 @@ export default function RootLayout({
   return (
     <html lang='es'>
       <body>
-        <Providers>{children} </Providers>
+        <Providers>
+          <SWRFetchConfig>
+            {children} 
+          </SWRFetchConfig>
+        </Providers>
       </body>
     </html>
   )
