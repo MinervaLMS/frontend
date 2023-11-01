@@ -1,5 +1,5 @@
 import useSWR from 'swr'
-import { API_ENDPOINTS, API_URL } from '@/config/api-connections'
+import { API_ENDPOINTS } from '@/config/api-connections'
 import { API_MaterialObject } from '@/config/interfaces'
 
 function useMaterialList(
@@ -33,8 +33,8 @@ function useMaterialList(
   }
 
   const { data, error, isLoading } = useSWR(
-    `${API_URL}/users/1/module/1/materials/`,
-    // `${API_ENDPOINTS.USERS}${userId}/module/${moduleId}/materials/`,
+    `${API_ENDPOINTS.USERS}${userId}/module/${moduleId}/materials/`,
+    // `${API_URL}/users/1/module/1/materials/`,
     fetcher
   )
 

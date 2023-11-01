@@ -51,11 +51,13 @@ function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
   )
 
   // States related to the API Fetch
+  /* QUEDA PENDIENTE REVISAR ESTE ENDPOINT PARA LA DATA SOCIAL... O QUITARLO SI YA NO ES NECESARIO
   const { data: accessData, isLoading: accessIsLoading } = useMaterialAccess(
     material.id,
     userId,
     userTokens.access
   )
+  */
 
   const [materialData, setMaterialData] = useState(material)
   const [reaction, setReaction] = useState<any>(null)
@@ -63,7 +65,7 @@ function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
   const [loadingRequest, setLoadingRequest] = useState<boolean>(true)
 
   const likeMaterial = async (materialId: number) => {
-    if (loadingRequest || accessIsLoading) return
+    if (loadingRequest /*|| accessIsLoading*/) return
     console.log('Like material with id: ' + materialId)
     setLoadingRequest(true)
 
@@ -113,7 +115,7 @@ function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
   }
 
   const dislikeMaterial = async (materialId: number) => {
-    if (loadingRequest || accessIsLoading) return
+    if (loadingRequest /*|| accessIsLoading*/) return
     console.log('Dislike material with id: ' + materialId)
     setLoadingRequest(true)
 
@@ -164,6 +166,7 @@ function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
     }
   }
 
+  /*
   useEffect(() => {
     if (accessData) {
       setAccess(accessData)
@@ -171,6 +174,7 @@ function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
       setLoadingRequest(false)
     }
   }, [])
+  */
 
   return (
     <Card
