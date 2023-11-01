@@ -80,3 +80,13 @@ export interface API_ModuleProgressObject {
   module_instructional_progress: number
   module_assessment_progress: number
 }
+
+export interface API_AccessProgressObject {
+  id: number
+  views: number
+  last_view: string
+  completed: string
+  like: boolean | null
+  material_id: number
+  user_id: number
+}

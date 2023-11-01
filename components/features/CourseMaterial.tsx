@@ -22,15 +22,15 @@ import ThumbDownIcon from '@mui/icons-material/ThumbDown'
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined'
 import CheckBoxIcon from '@mui/icons-material/CheckBox'
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
+import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 
 // Import styles
 import { common } from '@mui/material/colors'
 import styles from '@/styles/CourseMaterial.module.css'
 
 // Import API
-import useMaterialAccess from '@/hooks/fetching/useMaterialAccess'
-import { API_ENDPOINTS, API_STATUS_CODE } from '@/config/api-connections'
-import { API_MaterialObject } from '@/config/interfaces'
+import { API_ENDPOINTS } from '@/config/api-connections'
+import { API_AccessProgressObject, API_MaterialObject } from '@/config/interfaces'
 
 // Import redux
 import { useAppSelector } from '@/redux/hook'
@@ -41,16 +41,19 @@ import { MATERIAL_TYPES } from '@/config/enums'
 interface CourseMaterialProps {
   material: API_MaterialObject
   onSelected: () => undefined
+  access: API_AccessProgressObject
+  accessIsLoading: boolean
 }
 
 const iconByMaterialType: {[key: string]: any} = {
   [MATERIAL_TYPES.VIDEO]: <PlayCircleOutlinedIcon color='primary' sx={{ width: "95%", height: "95%" }}/>,
   [MATERIAL_TYPES.PDF]: <DescriptionOutlinedIcon color='primary' sx={{ width: "95%", height: "95%" }}/>,
   [MATERIAL_TYPES.MARKDOWN]: <SubjectOutlinedIcon color='primary' sx={{ width: "95%", height: "95%" }}/>,
-  [MATERIAL_TYPES.EXERCISE]: <DataObjectIcon color='primary' sx={{ width: "95%", height: "95%" }}/>
+  [MATERIAL_TYPES.EXERCISE]: <DataObjectIcon color='primary' sx={{ width: "95%", height: "95%" }}/>,
+  default: <MoreHorizOutlinedIcon color='primary' sx={{ width: "95%", height: "95%" }}/>
 }
 
-function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
+function CourseMaterial({ material, onSelected, access, accessIsLoading }: CourseMaterialProps) {
   // Redux states:
   const userTokens = useAppSelector(
     (state) => state.persistedReducer.userLoginState.tokens
@@ -60,16 +63,8 @@ function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
     (state) => state.persistedReducer.userLoginState.id
   )
 
-  // States related to the API Fetch
-  const { data: accessData, isLoading: accessIsLoading } = useMaterialAccess(
-    material.id,
-    userId,
-    userTokens.access
-  )
-
   const [materialData, setMaterialData] = useState(material)
   const [reaction, setReaction] = useState<any>(null)
-  const [access, setAccess] = useState<any>(null)
   const [loadingRequest, setLoadingRequest] = useState<boolean>(true)
 
   const likeMaterial = async (materialId: number) => {
@@ -81,11 +76,11 @@ function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
     if (access.like == null) {
       // There was no previous reaction
       setMaterialData({ ...materialData, likes: materialData.likes + 1 })
-      setAccess({ ...access, like: true })
+      access = { ...access, like: true }
       setReaction(true)
     } else if (access.like == false) {
       // Previous reaction was dislike -> Delete dislike and add like
-      setAccess({ ...access, like: true })
+      access = { ...access, like: true }
       setMaterialData({
         ...materialData,
         likes: materialData.likes + 1,
@@ -94,7 +89,7 @@ function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
       setReaction(true)
     } else {
       // Previous reaction was like -> Delete like
-      setAccess({ ...access, like: null })
+      access = { ...access, like: null }
       setMaterialData({ ...materialData, likes: materialData.likes - 1 })
       setReaction(null)
     }
@@ -130,12 +125,12 @@ function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
     // Update visual likes/dislikes counter
     if (access.like == null) {
       // There was no previous reaction
-      setAccess({ ...access, like: false })
+      access = { ...access, like: false }
       setMaterialData({ ...materialData, dislikes: materialData.dislikes + 1 })
       setReaction(false)
     } else if (access.like == true) {
       // Previous reaction was dislike -> Add dislike and delete like
-      setAccess({ ...access, like: false })
+      access = { ...access, like: false }
       setMaterialData({
         ...materialData,
         dislikes: materialData.dislikes + 1,
@@ -144,7 +139,7 @@ function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
       setReaction(false)
     } else {
       // Previous reaction was dislike -> Delete dislike
-      setAccess({ ...access, like: null })
+      access = { ...access, like: null }
       setMaterialData({ ...materialData, dislikes: materialData.dislikes - 1 })
       setReaction(null)
     }
@@ -175,9 +170,8 @@ function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
   }
 
   useEffect(() => {
-    if (accessData) {
-      setAccess(accessData)
-      setReaction(accessData.like)
+    if (access) {
+      setReaction(access.like)
       setLoadingRequest(false)
     }
   }, [])
@@ -194,7 +188,11 @@ function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
       <CardActionArea onClick={onSelected}>
         <Box className={styles.materialInformation}>
           <Box className={styles.typeOfMaterial}>
-            {iconByMaterialType[materialData.material_type]}
+            {
+              materialData.material_type in iconByMaterialType
+                ? iconByMaterialType[materialData.material_type]
+                : iconByMaterialType.default
+            }
           </Box>
           <Container>
             <Box className={styles.materialName}>

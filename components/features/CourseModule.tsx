@@ -85,10 +85,10 @@ const CourseModule = memo(({ moduleId, userId, accessToken, minAssessmentProgres
         <Box className={styles.titleSeparation}>
           <Grid container justifyContent="space-between" spacing={2}>
             <Grid item sm={12} md={8}>
-              <Typography component="h5" variant="h5">
+              <Typography component="h5" variant="h5" mt={2}>
                 {moduleData?.name}
               </Typography>
-              <Typography align="justify" paragraph>
+              <Typography align="justify" paragraph mt={1}>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
                 In varius ligula vel turpis tincidunt dignissim. 
                 Donec rutrum ut dolor in consequat. 
@@ -121,7 +121,7 @@ const CourseModule = memo(({ moduleId, userId, accessToken, minAssessmentProgres
                   <ModuleProgressBar
                     color="secondary"
                     progress={progressData ? progressData.module_assessment_progress : 0}
-                    minProgress={minAssessmentProgress}
+                    minprogress={minAssessmentProgress}
                   />
                 </Box>
               </Box>

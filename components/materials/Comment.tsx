@@ -89,6 +89,7 @@ export function Comment({ comment, level, material, parentReplies,setParentRepli
         parentReplies && setParentReplies && setParentReplies(parentReplies?.filter((reply) => reply.id !== comment.id));
 
         // Show the alert
+        console.log('Open alert')
         setAlertOpen(true);
         setAlertConfig({
             message: "El comentario se ha eliminado correctamente",
