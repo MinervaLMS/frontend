@@ -18,12 +18,11 @@ import { useAppSelector } from '@/redux/hook'
 
 // Import API
 import useModuleProgress from "@/hooks/fetching/useModuleProgress";
-import { API_ModuleObject } from "@/config/interfaces";
+import { API_ModuleListProgressObject } from "@/config/interfaces";
 
 // This interface defines the types of the props object.
 interface CourseModuleListItemProps {
-  module: API_ModuleObject
-  accessToken: string
+  module: API_ModuleListProgressObject
   minAssessmentProgress: number
   selectedModuleID: number
   changeSelectedModule: (selectedModuleID: number) => void
@@ -31,39 +30,27 @@ interface CourseModuleListItemProps {
 
 function CourseModuleListItem({
   module,
-  accessToken,
   minAssessmentProgress,
   selectedModuleID,
   changeSelectedModule,
 }: CourseModuleListItemProps) {
-
-  // Redux states
-  const userId = useAppSelector(
-    (state) => state.persistedReducer.userLoginState.id
-  );
-  
-  // States related to the API Fetch
-  const { data: moduleProgress } = useModuleProgress(module.id, userId, accessToken)
-
   // To change de icon depending on the progress
   let Icon = <HelpOutlineIcon color="secondary" />
 
-  if(moduleProgress) {
-    const progress = moduleProgress.module_assessment_progress
-    if (progress < minAssessmentProgress) {
-      Icon = <RadioButtonUncheckedIcon color="secondary" />
-    } else if (progress >= minAssessmentProgress && progress < 100) {
-      Icon = <CheckCircleOutlineRoundedIcon color="secondary" />
-    } else if (progress === 100) {
-      Icon = <VerifiedRoundedIcon color="secondary" />
-    }
+  const progress = module.module_assessment_progress
+  if (progress < minAssessmentProgress) {
+    Icon = <RadioButtonUncheckedIcon color="secondary" />
+  } else if (progress >= minAssessmentProgress && progress < 100) {
+    Icon = <CheckCircleOutlineRoundedIcon color="secondary" />
+  } else if (progress === 100) {
+    Icon = <VerifiedRoundedIcon color="secondary" />
   }
 
   return (
-    <ListItem key={module.id} disablePadding>
+    <ListItem key={module.module_id} disablePadding>
       <ListItemButton
-        onClick={() => changeSelectedModule(module.id)}
-        selected={selectedModuleID === module.id ? true : false}
+        onClick={() => changeSelectedModule(module.module_id)}
+        selected={selectedModuleID === module.module_id ? true : false}
       >
         {Icon}
         <ListItemText
@@ -71,7 +58,7 @@ function CourseModuleListItem({
           disableTypography
         >
           <Typography variant="body2">
-            {(module.order + 1).toString() + ". " + module.name}
+            {(module.order + 1).toString() + ". " + module.module_name}
           </Typography>
         </ListItemText>
       </ListItemButton>

@@ -12,23 +12,24 @@ import CourseModuleListItem from "./CourseModuleListItem";
 // Import constants
 import { AUTOHIDE_ALERT_DURATION } from "@/config/constants";
 
+// Import redux
+import { useAppSelector } from '@/redux/hook'
+
 // Import API
-import useModulesList from "@/hooks/fetching/useModulesList";
+import useModulesListProgress from "@/hooks/fetching/useModulesListProgress";
 import useCourse from "@/hooks/fetching/useCourse";
 import { API_STATUS_CODE } from "@/config/api-connections";
-import { API_ModuleObject } from "@/config/interfaces";
+import { API_ModuleListProgressObject } from "@/config/interfaces";
 
 // This interface defines the types of the props object.
 interface CourseModulesListProps {
   courseAlias: string;
-  accessToken: string;
   moduleID: number;
   changeSelectedModule: (moduleID: number) => void;
 }
 
 function CourseModulesList({
   courseAlias,
-  accessToken,
   moduleID,
   changeSelectedModule,
 }: CourseModulesListProps) {
@@ -36,9 +37,17 @@ function CourseModulesList({
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertConfig, setAlertConfig] = useState({ message: "", severity: "" });
 
+  // Redux states
+  const userTokens = useAppSelector(
+    (state) => state.persistedReducer.userLoginState.tokens
+  )
+  const userId = useAppSelector(
+    (state) => state.persistedReducer.userLoginState.id
+  )
+
   // States related to the API Fetch
-  const { data: modulesList, isLoading, error } = useModulesList(courseAlias, accessToken)
-  const { data: courseData } = useCourse(courseAlias, accessToken)
+  const { data: modulesList, isLoading, error } = useModulesListProgress(userId, courseAlias, userTokens.access)
+  const { data: courseData } = useCourse(courseAlias, userTokens.access)
 
   // Event handlers
   const handleAlertOpen = (status: number) => {
@@ -94,11 +103,10 @@ function CourseModulesList({
   if(!isLoading && !error) {
     return (
       <List>
-        {modulesList.map((module: API_ModuleObject) => (
+        {modulesList.map((module: API_ModuleListProgressObject) => (
           <CourseModuleListItem 
-            key={module.id}
+            key={module.module_id}
             module={module}
-            accessToken={accessToken}
             minAssessmentProgress={courseData?.min_assessment_progress}
             selectedModuleID={moduleID}
             changeSelectedModule={changeSelectedModule}

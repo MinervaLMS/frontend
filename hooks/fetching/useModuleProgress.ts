@@ -42,7 +42,7 @@ function useModuleProgress (moduleId: number, userId: string, userAccessToken: s
       }
       const newResponse = await fetch(url, config);
       if (!newResponse.ok) {
-        const error = new Error(response.status.toString())
+        const error = new Error(newResponse.status.toString())
         throw error
       }
       return newResponse.json()
