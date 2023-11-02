@@ -145,7 +145,13 @@ export default function CommentSection({ material }: CommentSectionProps) {
           <List style={{ padding: '0' }}>
             {commentsData.map((comment: API_CommentObject) => (
               <ListItem key={comment.id} style={{ padding: '0' }}>
-                <Comment comment={comment} level={0} material={material}/>
+                <Comment
+                  comment={comment}
+                  level={0}
+                  material={material}
+                  sectionSetAlertOpen={setAlertOpen}
+                  sectionSetAlertConfig={setAlertConfig}
+                />
               </ListItem>
             ))}
           </List>

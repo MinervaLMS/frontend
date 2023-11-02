@@ -16,9 +16,11 @@ interface CommentProps {
     level: number;
     parentReplies?: API_CommentObject[];
     setParentReplies?: React.Dispatch<React.SetStateAction<API_CommentObject[]>>
+    sectionSetAlertOpen: React.Dispatch<React.SetStateAction<boolean>>
+    sectionSetAlertConfig: React.Dispatch<React.SetStateAction<{ message: string, severity: string }>>
 }
 
-export function Comment({ comment, level, material, parentReplies,setParentReplies }: CommentProps) {
+export function Comment({ comment, level, material, parentReplies,setParentReplies, sectionSetAlertOpen, sectionSetAlertConfig }: CommentProps) {
     const UserIdState = useAppSelector((state) => state.persistedReducer.userLoginState.id)
 
     const userTokens = useAppSelector((state) => state.persistedReducer.userLoginState.tokens)
@@ -82,19 +84,18 @@ export function Comment({ comment, level, material, parentReplies,setParentRepli
 
         const response = await fetcher(`${API_ENDPOINTS.COMMENT}delete/${comment.id}`, config);
 
+        // Show the alert
+        sectionSetAlertOpen(true);
+        sectionSetAlertConfig({
+            message: "El comentario se ha eliminado correctamente",
+            severity: "success",
+        });
+
         // Delete the comment from the view
         !parentReplies && setCommentVisibility(false);
 
         // If the comment is a reply, delete it from the replies array
         parentReplies && setParentReplies && setParentReplies(parentReplies?.filter((reply) => reply.id !== comment.id));
-
-        // Show the alert
-        console.log('Open alert')
-        setAlertOpen(true);
-        setAlertConfig({
-            message: "El comentario se ha eliminado correctamente",
-            severity: "success",
-        });
     }
 
     // Response a comment
@@ -274,6 +275,8 @@ export function Comment({ comment, level, material, parentReplies,setParentRepli
                         material={material}
                         parentReplies={replies}
                         setParentReplies={setReplies}
+                        sectionSetAlertOpen={sectionSetAlertOpen}
+                        sectionSetAlertConfig={sectionSetAlertConfig}
                     />
                 ))}
             </Box>
