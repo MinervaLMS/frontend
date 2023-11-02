@@ -40,6 +40,7 @@ interface CourseMaterialProps {
 }
 
 function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
+  console.log(material)
   // Redux states:
   const userTokens = useAppSelector(
     (state) => state.persistedReducer.userLoginState.tokens
@@ -50,11 +51,13 @@ function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
   )
 
   // States related to the API Fetch
+  /* QUEDA PENDIENTE REVISAR ESTE ENDPOINT PARA LA DATA SOCIAL... O QUITARLO SI YA NO ES NECESARIO
   const { data: accessData, isLoading: accessIsLoading } = useMaterialAccess(
     material.id,
     userId,
     userTokens.access
   )
+  */
 
   const [materialData, setMaterialData] = useState(material)
   const [reaction, setReaction] = useState<any>(null)
@@ -62,7 +65,7 @@ function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
   const [loadingRequest, setLoadingRequest] = useState<boolean>(true)
 
   const likeMaterial = async (materialId: number) => {
-    if (loadingRequest || accessIsLoading) return
+    if (loadingRequest /*|| accessIsLoading*/) return
     console.log('Like material with id: ' + materialId)
     setLoadingRequest(true)
 
@@ -112,7 +115,7 @@ function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
   }
 
   const dislikeMaterial = async (materialId: number) => {
-    if (loadingRequest || accessIsLoading) return
+    if (loadingRequest /*|| accessIsLoading*/) return
     console.log('Dislike material with id: ' + materialId)
     setLoadingRequest(true)
 
@@ -163,6 +166,7 @@ function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
     }
   }
 
+  /*
   useEffect(() => {
     if (accessData) {
       setAccess(accessData)
@@ -170,6 +174,7 @@ function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
       setLoadingRequest(false)
     }
   }, [])
+  */
 
   return (
     <Card
@@ -196,7 +201,7 @@ function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
               <Typography sx={{ typography: { sm: 'body1', md: 'h6' } }}>
                 {materialData.name}
               </Typography>
-              {materialData.isCompleted ? (
+              {materialData?.access?.completed ? (
                 <CheckBoxIcon />
               ) : (
                 <CheckBoxOutlineBlankIcon />
@@ -209,8 +214,8 @@ function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
               >
                 {materialData.material_type === MATERIAL_TYPES.EXERCISE ? (
                   <Typography color='primary' variant='body1'>
-                    Aciertos: {materialData.correct_attempts}/
-                    {materialData.attempts}
+                    Aciertos: {materialData.access?.summary?.hits}/
+                    {materialData.access?.summary?.attempts}
                   </Typography>
                 ) : (
                   <>

@@ -35,16 +35,15 @@ export interface API_CourseObject {
 }
 
 export interface API_ModuleObject {
-
-  id: number,
-  name: string,
-  order: number,
-  module_total_materials: number,
-  module_instructional_materials: number,
-  module_assessment_materials: number,
-  module_extra_materials: number,
-  course_id: string,
-  parent_module_id: undefined | number,
+  id: number
+  name: string
+  order: number
+  module_total_materials: number
+  module_instructional_materials: number
+  module_assessment_materials: number
+  module_extra_materials: number
+  course_id: string
+  parent_module_id: undefined | number
 }
 
 export interface API_MaterialObject {
@@ -57,9 +56,27 @@ export interface API_MaterialObject {
   dislikes: number
   total_comments: number
   module_id: number
-  attempts: number
-  correct_attempts: number
-  isCompleted: boolean
+  comments: string[]
+  access: {
+    id: number
+    views: number
+    last_view: string
+    completed: boolean | null
+    like: boolean
+    material_id: number
+    user_id: number
+    summary: {
+      id: number
+      attempts: number
+      hits: number
+      points: number
+      min_execution_time: number
+      min_execution_memory: number
+      max_completion_rate: number
+      material: number
+      user: number
+    }
+  }
 }
 
 export interface API_CommentObject {
