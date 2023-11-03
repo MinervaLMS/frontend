@@ -24,13 +24,13 @@ function ExerciseModalResult({
     (state) => state.persistedReducer.userLoginState.tokens
   )
 
-  const message = async (result: string) => {
+  const message = (result: string) => {
     switch (result) {
       case 'unknow':
         return 'Estamos calificando tu ejercicio'
       case 'A':
-        const result = await fetch(`${API_ENDPOINTS.COMPLETED}`, {
-          method: 'POST',
+        const result = fetch(`${API_ENDPOINTS.COMPLETED}`, {
+          method: 'PATCH',
           headers: {
             Authorization: 'Bearer ' + userTokens.access,
             Accept: 'application/json',
@@ -41,7 +41,6 @@ function ExerciseModalResult({
             user_id: Number(UserIdState)
           })
         })
-        console.log(result)
         return 'Tu respuesta es correcta. ¡Felicitaciones!'
       case 'W':
         return 'Tu respuesta es incorrecta.. Revisa tu código y vuelve a intentarlo'
