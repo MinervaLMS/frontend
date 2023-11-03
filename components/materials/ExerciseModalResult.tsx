@@ -20,6 +20,10 @@ function ExerciseModalResult({
     (state) => state.persistedReducer.userLoginState.id
   )
 
+  const userTokens = useAppSelector(
+    (state) => state.persistedReducer.userLoginState.tokens
+  )
+
   const message = async (result: string) => {
     switch (result) {
       case 'unknow':
@@ -28,6 +32,8 @@ function ExerciseModalResult({
         const result = await fetch(`${API_ENDPOINTS.COMPLETED}`, {
           method: 'POST',
           headers: {
+            Authorization: 'Bearer ' + userTokens.access,
+            Accept: 'application/json',
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
