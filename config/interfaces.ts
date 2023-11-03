@@ -62,7 +62,7 @@ export interface API_MaterialObject {
     views: number
     last_view: string
     completed: boolean | null
-    like: boolean
+    like: boolean | null
     material_id: number
     user_id: number
     summary: {

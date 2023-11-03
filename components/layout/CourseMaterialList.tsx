@@ -16,7 +16,6 @@ import { AUTOHIDE_ALERT_DURATION } from '@/config/constants'
 
 // Import API
 import useMaterialList from '@/hooks/fetching/useMaterialList'
-import useModuleAccess from '@/hooks/fetching/useModuleAccess'
 import { API_STATUS_CODE } from '@/config/api-connections'
 import { API_AccessProgressObject, API_MaterialObject } from '@/config/interfaces'
 
@@ -46,7 +45,6 @@ function CourseMaterialList({ moduleId, accessToken }: CourseMaterialListProps) 
 
   // API Fetch
   const { data: materialsList, error } = useMaterialList(Number(userId), moduleId, accessToken)
-  const { data: accessData, isLoading: accessIsLoading } = useModuleAccess(moduleId, userId, accessToken)
 
   // Event handlers
   const handleAlertOpen = (status: number) => {
@@ -108,8 +106,6 @@ function CourseMaterialList({ moduleId, accessToken }: CourseMaterialListProps) 
           <CourseMaterial
             onSelected={() => handleGoToSelectedMaterial(material.id)}
             material={material}
-            access={accessData?.find((access: API_AccessProgressObject) => access.id === material.id)}
-            accessIsLoading={accessIsLoading}
           />
         </ListItem>
       ))}

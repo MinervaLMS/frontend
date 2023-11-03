@@ -41,8 +41,6 @@ import { MATERIAL_TYPES } from '@/config/enums'
 interface CourseMaterialProps {
   material: API_MaterialObject
   onSelected: () => undefined
-  access: API_AccessProgressObject
-  accessIsLoading: boolean
 }
 
 const iconByMaterialType: {[key: string]: any} = {
@@ -53,7 +51,7 @@ const iconByMaterialType: {[key: string]: any} = {
   default: <MoreHorizOutlinedIcon color='primary' sx={{ width: "95%", height: "95%" }}/>
 }
 
-function CourseMaterial({ material, onSelected, access, accessIsLoading }: CourseMaterialProps) {
+function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
   // Redux states:
   const userTokens = useAppSelector(
     (state) => state.persistedReducer.userLoginState.tokens
@@ -64,34 +62,33 @@ function CourseMaterial({ material, onSelected, access, accessIsLoading }: Cours
   )
 
   const [materialData, setMaterialData] = useState(material)
-  const [reaction, setReaction] = useState<any>(null)
-  const [loadingRequest, setLoadingRequest] = useState<boolean>(true)
+  const [access, setAccess] = useState(materialData?.access)
+  const [loadingRequest, setLoadingRequest] = useState<boolean>(false)
 
   const likeMaterial = async (materialId: number) => {
-    if (loadingRequest || accessIsLoading) return
+    console.log('loadingRequest', loadingRequest)
+    if (loadingRequest) return
+
     console.log('Like material with id: ' + materialId)
     setLoadingRequest(true)
 
     // Update visual likes/dislikes counter
-    if (access.like == null) {
+    if (access.like === null) {
       // There was no previous reaction
       setMaterialData({ ...materialData, likes: materialData.likes + 1 })
-      access = { ...access, like: true }
-      setReaction(true)
+      setAccess({ ...access, like: true })
     } else if (access.like == false) {
       // Previous reaction was dislike -> Delete dislike and add like
-      access = { ...access, like: true }
+      setAccess({ ...access, like: true })
       setMaterialData({
         ...materialData,
         likes: materialData.likes + 1,
         dislikes: materialData.dislikes - 1
       })
-      setReaction(true)
     } else {
       // Previous reaction was like -> Delete like
-      access = { ...access, like: null }
+      setAccess({ ...access, like: null })
       setMaterialData({ ...materialData, likes: materialData.likes - 1 })
-      setReaction(null)
     }
 
     // Make api call to update likes
@@ -106,9 +103,7 @@ function CourseMaterial({ material, onSelected, access, accessIsLoading }: Cours
       }
 
       let response = await fetch(`${API_ENDPOINTS.ACCESS}update/like/`, config)
-
       setLoadingRequest(false)
-
       return true
     } catch (error) {
       setLoadingRequest(false)
@@ -118,30 +113,27 @@ function CourseMaterial({ material, onSelected, access, accessIsLoading }: Cours
   }
 
   const dislikeMaterial = async (materialId: number) => {
-    if (loadingRequest || accessIsLoading) return
+    if (loadingRequest) return
     console.log('Dislike material with id: ' + materialId)
     setLoadingRequest(true)
 
     // Update visual likes/dislikes counter
     if (access.like == null) {
       // There was no previous reaction
-      access = { ...access, like: false }
+      setAccess({ ...access, like: false })
       setMaterialData({ ...materialData, dislikes: materialData.dislikes + 1 })
-      setReaction(false)
     } else if (access.like == true) {
       // Previous reaction was dislike -> Add dislike and delete like
-      access = { ...access, like: false }
+      setAccess({ ...access, like: false })
       setMaterialData({
         ...materialData,
         dislikes: materialData.dislikes + 1,
         likes: materialData.likes - 1
       })
-      setReaction(false)
     } else {
       // Previous reaction was dislike -> Delete dislike
-      access = { ...access, like: null }
+      setAccess({ ...access, like: null })
       setMaterialData({ ...materialData, dislikes: materialData.dislikes - 1 })
-      setReaction(null)
     }
 
     // Make api call to update dislikes
@@ -155,11 +147,7 @@ function CourseMaterial({ material, onSelected, access, accessIsLoading }: Cours
         body: JSON.stringify({ material_id: material.id, user_id: userId })
       }
 
-      let response = await fetch(
-        `${API_ENDPOINTS.ACCESS}update/dislike/`,
-        config
-      )
-
+      let response = await fetch( `${API_ENDPOINTS.ACCESS}update/dislike/`, config )
       setLoadingRequest(false)
       return true
     } catch (error) {
@@ -168,13 +156,6 @@ function CourseMaterial({ material, onSelected, access, accessIsLoading }: Cours
       return false
     }
   }
-
-  useEffect(() => {
-    if (access) {
-      setReaction(access.like)
-      setLoadingRequest(false)
-    }
-  }, [])
 
   return (
     <Card
@@ -255,11 +236,11 @@ function CourseMaterial({ material, onSelected, access, accessIsLoading }: Cours
                     likeMaterial(material.id)
                   }}
                 >
-                  {reaction == true ? (
-                    <ThumbUpIcon color='secondary' />
-                  ) : (
-                    <ThumbUpOutlinedIcon color='secondary' />
-                  )}
+                  {access.like
+                    ? <ThumbUpIcon color='secondary' />
+                    : <ThumbUpOutlinedIcon color='secondary' />
+                  }
+
                   <Typography variant='body1' color='secondary'>
                     {' '}
                     {materialData.likes}{' '}
@@ -277,11 +258,10 @@ function CourseMaterial({ material, onSelected, access, accessIsLoading }: Cours
                     dislikeMaterial(material.id)
                   }}
                 >
-                  {reaction == false ? (
-                    <ThumbDownIcon color='primary' />
-                  ) : (
-                    <ThumbDownOutlinedIcon color='primary' />
-                  )}
+                  {access.like === false
+                    ? <ThumbDownIcon color='primary' />
+                    : <ThumbDownOutlinedIcon color='primary' />
+                  }
                   <Typography variant='body1' color='primary'>
                     {' '}
                     {materialData.dislikes}{' '}
