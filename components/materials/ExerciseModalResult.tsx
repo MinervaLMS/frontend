@@ -54,9 +54,7 @@ function ExerciseModalResult({
           Resultado
         </Typography>
         <Typography component='p' id='modalDescription' sx={{ mt: 1 }}>
-          {result == 'unknow'
-            ? 'Estamos calificando tu ejercicio'
-            : message(result)}
+          {message(result)}
         </Typography>
         <Grid item xs={12} paddingTop={2}></Grid>
         <Button
