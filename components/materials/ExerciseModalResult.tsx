@@ -1,23 +1,43 @@
 import React from 'react'
 import styles from '@/styles/RegisterLogin.module.css'
 import { Box, Button, Grid, Modal, Typography } from '@mui/material'
+import { API_ENDPOINTS } from '@/config/api-connections'
+import { useAppSelector } from '@/redux/hook'
 
 function ExerciseModalResult({
   open,
   CloseModal,
-  result
+  result,
+  materialId
 }: {
   open: boolean
   CloseModal: () => void
   result: string
+  materialId: string
 }) {
-  const message = (result: string) => {
+  //Redux states
+  const UserIdState = useAppSelector(
+    (state) => state.persistedReducer.userLoginState.id
+  )
+
+  const message = async (result: string) => {
     switch (result) {
       case 'unknow':
         return 'Estamos calificando tu ejercicio'
       case 'A':
+        const result = await fetch(`${API_ENDPOINTS.COMPLETED}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            material_id: Number(materialId),
+            user_id: Number(UserIdState)
+          })
+        })
+        console.log(result)
         return 'Tu respuesta es correcta. ¡Felicitaciones!'
-      case 'WA':
+      case 'W':
         return 'Tu respuesta es incorrecta.. Revisa tu código y vuelve a intentarlo'
       case 'I':
         return 'Hubo un error en la ejecución de tu código. Revisalo y vuelve a intentarlo'

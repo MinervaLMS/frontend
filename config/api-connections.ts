@@ -20,7 +20,8 @@ export const API_ENDPOINTS = {
   MATERIALS: `/materials/`,
   MATERIAL: `${API_URL}/material/`,
   ACCESS: `${API_URL}/access/`,
-  PROGRESS: `${API_URL}/module_progress/`
+  PROGRESS: `${API_URL}/module_progress/`,
+  COMPLETED: `${API_URL}/access/update/completed/`
 }
 
 export const API_STATUS_CODE = {

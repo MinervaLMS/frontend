@@ -122,6 +122,7 @@ export default function ExerciseMaterial({
         open={openModal}
         CloseModal={handleCloseModal}
         result={submissionResult}
+        materialId={materialId}
       />
       <Box component='form' className={styles.IOCMaterial}>
         <iframe
