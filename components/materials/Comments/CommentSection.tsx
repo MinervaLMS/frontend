@@ -6,10 +6,10 @@ import { useAppSelector } from '@/redux/hook'
 import useComments from '@/hooks/fetching/useComments'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
-import { Comment } from '@/components/materials/Comment'
+import { Comment } from '@/components/materials/Comments/Comment'
 import { API_ENDPOINTS } from '@/config/api-connections'
 import { AUTOHIDE_ALERT_DURATION } from '@/config/constants'
-import CustomSnackbar from '../common/CustomSnackbar'
+import CustomSnackbar from '../../common/CustomSnackbar'
 
 // This interface defines the types of the props object.
 interface CommentSectionProps {

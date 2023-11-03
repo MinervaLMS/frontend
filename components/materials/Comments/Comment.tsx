@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import { useAppSelector } from "@/redux/hook";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { API_ENDPOINTS } from "@/config/api-connections";
-import CustomSnackbar from "../common/CustomSnackbar";
+import CustomSnackbar from "../../common/CustomSnackbar";
 import { AUTOHIDE_ALERT_DURATION } from "@/config/constants";
 import CommentDeleteModal from "./CommentDeleteModal";
 
