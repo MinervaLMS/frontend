@@ -9,7 +9,11 @@ import { AUTOHIDE_ALERT_DURATION } from '@/config/constants'
 import ExerciseModalResult from './ExerciseModalResult'
 import styles from '@/styles/CourseMaterial.module.css'
 
-export default function ExerciseMaterial() {
+export default function ExerciseMaterial({
+  params
+}: {
+  params: { id: string }
+}) {
   //Redux states
   const UserIdState = useAppSelector(
     (state) => state.persistedReducer.userLoginState.id
@@ -52,7 +56,7 @@ export default function ExerciseMaterial() {
   const handleSubmit = (e: React.SyntheticEvent<HTMLButtonElement, Event>) => {
     e.preventDefault()
     const submission = {
-      material_id: 4,
+      material_id: Number(params.id),
       user_id: Number(UserIdState),
       code: submissionCode,
       language: 'py3'
