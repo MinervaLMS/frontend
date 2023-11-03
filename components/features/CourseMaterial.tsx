@@ -23,6 +23,8 @@ import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined'
 import CheckBoxIcon from '@mui/icons-material/CheckBox'
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
+import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
+import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
 
 // Import styles
 import { common } from '@mui/material/colors'
@@ -49,6 +51,40 @@ const iconByMaterialType: {[key: string]: any} = {
   [MATERIAL_TYPES.MARKDOWN]: <SubjectOutlinedIcon color='primary' sx={{ width: "95%", height: "95%" }}/>,
   [MATERIAL_TYPES.EXERCISE]: <DataObjectIcon color='primary' sx={{ width: "95%", height: "95%" }}/>,
   default: <MoreHorizOutlinedIcon color='primary' sx={{ width: "95%", height: "95%" }}/>
+}
+
+const infoByMaterialType = (materialData: API_MaterialObject) => {
+  switch (materialData.material_type) {
+    case MATERIAL_TYPES.EXERCISE:
+      return (
+        <>
+          <CheckCircleOutlinedIcon color='primary' />
+          <Typography color='primary' variant='body1'>
+            Aciertos: {materialData.access?.summary?.hits || 0}/
+            {materialData.access?.summary?.attempts || 0}
+          </Typography>
+        </>
+      )
+
+    case MATERIAL_TYPES.VIDEO:
+      return (
+        <>
+          <TimerOutlinedIcon color='primary' />
+          <Typography color='primary' variant='body1'> 8m, 45s </Typography>
+        </>
+      )
+
+    case MATERIAL_TYPES.PDF:
+      return (
+        <>
+          <ArticleOutlinedIcon color='primary' />
+          <Typography color='primary' variant='body1'>2 páginas</Typography>
+        </>
+      )
+
+    default:
+      return ( <> </> )
+  }
 }
 
 function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
@@ -188,22 +224,10 @@ function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
             </Box>
             <Box className={styles.materialDetails}>
               <Container
-                sx={{ display: 'flex', direction: 'wrap' }}
+                sx={{ display: 'flex', direction: 'wrap', gap: '0.25rem' }}
                 disableGutters
               >
-                {materialData.material_type === MATERIAL_TYPES.EXERCISE ? (
-                  <Typography color='primary' variant='body1'>
-                    Aciertos: {materialData.access?.summary?.hits || 0}/
-                    {materialData.access?.summary?.attempts || 0}
-                  </Typography>
-                ) : (
-                  <>
-                    <TimerOutlinedIcon color='primary' />
-                    <Typography color='primary' variant='body1'>
-                      8m, 45s
-                    </Typography>
-                  </>
-                )}
+                {infoByMaterialType(materialData)}
               </Container>
               <Box className={styles.materialReactions}>
                 {/* Lo siguiente lo dejo con estilos inline porque de igual forma se va a tener que cambiar */}
