@@ -11,7 +11,7 @@ function ExerciseModalResult({
   CloseModal: () => void
   result: string
 }) {
-  const message = () => {
+  const message = (result: string) => {
     switch (result) {
       case 'unknow':
         return 'Estamos calificando tu ejercicio'
@@ -56,9 +56,7 @@ function ExerciseModalResult({
         <Typography component='p' id='modalDescription' sx={{ mt: 1 }}>
           {result == 'unknow'
             ? 'Estamos calificando tu ejercicio'
-            : result == 'I'
-            ? 'Respuesta correcta'
-            : 'Respuesta incorrecta'}
+            : message(result)}
         </Typography>
         <Grid item xs={12} paddingTop={2}></Grid>
         <Button
