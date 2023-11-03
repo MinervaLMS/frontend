@@ -76,21 +76,12 @@ export function Comment({ comment, level, material, parentReplies,setParentRepli
     }
 
     const handleDeleteComment = async () => {
-        setOpenModal(true)
-
-        // Wait while openModal is true
-        while (openModal) {
-            await new Promise((resolve) => setTimeout(resolve, 100));
-        }
-
-        // If the user confirmed the deletion, delete the comment
-        console.log('openModal', openModal)
-        if (!openModal) { fetchDeleteComment() }
-
-    }
+        setOpenModal(true);
+    };
 
     const fetchDeleteComment = async () => {
         console.log('pasé por acá')
+        console.log('openModal', openModal)
 
         const config = {
             method: "DELETE",
@@ -183,7 +174,16 @@ export function Comment({ comment, level, material, parentReplies,setParentRepli
                 onClose={handleAlertClose}
             />
 
-            <CommentDeleteModal open={openModal} closeModal={() => { setOpenModal(false) }}/>
+            <CommentDeleteModal
+                openModal={openModal}
+                closeModal={() => { setOpenModal(false) }}
+                comment={comment}
+                sectionSetAlertOpen={sectionSetAlertOpen}
+                sectionSetAlertConfig={sectionSetAlertConfig}
+                parentReplies={parentReplies}
+                setCommentVisibility={setCommentVisibility}
+                setParentReplies={setParentReplies}
+            />
 
             <Box style={{ marginTop: "1.5rem", marginLeft: `${3*level}rem`, width: `calc(100% - ${3*level}rem)` }}>
                 <Card
