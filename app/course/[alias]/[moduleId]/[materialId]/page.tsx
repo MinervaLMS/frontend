@@ -29,7 +29,6 @@ import { useRouter, useParams } from 'next/navigation'
 // Import API
 import useCourseMaterial from '@/hooks/fetching/useCourseMaterial'
 import useComments from '@/hooks/fetching/useComments'
-import useMaterialList from '@/hooks/fetching/useMaterialList'
 import { API_STATUS_CODE } from '@/config/api-connections'
 import { API_MaterialObject } from '@/config/interfaces'
 import { MATERIAL_TYPES } from '@/config/enums'
@@ -45,9 +44,6 @@ function Materials() {
   // Redux states:
   const userTokens = useAppSelector(
     (state) => state.persistedReducer.userLoginState.tokens
-  )
-  const userId = useAppSelector(
-    (state) => state.persistedReducer.userLoginState.id
   )
 
   // States related to the alert component
@@ -65,12 +61,6 @@ function Materials() {
 
   const { isLoading: commentsIsLoading } = useComments(
     String(materialId),
-    userTokens.access
-  )
-
-  const { mutate: materialsRevalidation } = useMaterialList(
-    Number(userId),
-    Number(moduleId),
     userTokens.access
   )
 
@@ -130,7 +120,6 @@ function Materials() {
         <Link
           onClick={() => {
             router.push(`/course/${alias}/${moduleId}`)
-            materialsRevalidation()
           }}
           sx={{ cursor: 'pointer' }}
           underline='hover'
