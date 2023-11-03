@@ -37,9 +37,14 @@ import { setOpen } from '@/redux/features/drawerSlice'
 import { logOut } from '@/redux/features/userLoginSlice'
 import { useRouter, useParams } from 'next/navigation'
 
+import { Theme } from '@mui/material'
+import { useTheme } from '@mui/material/styles';
+
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean
 }
+
+ {/* <MainAppBar /> */}
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open'
@@ -61,7 +66,6 @@ const AppBar = styled(MuiAppBar, {
 export default function MainAppBar() {
   // To determine if you are in or out of course pages
   const params = useParams()
-  console.log(params)
 
   // Router
   const router = useRouter()
@@ -106,6 +110,8 @@ export default function MainAppBar() {
     dispatch(logOut())
     handleNavigate('/')
   }
+
+  const theme: Theme = useTheme();
 
   // Menu options for the log in user
   const logInUserOptions = (
@@ -195,7 +201,11 @@ export default function MainAppBar() {
 
   return (
     <Box id='header'>
-      <AppBar position='fixed' open={params.hasOwnProperty('alias') ? open : false}>
+      <AppBar open={params.hasOwnProperty('alias') ? open : false}
+        position={userLoginState ? "fixed" : "fixed"}
+        color={userLoginState ? "primary" : "primary"}
+        elevation={userLoginState ? 2 : 2}
+      >
         <Toolbar className={styles.mainHeader}>
           <Box className={styles.topBarArea}>
             {params.hasOwnProperty('alias') && drawerButton}
