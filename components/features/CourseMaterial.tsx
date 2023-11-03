@@ -193,8 +193,8 @@ function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
               >
                 {materialData.material_type === MATERIAL_TYPES.EXERCISE ? (
                   <Typography color='primary' variant='body1'>
-                    Aciertos: {materialData.access?.summary?.hits}/
-                    {materialData.access?.summary?.attempts}
+                    Aciertos: {materialData.access?.summary?.hits || 0}/
+                    {materialData.access?.summary?.attempts || 0}
                   </Typography>
                 ) : (
                   <>

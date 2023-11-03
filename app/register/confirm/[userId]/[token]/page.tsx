@@ -56,42 +56,43 @@ function AccountConfirmation({
       setAlertOpen(true);
       console.log(error);
     };
-  }, [error]);
 
-  if (isLoading) {
-    handleOpenLoader();
-  } else {
-    handleCloseLoader();
-  }
-
-  if (confirmStatus) {
-    if (confirmStatus == API_STATUS_CODE.SUCCESS) {
-      setconfirmText(
-        <>
-          <Typography component="h2" variant="h4" my={2}>
-            Gracias por registrate en Minerva LMS
-          </Typography>
-          <Typography component="p" my={2}>
-            Tu cuenta ha sido activada exitosamente. Ahora estás listo para
-            empezar a aprender.
-          </Typography>
-          <Link href="/login">Ingresar →</Link>
-        </>
-      );
+    if (isLoading) {
+      handleOpenLoader();
     } else {
-      setconfirmText(
-        <>
-          <Typography component="h2" variant="h4" my={2}>
-            Hubo un error al activar tu cuenta
-          </Typography>
-          <Typography component="p" my={2}>
-            El token ha fallado. Solicita un nuevo correo de activación.
-          </Typography>
-          <Link href="#">Reenviar correo →</Link>
-        </>
-      );
+      handleCloseLoader();
     }
-  }
+
+    if (confirmStatus) {
+      if (confirmStatus == API_STATUS_CODE.SUCCESS) {
+        setconfirmText(
+          <>
+            <Typography component="h2" variant="h4" my={2}>
+              Gracias por registrate en Minerva LMS
+            </Typography>
+            <Typography component="p" my={2}>
+              Tu cuenta ha sido activada exitosamente. Ahora estás listo para
+              empezar a aprender.
+            </Typography>
+            <Link href="/login">Ingresar →</Link>
+          </>
+        );
+      } else {
+        setconfirmText(
+          <>
+            <Typography component="h2" variant="h4" my={2}>
+              Hubo un error al activar tu cuenta
+            </Typography>
+            <Typography component="p" my={2}>
+              El token ha fallado. Solicita un nuevo correo de activación.
+            </Typography>
+            <Link href="#">Reenviar correo →</Link>
+          </>
+        );
+      }
+    }
+
+  }, [confirmStatus, isLoading, error]);
 
   return (
     <div className={styles.mainContainer}>

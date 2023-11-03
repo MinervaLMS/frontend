@@ -58,6 +58,7 @@ function Materials() {
     isLoading: materialIsLoading,
     error
   } = useCourseMaterial(String(materialId), userTokens.access)
+
   const { isLoading: commentsIsLoading } = useComments(
     String(materialId),
     userTokens.access
@@ -117,7 +118,9 @@ function Materials() {
         }}
       >
         <Link
-          onClick={() => router.push(`/course/${alias}/${moduleId}`)}
+          onClick={() => {
+            router.push(`/course/${alias}/${moduleId}`)
+          }}
           sx={{ cursor: 'pointer' }}
           underline='hover'
           color={''}
@@ -128,7 +131,7 @@ function Materials() {
         <Typography component='h1' variant='h4'>
           {materialData?.name}
         </Typography>
-        <CurrentView />
+        <CurrentView materialId={materialId} />
       </Box>
       <CommentSection material={materialData} />
     </Box>
