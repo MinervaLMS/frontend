@@ -64,6 +64,12 @@ export default function CommentSection({ material }: CommentSectionProps) {
   const handleSubmit = async (e: React.SyntheticEvent<HTMLButtonElement, Event>) => {
     e.preventDefault()
 
+    if (commentText === '') {
+      setAlertOpen(true);
+      setAlertConfig({ message: "El comentario no puede estar vacío", severity: "error" });
+      return
+    }
+
     const commentParams = {
       material_id: String(material.id),
       user_id: Number(UserIdState),

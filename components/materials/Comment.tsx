@@ -8,6 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { API_ENDPOINTS } from "@/config/api-connections";
 import CustomSnackbar from "../common/CustomSnackbar";
 import { AUTOHIDE_ALERT_DURATION } from "@/config/constants";
+import CommentDeleteModal from "./CommentDeleteModal";
 
 // This interface defines the types of the props object.
 interface CommentProps {
@@ -48,6 +49,9 @@ export function Comment({ comment, level, material, parentReplies,setParentRepli
         setAlertOpen(false);
     };
 
+    // Local states related to the modal
+    const [openModal, setOpenModal] = useState(false)
+
     // Manage replies list
     const [replies, setReplies] = useState(comment?.replies || []);
 
@@ -72,6 +76,22 @@ export function Comment({ comment, level, material, parentReplies,setParentRepli
     }
 
     const handleDeleteComment = async () => {
+        setOpenModal(true)
+
+        // Wait while openModal is true
+        while (openModal) {
+            await new Promise((resolve) => setTimeout(resolve, 100));
+        }
+
+        // If the user confirmed the deletion, delete the comment
+        console.log('openModal', openModal)
+        if (!openModal) { fetchDeleteComment() }
+
+    }
+
+    const fetchDeleteComment = async () => {
+        console.log('pasé por acá')
+
         const config = {
             method: "DELETE",
             headers: {
@@ -104,6 +124,12 @@ export function Comment({ comment, level, material, parentReplies,setParentRepli
 
     const handleSubmit = async (e: React.SyntheticEvent<HTMLButtonElement, Event>) => {
         e.preventDefault()
+
+        if (responseText === '') {
+            setAlertOpen(true);
+            setAlertConfig({ message: "La respuesta no puede estar vacía", severity: "error" });
+            return
+        }
 
         const commentParams = {
             material_id: String(material.id),
@@ -156,6 +182,8 @@ export function Comment({ comment, level, material, parentReplies,setParentRepli
                 open={alertOpen}
                 onClose={handleAlertClose}
             />
+
+            <CommentDeleteModal open={openModal} closeModal={() => { setOpenModal(false) }}/>
 
             <Box style={{ marginTop: "1.5rem", marginLeft: `${3*level}rem`, width: `calc(100% - ${3*level}rem)` }}>
                 <Card
