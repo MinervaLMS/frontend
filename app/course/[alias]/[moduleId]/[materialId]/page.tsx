@@ -142,7 +142,7 @@ function Materials() {
         <Typography component='h1' variant='h4'>
           {materialData?.name}
         </Typography>
-        <CurrentView />
+        <CurrentView materialId={materialId} />
       </Box>
       <CommentSection material={materialData} />
     </Box>

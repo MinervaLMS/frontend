@@ -10,9 +10,9 @@ import ExerciseModalResult from './ExerciseModalResult'
 import styles from '@/styles/CourseMaterial.module.css'
 
 export default function ExerciseMaterial({
-  params
+  materialId
 }: {
-  params: { id: string }
+  materialId: string
 }) {
   //Redux states
   const UserIdState = useAppSelector(
@@ -56,7 +56,7 @@ export default function ExerciseMaterial({
   const handleSubmit = (e: React.SyntheticEvent<HTMLButtonElement, Event>) => {
     e.preventDefault()
     const submission = {
-      material_id: Number(params.id),
+      material_id: Number(materialId),
       user_id: Number(UserIdState),
       code: submissionCode,
       language: 'py3'
