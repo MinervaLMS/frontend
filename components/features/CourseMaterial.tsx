@@ -18,6 +18,8 @@ import ThumbDownIcon from '@mui/icons-material/ThumbDown'
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined'
 import CheckBoxIcon from '@mui/icons-material/CheckBox'
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 
 // Import styles
 import { common } from '@mui/material/colors'
@@ -202,9 +204,9 @@ function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
                 {materialData.name}
               </Typography>
               {materialData?.access?.completed ? (
-                <CheckBoxIcon />
+                <CheckCircleIcon />
               ) : (
-                <CheckBoxOutlineBlankIcon />
+                <RadioButtonUncheckedIcon />
               )}
             </Box>
             <Box className={styles.materialDetails}>
