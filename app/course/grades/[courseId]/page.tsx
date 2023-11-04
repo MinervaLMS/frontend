@@ -8,7 +8,7 @@ import { DataGrid, GridColDef, GridColumnHeaderParams, GridValueFormatterParams,
 import { useAppSelector } from "@/redux/hook";
 import CustomSnackbar from "@/components/common/CustomSnackbar";
 import { AUTOHIDE_ALERT_DURATION } from "@/config/constants";
-import { API_ModuleProgressObject } from "@/config/interfaces";
+import { API_ModuleListProgressObject, API_ModuleProgressObject, API_ProgressByCourseResponseObject } from "@/config/interfaces";
 import { API_ENDPOINTS } from "@/config/api-connections";
 
 const columns: GridColDef[] = [
@@ -52,7 +52,7 @@ const columns: GridColDef[] = [
     }
   ];
 
-let rows: API_ModuleProgressObject[] = []
+let rows: API_ModuleListProgressObject[] = []
 
 function ModulesProgress({ params }: { params: { courseId: string } }) {
     // Redux states:
@@ -64,8 +64,6 @@ function ModulesProgress({ params }: { params: { courseId: string } }) {
     );
 
     const courseId = params.courseId;
-    console.log(courseId + 'fdasf' + userId);
-    
 
     const [loading, setLoading] = useState(true)
     const [alertConfig, setAlertConfig] = useState({ message: '', severity: '' })
@@ -80,7 +78,7 @@ function ModulesProgress({ params }: { params: { courseId: string } }) {
         setAlertOpen(false)
     }
 
-    function getRowId(row: API_ModuleProgressObject) {
+    function getRowId(row: API_ModuleListProgressObject) {
         return row.module_id
     }
 
@@ -95,10 +93,8 @@ function ModulesProgress({ params }: { params: { courseId: string } }) {
                 },
             };
             let response = await fetch(`${API_ENDPOINTS.USERS}${courseId}/${userId}/modules-progress/`, config)
-            rows = await response.json()
-            console.log(
-                rows
-            );
+            let moduleProgressResponse: API_ProgressByCourseResponseObject = await response.json();
+            rows = moduleProgressResponse.module_progress;
             setLoading(false)
         } catch (error) {
             setAlertConfig({
