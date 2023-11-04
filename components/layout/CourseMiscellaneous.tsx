@@ -72,7 +72,7 @@ function CourseMiscellaneous({ courseAlias }: { courseAlias: string }) {
               <ListItem key={`misc-${item.title}`} disablePadding>
                 <ListItemButton
                   onClick={() =>
-                    router.push(`/course/${item.route}/${courseId}`)
+                    router.push(`/course/${courseAlias}/${item.route}`)
                   }
                 >
                   {COURSE_OPTIONS_ICONS[index]}
