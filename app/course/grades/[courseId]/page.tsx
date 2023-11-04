@@ -54,7 +54,7 @@ const columns: GridColDef[] = [
 
 let rows: API_ModuleProgressObject[] = []
 
-function ModulesProgress() {
+function ModulesProgress({ params }: { params: { courseId: string } }) {
     // Redux states:
     const userTokens = useAppSelector(
         (state) => state.persistedReducer.userLoginState.tokens
@@ -62,6 +62,10 @@ function ModulesProgress() {
     const userId = useAppSelector(
         (state) => state.persistedReducer.userLoginState.id
     );
+
+    const courseId = params.courseId;
+    console.log(courseId + 'fdasf' + userId);
+    
 
     const [loading, setLoading] = useState(true)
     const [alertConfig, setAlertConfig] = useState({ message: '', severity: '' })
@@ -90,7 +94,7 @@ function ModulesProgress() {
                     "Content-Type": "application/json",
                 },
             };
-            let response = await fetch(`${API_ENDPOINTS.MODULE}progress/${userId}`, config)
+            let response = await fetch(`${API_ENDPOINTS.USERS}${courseId}/${userId}/modules-progress/`, config)
             rows = await response.json()
             console.log(
                 rows
