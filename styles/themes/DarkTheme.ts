@@ -1,12 +1,13 @@
-import { createTheme, responsiveFontSizes } from '@mui/material/styles';
+import { Theme, createTheme } from "@mui/material/styles";
+import "@/styles/globals.css";
+import commonTheme from "@/styles/themes/CommonTheme";
 
-let darkTheme = createTheme({
+const darkTheme: Theme = createTheme({
+  ...commonTheme,
   palette: {
-    mode: 'dark',
+    mode: "dark",
     // other dark theme settings...
   },
 });
-
-darkTheme = responsiveFontSizes(darkTheme);
 
 export default darkTheme;
