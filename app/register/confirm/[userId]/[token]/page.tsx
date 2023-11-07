@@ -1,7 +1,9 @@
 "use client";
 
 import CustomSnackbar from "@/components/common/CustomSnackbar";
-import { API_ENDPOINTS, API_STATUS_CODE } from "@/config/api-connections";
+import CircularSpinner from "@/components/common/CircularSpinner";
+import { API_STATUS_CODE } from "@/config/api-connections";
+import useConfirmAccount from "@/hooks/fetching/useConfirmAccount";
 import { AUTOHIDE_ALERT_DURATION } from "@/config/constants";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,64 +22,13 @@ function AccountConfirmation({
   // States related to the loader component
   const [confirmText, setconfirmText] = useState(<></>);
 
-  useEffect(() => {
-    try {
-      let config = {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      };
+  // Loader state
+  const [openBackdrop, setOpenBackdrop] = useState(false);
 
-      fetch(
-        `${API_ENDPOINTS.CONFIRM_ACCOUNT}${params.userId}/${params.token}`,
-        config
-      ).then((response) => {
-        console.log(response);
-        handleResponse(response.status);
-      });
-    } catch (error) {
-      setAlertConfig({
-        message: "Hubo un error. Intentalo de nuevo más tarde",
-        severity: "error",
-      });
-      setAlertOpen(true);
-      console.log(error);
-    }
-  }, []);
+  // States related to the API Fetch
+  const { data: confirmStatus, isLoading, error } = useConfirmAccount(params.userId, params.token)
 
   // Event handlers
-
-  const handleResponse = (status: number) => {
-    if (status == API_STATUS_CODE.SUCCESS) {
-      setconfirmText(
-        <>
-          <Typography component="h2" variant="h4" my={2}>
-            Gracias por registrate en Minerva LMS
-          </Typography>
-          <Typography component="p" my={2}>
-            Tu cuenta ha sido activada exitosamente. Ahora estás listo para
-            empezar a aprender.
-          </Typography>
-          <Link href="/login">Ingresar →</Link>
-        </>
-      );
-    } else {
-      setconfirmText(
-        <>
-          <Typography component="h2" variant="h4" my={2}>
-            Hubo un error al activar tu cuenta
-          </Typography>
-          <Typography component="p" my={2}>
-            El token ha fallado. Solicita un nuevo correo de activación.
-          </Typography>
-          <Link href="#">Reenviar correo →</Link>
-        </>
-      );
-    }
-  };
-
   const handleAlertClose = (
     event?: React.SyntheticEvent | Event,
     reason?: string
@@ -88,8 +39,64 @@ function AccountConfirmation({
     setAlertOpen(false);
   };
 
+  // Loader handlers
+  const handleCloseLoader = () => {
+    setOpenBackdrop(false);
+  };
+  const handleOpenLoader = () => {
+    setOpenBackdrop(true);
+  };
+
+  useEffect(() => {
+    if (error) {
+      setAlertConfig({
+        message: "Hubo un error. Intentalo de nuevo más tarde",
+        severity: "error",
+      });
+      setAlertOpen(true);
+      console.log(error);
+    };
+
+    if (isLoading) {
+      handleOpenLoader();
+    } else {
+      handleCloseLoader();
+    }
+
+    if (confirmStatus) {
+      if (confirmStatus == API_STATUS_CODE.SUCCESS) {
+        setconfirmText(
+          <>
+            <Typography component="h2" variant="h4" my={2}>
+              Gracias por registrate en Minerva LMS
+            </Typography>
+            <Typography component="p" my={2}>
+              Tu cuenta ha sido activada exitosamente. Ahora estás listo para
+              empezar a aprender.
+            </Typography>
+            <Link href="/login">Ingresar →</Link>
+          </>
+        );
+      } else {
+        setconfirmText(
+          <>
+            <Typography component="h2" variant="h4" my={2}>
+              Hubo un error al activar tu cuenta
+            </Typography>
+            <Typography component="p" my={2}>
+              El token ha fallado. Solicita un nuevo correo de activación.
+            </Typography>
+            <Link href="#">Reenviar correo →</Link>
+          </>
+        );
+      }
+    }
+
+  }, [confirmStatus, isLoading, error]);
+
   return (
     <div className={styles.mainContainer}>
+      <CircularSpinner openBackdrop={openBackdrop} />
       <CustomSnackbar
         message={alertConfig.message}
         severity={alertConfig.severity}

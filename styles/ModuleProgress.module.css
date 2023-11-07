@@ -1,0 +1,12 @@
+.contentContainer {
+    width: 100%;
+    height: calc(100vh - 132px);
+}
+
+.titleContainer {
+    height: 20%;
+}
+
+.tableContainer {
+    width: 96%;
+}

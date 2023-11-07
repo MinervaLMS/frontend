@@ -1,6 +1,10 @@
 // Constant for api conection.
-export const API_URL: string = "https://minervalms-develop.onrender.com"; // https://minerva-api-4t0g.onrender.com
+// export const API_URL: string = "https://minervalms-develop.onrender.com"; // https://minerva-api-4t0g.onrender.com
+export const API_URL: string = 'https://minervalms-develop.onrender.com' // https://minerva-api-4t0g.onrender.com
 
+export const JUDGE_ENDPOINTS = {
+  SUBMISSION_CREATE: `${API_URL}/iocode/submission/create/`
+}
 export const API_ENDPOINTS = {
   REGISTER: `${API_URL}/register/`,
   LOGIN: `${API_URL}/login/`,
@@ -9,10 +13,16 @@ export const API_ENDPOINTS = {
   CONFIRM_ACCOUNT: `${API_URL}/register/confirm/`,
   CONTACT: `${API_URL}/contact/`,
   COURSE: `${API_URL}/course/`,
+  COURSES: `/courses/`,
+  USERS: `${API_URL}/users/`,
   MODULES: `/modules/`,
   MODULE: `${API_URL}/module/`,
   MATERIALS: `/materials/`,
-};
+  MATERIAL: `${API_URL}/material/`,
+  ACCESS: `${API_URL}/access/`,
+  PROGRESS: `${API_URL}/module_progress/`,
+  COMPLETED: `${API_URL}/access/update/completed/`
+}
 
 export const API_STATUS_CODE = {
   SUCCESS: 200,
@@ -20,4 +30,4 @@ export const API_STATUS_CODE = {
   BAD_REQUEST: 400,
   UNAUTHORIZED: 401,
   NOT_FOUND: 404
-};
+}
