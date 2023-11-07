@@ -37,8 +37,7 @@ import { setOpen } from '@/redux/features/drawerSlice'
 import { logOut } from '@/redux/features/userLoginSlice'
 import { useRouter, useParams } from 'next/navigation'
 
-import { Theme } from '@mui/material'
-import { useTheme } from '@mui/material/styles';
+import ToggleThemeButton from '../features/ToogleThemeButton'
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean
@@ -111,7 +110,6 @@ export default function MainAppBar() {
     handleNavigate('/')
   }
 
-  const theme: Theme = useTheme();
 
   // Menu options for the log in user
   const logInUserOptions = (
@@ -207,6 +205,7 @@ export default function MainAppBar() {
         elevation={userLoginState ? 2 : 2}
       >
         <Toolbar className={styles.mainHeader}>
+
           <Box className={styles.topBarArea}>
             {params.hasOwnProperty('alias') && drawerButton}
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
@@ -222,9 +221,12 @@ export default function MainAppBar() {
               />
             </Box>
           </Box>
+
           <Box className={styles.topBarArea}>
+            <ToggleThemeButton/>
             {userLoginState ? logInUserOptions : logOutUserOptions}
           </Box>
+
         </Toolbar>
       </AppBar>
       <DrawerHeader />

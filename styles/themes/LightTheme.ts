@@ -17,6 +17,7 @@ let lightTheme: Theme = createTheme({
     mode: "light",
     primary: {
       main: "#4348A7",
+      contrastText: "#fff",
     },
     secondary: {
       main: "#55B328",
