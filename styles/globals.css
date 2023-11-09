@@ -21,8 +21,7 @@ input::-ms-clear {
 
 a {
   color: #55b328 !important;
-  text-decoration: none !important;
-  font-family: 'Lato', sans-serif !important;
+  text-decoration: none;
   text-transform: none !important;
 }
 

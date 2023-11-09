@@ -2,24 +2,30 @@ import { Theme, createTheme } from "@mui/material/styles";
 import "@/styles/globals.css";
 import commonTheme from "@/styles/themes/CommonTheme";
 
+const currentPrimary = "#4348A7";
+const currentSecondary = "#55b328";
+
+const primaryMain = "#00546B";
+const secondaryMain = "#29CCBC";
+
 const lightTheme: Theme = createTheme({
   ...commonTheme,
   palette: {
     mode: "light",
     primary: {
-      main: "#4348A7",
+      main: "#00546B",
       contrastText: "#fff",
     },
     secondary: {
-      main: "#55B328",
-      contrastText: "#fff",
+      main: "#29CCBC",
+      contrastText: "#000",
     },
     info: {
-      main: "#fff",
-      contrastText: "#4348A7",
+      main: "#0263D1",
     },
     background: {
-      surface1: "#F8F8F8",
+      default: "#FEFEFE",
+      surface1: "#F7F7F7",
     },
   },
 });

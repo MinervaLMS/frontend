@@ -19,7 +19,7 @@ const ToggleThemeButton = () => {
 
   const getThemeIcon = () => {
     const theme = useTheme();
-    const iconColor = theme.palette.primary.contrastText;
+    const iconColor = isDarkMode ? theme.palette.common.white : theme.palette.primary.contrastText;
     const themeIcon = isDarkMode ? <Brightness7Icon sx={{color: iconColor}}/> : <Brightness4Icon sx={{color: iconColor}}/>;
     return themeIcon;
   };

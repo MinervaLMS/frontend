@@ -17,7 +17,7 @@ import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
 import { DrawerHeader } from "@/components/layout/CourseDrawer";
 
 // Import styles
-import { styled } from '@mui/material/styles'
+import { styled, useTheme } from '@mui/material/styles'
 import styles from '@/styles/Header.module.css'
 
 // Import icons
@@ -79,6 +79,9 @@ export default function MainAppBar() {
   const open = useAppSelector(
     (state) => state.persistedReducer.drawerState.open
   )
+
+  // Theme
+  const theme = useTheme();
 
   // Redux dispatch
   const dispatch = useAppDispatch()
@@ -202,7 +205,7 @@ export default function MainAppBar() {
       <AppBar open={params.hasOwnProperty('alias') ? open : false}
         position={userLoginState ? "fixed" : "fixed"}
         color={userLoginState ? "primary" : "primary"}
-        elevation={userLoginState ? 2 : 2}
+        elevation={userLoginState ? 2 : 0}
       >
         <Toolbar className={styles.mainHeader}>
 
