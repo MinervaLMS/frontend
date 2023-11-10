@@ -33,13 +33,16 @@ export default function Login() {
       style={{ backgroundImage: `url(${bg.src})`, backgroundSize: 'cover' }}
       className={styles.mainContainer}
     >
-      <Image
-        src='/vercel.svg'
-        alt='Vercel Logo'
-        className={styles.logo}
-        width={100}
-        height={100}
-      />
+      <Link href='/'>
+        <Image
+          src='/vercel.svg'
+          alt='Vercel Logo'
+          className={styles.logo}
+          width={100}
+          height={100}
+        />
+      </Link>
+      
       <Paper
         elevation={3}
         className={styles.formBox}

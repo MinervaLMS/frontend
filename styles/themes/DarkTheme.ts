@@ -31,6 +31,21 @@ const darkTheme: Theme = createTheme({
       surface1: "#151C1F",
     },
   },
+  components: {
+    MuiLink: {
+      defaultProps: {
+        underline: "hover",
+      },
+      styleOverrides: {
+        root: {
+          color: "#91E8FA",
+          ":hover": {
+            color: "#F2FAF9",
+          },
+        },
+      },
+    },
+  },
 });
 
 export default darkTheme;
