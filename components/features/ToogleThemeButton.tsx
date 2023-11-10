@@ -1,6 +1,7 @@
 // SomeOtherComponent.tsx
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useAppSelector } from '@/redux/hook'
 import { toggleTheme } from '@/redux/features/themeSlice';
 import { RootState } from '@/redux/store';
 import { IconButton } from '@mui/material';
@@ -17,15 +18,27 @@ const ToggleThemeButton = () => {
     dispatch(toggleTheme());
   };
 
+  const userLoginState = useAppSelector(
+    (state) => state.persistedReducer.userLoginState.login
+  )
+
   const getThemeIcon = () => {
     const theme = useTheme();
-    const iconColor = isDarkMode ? theme.palette.common.white : theme.palette.primary.contrastText;
+    
+    const iconColor = 
+      userLoginState ? 
+        theme.palette.common.white 
+        : isDarkMode ? 
+            theme.palette.common.white
+          : theme.palette.text.primary;
+
     const themeIcon = isDarkMode ? <Brightness7Icon sx={{color: iconColor}}/> : <Brightness4Icon sx={{color: iconColor}}/>;
+
     return themeIcon;
   };
 
   return (
-    <IconButton sx={{ mr: 2 }} onClick={handleToggleTheme}>
+    <IconButton sx={{ mr: 2 }} onClick={handleToggleTheme} aria-label={isDarkMode ? "Desactivar modo oscuro" : "Activar modo oscuro"}>
       {getThemeIcon()}
     </IconButton>
   );

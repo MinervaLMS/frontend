@@ -38,6 +38,8 @@ import { logOut } from '@/redux/features/userLoginSlice'
 import { useRouter, useParams } from 'next/navigation'
 
 import ToggleThemeButton from '../features/ToogleThemeButton'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean
@@ -79,6 +81,8 @@ export default function MainAppBar() {
   const open = useAppSelector(
     (state) => state.persistedReducer.drawerState.open
   )
+
+  const isDarkMode = useSelector((state: RootState) => state.persistedReducer.theme.isDarkMode);
 
   // Theme
   const theme = useTheme();
@@ -168,8 +172,8 @@ export default function MainAppBar() {
   const logOutUserOptions = (
     <>
       <Button
-        variant='contained'
-        color='info'
+        variant='outlined'
+        color='primary'
         sx={{ mx: 1, textTransform: 'none' }}
         onClick={() => handleNavigate('/register')}
         type='button'
@@ -177,7 +181,7 @@ export default function MainAppBar() {
         Registrarse
       </Button>
       <Button
-        color='secondary'
+        color='primary'
         variant='contained'
         sx={{ mx: 1, textTransform: 'none' }}
         onClick={() => handleNavigate('/login')}
@@ -204,8 +208,15 @@ export default function MainAppBar() {
     <Box id='header'>
       <AppBar open={params.hasOwnProperty('alias') ? open : false}
         position={userLoginState ? "fixed" : "fixed"}
-        color={userLoginState ? "primary" : "primary"}
-        elevation={userLoginState ? 2 : 0}
+        elevation={userLoginState ? 2 : 2}
+        sx = {{
+          backgroundColor: (t) => 
+            userLoginState
+              ? isDarkMode
+                ? t.palette.background.surface1
+                : t.palette.primary.main
+              : t.palette.background.surface1,
+        }}
       >
         <Toolbar className={styles.mainHeader}>
 
@@ -214,8 +225,8 @@ export default function MainAppBar() {
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
               <Image
                 className={styles.logo}
-                hidden={open}
-                src='/vercel.svg'
+                hidden={open && userLoginState} 
+                src='vercel.svg'
                 alt='Vercel Logo'
                 width={80}
                 height={40}
