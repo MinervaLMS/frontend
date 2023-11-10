@@ -1,63 +1,62 @@
-import { Theme, createTheme, responsiveFontSizes } from "@mui/material/styles";
+import { Theme, createTheme } from "@mui/material/styles";
 import "@/styles/globals.css";
+import commonTheme from "@/styles/themes/CommonTheme";
 
-// Augment the palette to include new background colors
-declare module '@mui/material/styles' {
-  interface TypeBackground {
-    surface1: string;
-  }
+const previousPrimary = "#4348A7";
+const previousSecondary = "#55b328";
 
-  interface TypeBackgroundOptions {
-    surface1?: string;
-  }
-}
+const linkPrimary = "#005A73";
+const linkPrimaryHover = "#002833";
 
-let lightTheme: Theme = createTheme({
+const linkSecondary = "#005952";
+const linkSecondaryHover = "#00332F";
+
+const lightTheme: Theme = createTheme({
+  ...commonTheme,
   palette: {
     mode: "light",
     primary: {
-      main: "#4348A7",
-    },
-    secondary: {
-      main: "#55B328",
+      main: "#00546B",
       contrastText: "#fff",
     },
+    secondary: {
+      main: "#29CCBC",
+      contrastText: "#000",
+    },
+    error: {
+      main: "#D4372F",
+    },
+    warning: {
+      main: "#ED7802",
+      contrastText: "#000",
+    },
     info: {
-      main: "#fff",
-      contrastText: "#4348A7",
+      main: "#0263D1",
+    },
+    success: {
+      main: "#2E7D56",
     },
     background: {
-      surface1: "#F8F8F8",
+      default: "#FEFEFE",
+      paper: "#FEFEFE",
+      surface1: "#F7F7F7",
     },
   },
-  typography: {
-    fontFamily: '"Lato", "Helvetica", "Arial", sans-serif',
-    fontSize: 14,
-    h1: {
-      fontFamily: '"Montserrat", "Helvetica", "Arial", sans-serif',
-      fontWeight: 700,
-    },
-    h2: {
-      fontFamily: '"Montserrat", "Helvetica", "Arial", sans-serif',
-    },
-    h3: {
-      fontFamily: '"Montserrat", "Helvetica", "Arial", sans-serif',
-    },
-    h4: {
-      fontFamily: '"Montserrat", "Helvetica", "Arial", sans-serif',
-      fontWeight: "bold",
-    },
-    h5: {
-      fontFamily: '"Montserrat", "Helvetica", "Arial", sans-serif',
-      fontWeight: "bold",
-    },
-    h6: {
-      fontFamily: '"Montserrat", "Helvetica", "Arial", sans-serif',
-      fontWeight: "bold",
+  components: {
+    MuiLink: {
+      defaultProps: {
+        underline: "hover",
+      },
+      styleOverrides: {
+        root: {
+          color: "#024897",
+          ":hover": {
+            color: "#013066",
+          },
+        },
+      },
     },
   },
 });
-
-lightTheme = responsiveFontSizes(lightTheme);
 
 export default lightTheme;

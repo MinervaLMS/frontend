@@ -33,11 +33,6 @@ import { AUTOHIDE_ALERT_DURATION } from '@/config/constants'
 import { ROLES } from '@/config/enums'
 import { useRouter } from 'next/navigation'
 
-// Theming
-import lightTheme from '@/styles/themes/LightTheme'
-import { ThemeProvider } from '@mui/material'
-import CssBaseline from '@mui/material/CssBaseline'
-
 export default function LoginForm() {
   // Router
   const router = useRouter()
@@ -189,102 +184,99 @@ export default function LoginForm() {
 
   return (
     <>
-      <ThemeProvider theme={lightTheme}>
-        <CssBaseline />
-        <CircularSpinner openBackdrop={openBackdrop} />
-        <CustomSnackbar
-          message={alertConfig.message}
-          severity={alertConfig.severity}
-          vertical='top'
-          horizontal='center'
-          autoHideDuration={AUTOHIDE_ALERT_DURATION}
-          open={alertOpen}
-          onClose={handleAlertClose}
-        />
-        <PasswordForgot
-          open={openPasswordForgot}
-          handlePasswordForgot={handlePasswordForgot}
-          setOpen={setOpenPasswordForgot}
-          handleOpenLoader={handleOpenLoader}
-          handleCloseLoader={handleCloseLoader}
-        />
-        <Box component='form' onSubmit={handleSubmit} sx={{ mt: 3 }} noValidate>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                required
-                id='email'
-                label='Correo'
-                name='email'
-                type='email'
-                autoComplete='email'
-                size='small'
-                value={email}
-                onChange={handleEmailChange}
-                error={emailError}
-                helperText={emailError ? requiredText : ''}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <FormControl
-                variant='outlined'
-                size='small'
-                fullWidth
-                required
-                error={passwordError}
-              >
-                <InputLabel htmlFor='outlined-adornment-password'>
-                  Contraseña
-                </InputLabel>
-                <OutlinedInput
-                  id='outlined-adornment-password'
-                  type={showPassword ? 'text' : 'password'}
-                  endAdornment={
-                    <InputAdornment position='end'>
-                      <IconButton
-                        aria-label='toggle password visibility'
-                        onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
-                        edge='end'
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                  label='Password'
-                  value={password}
-                  onChange={handlePasswordChange}
-                />
-                <FormHelperText>
-                  {passwordError ? requiredText : ''}
-                </FormHelperText>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12}>
-              <Link
-                href='#'
-                onClick={handlePasswordForgot}
-                underline='hover'
-                color={''}
-                variant='body1'
-              >
-                Olvidé mi contraseña →
-              </Link>
-            </Grid>
+      <CircularSpinner openBackdrop={openBackdrop} />
+      <CustomSnackbar
+        message={alertConfig.message}
+        severity={alertConfig.severity}
+        vertical='top'
+        horizontal='center'
+        autoHideDuration={AUTOHIDE_ALERT_DURATION}
+        open={alertOpen}
+        onClose={handleAlertClose}
+      />
+      <PasswordForgot
+        open={openPasswordForgot}
+        handlePasswordForgot={handlePasswordForgot}
+        setOpen={setOpenPasswordForgot}
+        handleOpenLoader={handleOpenLoader}
+        handleCloseLoader={handleCloseLoader}
+      />
+      <Box component='form' onSubmit={handleSubmit} sx={{ mt: 3 }} noValidate>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              required
+              id='email'
+              label='Correo'
+              name='email'
+              type='email'
+              autoComplete='email'
+              size='small'
+              value={email}
+              onChange={handleEmailChange}
+              error={emailError}
+              helperText={emailError ? requiredText : ''}
+            />
           </Grid>
-          <Button
-            className='btn btn-primary'
-            type='submit'
-            fullWidth
-            variant='contained'
-            color='secondary'
-            sx={{ mt: 1, mb: 2 }}
-          >
-            Ingresar
-          </Button>
-        </Box>
-      </ThemeProvider>
+          <Grid item xs={12}>
+            <FormControl
+              variant='outlined'
+              size='small'
+              fullWidth
+              required
+              error={passwordError}
+            >
+              <InputLabel htmlFor='outlined-adornment-password'>
+                Contraseña
+              </InputLabel>
+              <OutlinedInput
+                id='outlined-adornment-password'
+                type={showPassword ? 'text' : 'password'}
+                endAdornment={
+                  <InputAdornment position='end'>
+                    <IconButton
+                      aria-label='toggle password visibility'
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge='end'
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label='Password'
+                value={password}
+                onChange={handlePasswordChange}
+              />
+              <FormHelperText>
+                {passwordError ? requiredText : ''}
+              </FormHelperText>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12}>
+            <Link
+              href='#'
+              onClick={handlePasswordForgot}
+              underline='hover'
+              color={''}
+              variant='body1'
+            >
+              Olvidé mi contraseña →
+            </Link>
+          </Grid>
+        </Grid>
+        <Button
+          className='btn btn-primary'
+          type='submit'
+          fullWidth
+          variant='contained'
+          color='primary'
+          sx={{ mt: 1, mb: 2 }}
+        >
+          Ingresar
+        </Button>
+      </Box>
     </>
   )
 }

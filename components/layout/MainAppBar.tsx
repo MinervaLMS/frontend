@@ -17,7 +17,7 @@ import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
 import { DrawerHeader } from "@/components/layout/CourseDrawer";
 
 // Import styles
-import { styled } from '@mui/material/styles'
+import { styled, useTheme } from '@mui/material/styles'
 import styles from '@/styles/Header.module.css'
 
 // Import icons
@@ -37,8 +37,9 @@ import { setOpen } from '@/redux/features/drawerSlice'
 import { logOut } from '@/redux/features/userLoginSlice'
 import { useRouter, useParams } from 'next/navigation'
 
-import { Theme } from '@mui/material'
-import { useTheme } from '@mui/material/styles';
+import ToggleThemeButton from '../features/ToogleThemeButton'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean
@@ -81,6 +82,11 @@ export default function MainAppBar() {
     (state) => state.persistedReducer.drawerState.open
   )
 
+  const isDarkMode = useSelector((state: RootState) => state.persistedReducer.theme.isDarkMode);
+
+  // Theme
+  const theme = useTheme();
+
   // Redux dispatch
   const dispatch = useAppDispatch()
 
@@ -111,10 +117,9 @@ export default function MainAppBar() {
     handleNavigate('/')
   }
 
-  const theme: Theme = useTheme();
 
   // Menu options for the log in user
-  const logInUserOptions = (
+  const loggedInUserOptions = (
     <Box className={styles.userBox}>
       <Typography className={styles.userName} component='h2'>
         {userNameState}
@@ -164,11 +169,11 @@ export default function MainAppBar() {
   )
 
   // Menu options for the log out user
-  const logOutUserOptions = (
+  const loggedOutUserOptions = (
     <>
       <Button
-        variant='contained'
-        color='info'
+        variant='outlined'
+        color='primary'
         sx={{ mx: 1, textTransform: 'none' }}
         onClick={() => handleNavigate('/register')}
         type='button'
@@ -176,7 +181,7 @@ export default function MainAppBar() {
         Registrarse
       </Button>
       <Button
-        color='secondary'
+        color='primary'
         variant='contained'
         sx={{ mx: 1, textTransform: 'none' }}
         onClick={() => handleNavigate('/login')}
@@ -203,17 +208,25 @@ export default function MainAppBar() {
     <Box id='header'>
       <AppBar open={params.hasOwnProperty('alias') ? open : false}
         position={userLoginState ? "fixed" : "fixed"}
-        color={userLoginState ? "primary" : "primary"}
         elevation={userLoginState ? 2 : 2}
+        sx = {{
+          backgroundColor: (t) => 
+            userLoginState
+              ? isDarkMode
+                ? t.palette.background.surface1
+                : t.palette.primary.main
+              : t.palette.background.surface1,
+        }}
       >
         <Toolbar className={styles.mainHeader}>
+
           <Box className={styles.topBarArea}>
             {params.hasOwnProperty('alias') && drawerButton}
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
               <Image
                 className={styles.logo}
-                hidden={open}
-                src='/vercel.svg'
+                hidden={userLoginState} 
+                src='vercel.svg'
                 alt='Vercel Logo'
                 width={80}
                 height={40}
@@ -222,9 +235,12 @@ export default function MainAppBar() {
               />
             </Box>
           </Box>
+
           <Box className={styles.topBarArea}>
-            {userLoginState ? logInUserOptions : logOutUserOptions}
+            <ToggleThemeButton/>
+            {userLoginState ? loggedInUserOptions : loggedOutUserOptions}
           </Box>
+
         </Toolbar>
       </AppBar>
       <DrawerHeader />

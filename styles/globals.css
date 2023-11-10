@@ -19,15 +19,13 @@ input::-ms-clear {
   display: none;
 }
 
+/* Mainly for HTML's course materials */
 a {
-  color: #55b328 !important;
-  text-decoration: none !important;
-  font-family: 'Lato', sans-serif !important;
-  text-transform: none !important;
+  color: #0077FF;
+  text-decoration: none;
 }
 
 a:hover {
-  color: #40881f !important;
-  text-decoration-color: #40881f !important;
   transition: ease 0.5s;
+  text-decoration: underline;
 }

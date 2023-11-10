@@ -255,7 +255,7 @@ export default function Home() {
                   <img src="/assets/images/institution-image.png" alt="Logo Minerva" width={"200rem"}/>
                   <Typography component="p" variant="body1" gutterBottom>
                     {'Copyright © '}
-                    <Link color="inherit" href="/">
+                    <Link href="/" >
                       Minerva
                     </Link>{' '}
                     {new Date().getFullYear()}
@@ -272,7 +272,7 @@ export default function Home() {
                     </Typography>
                     {footer.elements.map((element) => (
                       <Typography component="p" variant="body1" textAlign="left">
-                        <a href={element.link}>{element.name}</a>
+                        <Link href={element.link}>{element.name}</Link>
                       </Typography>
                     ))}
                   </Stack>

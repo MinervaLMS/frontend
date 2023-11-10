@@ -8,11 +8,12 @@ import styles from '@/styles/RegisterLogin.module.css'
 import bg from '@/public/assets/images/register-bg.png'
 import Image from 'next/image'
 
-import { Paper, Typography } from '@mui/material'
+import { Divider, Paper, Typography } from '@mui/material'
 import { useAppSelector } from '@/redux/hook'
 import { useRouter } from 'next/navigation'
 
 export default function Login() {
+  
   const userLoginState = useAppSelector(
     (state) => state.persistedReducer.userLoginState.login
   )
@@ -32,13 +33,16 @@ export default function Login() {
       style={{ backgroundImage: `url(${bg.src})`, backgroundSize: 'cover' }}
       className={styles.mainContainer}
     >
-      <Image
-        src='/vercel.svg'
-        alt='Vercel Logo'
-        className={styles.logo}
-        width={100}
-        height={100}
-      />
+      <Link href='/'>
+        <Image
+          src='/vercel.svg'
+          alt='Vercel Logo'
+          className={styles.logo}
+          width={100}
+          height={100}
+        />
+      </Link>
+      
       <Paper
         elevation={3}
         className={styles.formBox}
