@@ -73,25 +73,27 @@ function CourseCardList() {
 
   return (
     <>
-      <Box component='div' display='flex' justifyContent='space-between'>
-        <Typography component='h1' variant='h2' gutterBottom>
+      <Box component='div' display='flex' justifyContent='space-between' alignItems='center' sx={{mb: 3}}>
+        <Typography component='h1' variant='h2'>
           Mis Cursos
         </Typography>
-        {viewMode === LIST_VIEW_MODE.GRID ? (
-          <IconButton
-            aria-label='view grid'
-            onClick={() => handleChangeViewMode(LIST_VIEW_MODE.LIST)}
-          >
-            <ViewModule />
-          </IconButton>
-        ) : (
-          <IconButton
-            aria-label='view list'
-            onClick={() => handleChangeViewMode(LIST_VIEW_MODE.GRID)}
-          >
-            <ViewList />
-          </IconButton>
-        )}
+        <Box>
+          {viewMode === LIST_VIEW_MODE.GRID ? (
+            <IconButton
+              aria-label='view grid'
+              onClick={() => handleChangeViewMode(LIST_VIEW_MODE.LIST)}
+            >
+              <ViewModule />
+            </IconButton>
+          ) : (
+            <IconButton
+              aria-label='view list'
+              onClick={() => handleChangeViewMode(LIST_VIEW_MODE.GRID)}
+            >
+              <ViewList />
+            </IconButton>
+          )}
+        </Box>
       </Box>
       <Box component='div'>
         {viewMode === LIST_VIEW_MODE.GRID ? (
@@ -126,7 +128,17 @@ function CourseCardList() {
                   </TableCell>
                   <TableCell align='left'>
                     <Typography variant='body2' fontWeight='bold'>
-                      Descripción
+                      Nivel
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant='body2' fontWeight='bold'>
+                      Puntos
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant='body2' fontWeight='bold'>
+                      Avance
                     </Typography>
                   </TableCell>
                 </TableRow>
@@ -151,7 +163,17 @@ function CourseCardList() {
                       </TableCell>
                       <TableCell align='left'>
                         <Typography variant='body2'>
-                          {course.description}
+                          Compentente
+                        </Typography>
+                      </TableCell>
+                      <TableCell align='left'>
+                        <Typography variant='body2'>
+                          850
+                        </Typography>
+                      </TableCell>
+                      <TableCell align='left'>
+                        <Typography variant='body2'>
+                          30%
                         </Typography>
                       </TableCell>
                     </TableRow>
