@@ -119,7 +119,7 @@ export default function MainAppBar() {
 
 
   // Menu options for the log in user
-  const logInUserOptions = (
+  const loggedInUserOptions = (
     <Box className={styles.userBox}>
       <Typography className={styles.userName} component='h2'>
         {userNameState}
@@ -169,7 +169,7 @@ export default function MainAppBar() {
   )
 
   // Menu options for the log out user
-  const logOutUserOptions = (
+  const loggedOutUserOptions = (
     <>
       <Button
         variant='outlined'
@@ -238,7 +238,7 @@ export default function MainAppBar() {
 
           <Box className={styles.topBarArea}>
             <ToggleThemeButton/>
-            {userLoginState ? logInUserOptions : logOutUserOptions}
+            {userLoginState ? loggedInUserOptions : loggedOutUserOptions}
           </Box>
 
         </Toolbar>
