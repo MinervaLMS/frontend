@@ -12,9 +12,18 @@ const darkTheme: Theme = createTheme({
     secondary: {
       main: "#F2FAF9",
     },
+    error: {
+      main: "#F54C36",
+    },
+    warning: {
+      main: "#FFB326",
+    },
     info: {
       main: "#3098FF",
       contrastText: "#000",
+    },
+    success: {
+      main: "#66BA90",
     },
     background: {
       default: "#0F1517",
