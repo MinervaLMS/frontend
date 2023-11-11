@@ -22,7 +22,7 @@ const FrequentlyAskedQuestions: React.FC<FAQProps> = ({ FAQs }) => {
             aria-controls="panel1a-content"
             id="panel1a-header"
           >
-            <Typography color={"#55b328"} >{FAQ.question}</Typography>
+            <Typography color="primary" >{FAQ.question}</Typography>
           </AccordionSummary>
           <AccordionDetails>
             <Typography>{FAQ.answer}</Typography>

@@ -225,7 +225,7 @@ export default function MainAppBar() {
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
               <Image
                 className={styles.logo}
-                hidden={userLoginState} 
+                hidden={userLoginState}
                 src='vercel.svg'
                 alt='Vercel Logo'
                 width={80}
