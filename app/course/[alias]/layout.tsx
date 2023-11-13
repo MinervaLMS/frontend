@@ -39,6 +39,7 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
     duration: theme.transitions.duration.leavingScreen,
   }),
   marginLeft: `-${DRAWER_WIDTH}px`,
+  overflow: "hidden",
   ...(open && {
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.easeOut,
@@ -147,7 +148,6 @@ function CourseLayout({ children, params
   // Render the principal container for the course page.
   return (
     <Box className={styles.course}>
-      <CssBaseline />
       <MainAppBar />
       <CourseDrawer courseAlias={params.alias} />
       <Main open={drawerOpen}>

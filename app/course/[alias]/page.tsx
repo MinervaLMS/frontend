@@ -36,6 +36,7 @@ import { useRouter } from "next/navigation";
 import useCourse from "@/hooks/fetching/useCourse";
 import useModulesList from "@/hooks/fetching/useModulesList";
 import { API_STATUS_CODE } from "@/config/api-connections";
+import { Container } from "@mui/material";
 
 function CourseHome({ params }: { params: { alias: string } }) {
 
