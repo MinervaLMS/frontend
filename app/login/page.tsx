@@ -54,10 +54,9 @@ export default function Login() {
           Bienvenido
         </Typography>
         <Typography component='p' align='center'>
-          Ingresa tus tus datos de inicio de sesión para acceder a tu cuenta.{' '}
-          <br />
-          ¡Estamos emocionados de verte de nuevo!
+          Ingresa tus datos de inicio de sesión para acceder a tu cuenta.
         </Typography>
+        
         <LoginForm />
 
         <Typography variant='body1'>
@@ -66,11 +65,16 @@ export default function Login() {
             Regístrate
           </Link>
         </Typography>
+
+        <Divider flexItem className={styles.helpDivider}/>
+
+        <Typography component='p'>
+          Si tienes alguna dificultad comunícate con nuestro{' '}
+          <Link href='/contact'>Centro de atención.</Link>
+        </Typography>
+
       </Paper>
-      <Typography component='p' sx={{ color: '#fff', marginTop: '2rem' }}>
-        Si tienes alguna dificultad comunícate con nuestro{' '}
-        <Link href='/contact'>Centro de atención.</Link>
-      </Typography>
+      
     </Box>
   )
 }
