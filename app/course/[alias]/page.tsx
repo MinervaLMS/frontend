@@ -196,7 +196,7 @@ function CourseHome({ params }: { params: { alias: string } }) {
                 </Typography>
                 <Stack direction="row" alignItems="center" spacing={4} pt={2}>
                   <Stack direction="row" alignItems="center" spacing={2}>
-                    <StarRateIcon style={{color: "#FF9800"}} />
+                    <StarRateIcon sx={{color: (t) => t.palette.warning.main }} />
                     <Typography component="p" variant="body1">
                       {`
                         ${courseData?.average_stars != null ? courseData?.average_stars : "NaN"} 
@@ -205,7 +205,7 @@ function CourseHome({ params }: { params: { alias: string } }) {
                     </Typography>
                   </Stack>
                   <Stack direction="row" alignItems="center" spacing={2}>
-                    <CommentIcon style={{color: "#01579B"}} />
+                    <CommentIcon sx={{color: (t) => t.palette.info.main }} />
                     <Typography component="p" variant="body1">
                       {`${courseData?.comments} comentarios`}
                     </Typography>

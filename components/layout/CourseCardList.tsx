@@ -10,12 +10,14 @@ import {
   CardMedia,
   IconButton,
   Paper,
+  Tab,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  Tabs,
   Typography
 } from '@mui/material'
 import { useRouter } from 'next/navigation'
@@ -23,8 +25,10 @@ import React, { useEffect, useState } from 'react'
 
 function CourseCardList() {
   const router = useRouter()
+  
   const [courses, setCourses] =
     useState<[{ name: string; alias: string; description: string }]>()
+  
   const [viewMode, setViewMode] = useState<LIST_VIEW_MODE>(LIST_VIEW_MODE.LIST)
 
   const userId = useAppSelector(
@@ -71,6 +75,18 @@ function CourseCardList() {
     console.log('User is logged in')
   }, [])
 
+
+  {/* Tabs management for course type */}
+  
+  {/* It needs to be completed for changing the view. Now its not functional. */}
+
+  const [tabValue, setTabValue] = React.useState("active");
+
+  const handleTabChange = (event: React.SyntheticEvent, newTabValue: string) => {
+    setTabValue(newTabValue);
+  };
+
+
   return (
     <>
       <Box component='div' display='flex' justifyContent='space-between' alignItems='center' sx={{mb: 3}}>
@@ -95,6 +111,21 @@ function CourseCardList() {
           )}
         </Box>
       </Box>
+
+      <Box component='div' sx={{mb: 3}}>
+        <Tabs
+          value={tabValue}
+          onChange={handleTabChange}
+          textColor="primary"
+          indicatorColor="primary"
+          aria-label="course types tabs"
+        >
+          <Tab label="Activos" value="active" />
+          <Tab label="Finalizados" value="finished" />
+        </Tabs>
+
+      </Box>
+
       <Box component='div'>
         {viewMode === LIST_VIEW_MODE.GRID ? (
           courses &&
