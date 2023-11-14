@@ -99,14 +99,14 @@ function CourseCardList() {
               aria-label='view grid'
               onClick={() => handleChangeViewMode(LIST_VIEW_MODE.LIST)}
             >
-              <ViewModule />
+              <ViewList fontSize='large'/>
             </IconButton>
           ) : (
             <IconButton
               aria-label='view list'
               onClick={() => handleChangeViewMode(LIST_VIEW_MODE.GRID)}
             >
-              <ViewList />
+              <ViewModule fontSize='large'/>
             </IconButton>
           )}
         </Box>

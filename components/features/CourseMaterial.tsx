@@ -4,7 +4,6 @@ import React, { MouseEvent, useState, useEffect } from 'react'
 import { Box } from '@mui/material'
 import Container from '@mui/material/Container'
 import Card from '@mui/material/Card/Card'
-import Checkbox from '@mui/material/Checkbox'
 import CardActionArea from '@mui/material/CardActionArea/CardActionArea'
 import Typography from '@mui/material/Typography'
 
@@ -16,13 +15,13 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp'
 import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined'
 import ThumbDownIcon from '@mui/icons-material/ThumbDown'
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined'
-import CheckBoxIcon from '@mui/icons-material/CheckBox'
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+import CodeIcon from '@mui/icons-material/Code';
+import SubjectIcon from '@mui/icons-material/Subject'
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 
 // Import styles
-import { common } from '@mui/material/colors'
 import styles from '@/styles/CourseMaterial.module.css'
 
 // Import API
@@ -39,6 +38,27 @@ import { MATERIAL_TYPES } from '@/config/enums'
 interface CourseMaterialProps {
   material: API_MaterialObject
   onSelected: () => undefined
+}
+
+const MATERIAL_ICONS = {
+  [MATERIAL_TYPES.VIDEO]: PlayCircleOutlinedIcon,
+  [MATERIAL_TYPES.EXERCISE]: CodeIcon,
+  [MATERIAL_TYPES.PDF]: PictureAsPdfIcon,
+  [MATERIAL_TYPES.MARKDOWN]: SubjectIcon,
+  [MATERIAL_TYPES.NONE]: SubjectIcon,
+};  
+
+function TypeOfMaterialIcon(materialType: MATERIAL_TYPES = MATERIAL_TYPES.NONE): React.JSX.Element {
+  const Icon = MATERIAL_ICONS[materialType] || SubjectIcon;
+  return (
+    <Icon
+      color='primary'
+      sx={{
+        width: '95%',
+        height: '95%'
+      }}
+    />
+  );
 }
 
 function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
@@ -168,35 +188,23 @@ function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
     }
   }
 
-  /*
-  useEffect(() => {
-    if (accessData) {
-      setAccess(accessData)
-      setReaction(accessData.like)
-      setLoadingRequest(false)
-    }
-  }, [])
-  */
+
 
   return (
     <Card
       sx={{
         width: '70%',
         height: '120px',
-        bgcolor: '#E6E6E6'
+        bgcolor: (theme) => theme.palette.background.surface1,
       }}
     >
       {/* <CircularSpinner openBackdrop={loadingRequest || accessIsLoading} /> */}
       <CardActionArea onClick={onSelected}>
         <Box className={styles.materialInformation}>
-          <Box className={styles.typeOfMaterial}>
-            <PlayCircleOutlinedIcon
-              color='primary'
-              sx={{
-                width: '95%',
-                height: '95%'
-              }}
-            />
+          <Box className={styles.typeOfMaterial} 
+            sx={{ bgcolor: (theme) => theme.palette.background.default,
+          }}>
+            {TypeOfMaterialIcon(materialData.material_type)}
           </Box>
           <Container>
             <Box className={styles.materialName}>
@@ -215,14 +223,14 @@ function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
                 disableGutters
               >
                 {materialData.material_type === MATERIAL_TYPES.EXERCISE ? (
-                  <Typography color='primary' variant='body1'>
+                  <Typography variant='body1'>
                     Aciertos: {materialData.access?.summary?.hits || 0}/
                     {materialData.access?.summary?.attempts || 0}
                   </Typography>
                 ) : (
                   <>
-                    <TimerOutlinedIcon color='primary' />
-                    <Typography color='primary' variant='body1'>
+                    <TimerOutlinedIcon color='info' />
+                    <Typography variant='body1'>
                       8m, 45s
                     </Typography>
                   </>

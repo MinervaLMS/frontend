@@ -2,8 +2,22 @@
   display: flex;
 }
 
+/*
 .course > Main {
   padding: 2rem 5vw;
+}
+*/
+
+.main {
+  margin-top: 64px;
+  padding-top: 6vh;
+  padding-bottom: 11vh;
+}
+
+@media (max-width: 600px) {
+  .main {
+    margin-top: 56px;
+  }
 }
 
 .moduleListItemText {

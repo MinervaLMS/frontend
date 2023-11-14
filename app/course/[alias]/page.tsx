@@ -141,7 +141,8 @@ function CourseHome({ params }: { params: { alias: string } }) {
   }
 
   return (
-    <>
+    <Container>
+      
       <CustomSnackbar
         message={modulesAlertConfig.message}
         severity={modulesAlertConfig.severity}
@@ -265,7 +266,8 @@ function CourseHome({ params }: { params: { alias: string } }) {
         </Typography>
         <ModulesAccordion courseAlias={params.alias} accessToken={userTokens.access} />
       </Box>
-    </>
+
+    </Container>
   );
 }
 

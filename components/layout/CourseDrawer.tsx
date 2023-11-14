@@ -50,9 +50,6 @@ export const CourseDrawer = ({ courseAlias, moduleID }: CourseDrawerProps) => {
     router.push(`/course/${courseAlias}/${moduleID}`)
   }
 
-  // For using the theme predefined styles
-  const theme = useTheme()
-
   return (
     <Drawer
       sx={{

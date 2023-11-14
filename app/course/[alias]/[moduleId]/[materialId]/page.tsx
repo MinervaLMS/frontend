@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react'
 // Import MaterialUI Components
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { Link } from '@mui/material'
+import { Container, Link } from '@mui/material'
 
 // Import own components
 import CircularSpinner from '@/components/common/CircularSpinner'
@@ -110,31 +110,33 @@ function Materials() {
 
   // Render the principal container for the course page.
   return (
-    <Box component='section' style={{ height: 'calc(100vh - 130px)' }}>
-      <Box
-        sx={{
-          width: 1,
-          height: '90%'
-        }}
-      >
-        <Link
-          onClick={() => {
-            router.push(`/course/${alias}/${moduleId}`)
+    <Container maxWidth="md">
+      <Box component='section' style={{ height: 'calc(100vh - 130px)' }}>
+        <Box
+          sx={{
+            width: 1,
+            height: '90%'
           }}
-          sx={{ cursor: 'pointer' }}
-          underline='hover'
-          color={''}
-          variant='body1'
         >
-          ← Volver
-        </Link>
-        <Typography component='h1' variant='h4'>
-          {materialData?.name}
-        </Typography>
-        <CurrentView materialId={materialId} />
+          <Link
+            onClick={() => {
+              router.push(`/course/${alias}/${moduleId}`)
+            }}
+            sx={{ cursor: 'pointer' }}
+            underline='hover'
+            color={''}
+            variant='body1'
+          >
+            ← Volver
+          </Link>
+          <Typography component='h1' variant='h4'>
+            {materialData?.name}
+          </Typography>
+          <CurrentView materialId={materialId} />
+        </Box>
+        <CommentSection material={materialData} />
       </Box>
-      <CommentSection material={materialData} />
-    </Box>
+    </Container>
   )
 }
 

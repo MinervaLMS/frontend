@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 
 // Import MaterialUI Components
 import Box from "@mui/material/Box";
-import CssBaseline from "@mui/material/CssBaseline";
 
 // Import own components
 import CircularSpinner from "@/components/common/CircularSpinner";
@@ -148,10 +147,9 @@ function CourseLayout({ children, params
   // Render the principal container for the course page.
   return (
     <Box className={styles.course}>
-      <MainAppBar />
       <CourseDrawer courseAlias={params.alias} />
-      <Main open={drawerOpen}>
-        <DrawerHeader />
+      <MainAppBar />
+      <Main open={drawerOpen} className={styles.main}>
         {children}
       </Main>
     </Box>
