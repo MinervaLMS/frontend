@@ -111,31 +111,46 @@ function Materials() {
   // Render the principal container for the course page.
   return (
     <Container maxWidth="md">
-      <Box component='section' style={{ height: 'calc(100vh - 130px)' }}>
-        <Box
-          sx={{
-            width: 1,
-            height: '90%'
-          }}
-        >
-          <Link
-            onClick={() => {
-              router.push(`/course/${alias}/${moduleId}`)
-            }}
-            sx={{ cursor: 'pointer' }}
-            underline='hover'
-            color={''}
-            variant='body1'
-          >
-            ← Volver
-          </Link>
-          <Typography component='h1' variant='h4'>
+          <Typography component='h1' variant='h4' gutterBottom>
             {materialData?.name}
           </Typography>
+          
+          <Box id="materials_navigation" sx={{ paddingY: 2 }} display={"flex"} justifyContent={"space-between"}>
+            
+            <Link
+              onClick={() => {
+                router.push(`/course/${alias}/${moduleId}`)
+              }}
+              sx={{ cursor: 'pointer' }}
+              underline='hover'
+              color={''}
+              variant='body1'
+            >
+              ← Volver
+            </Link>
+
+            <Link
+              sx={{ cursor: 'pointer' }}
+              underline='hover'
+              color={''}
+              variant='body1'
+            >
+              <Typography> &lt; Anterior </Typography>
+            </Link>
+
+            <Link
+              sx={{ cursor: 'pointer' }}
+              underline='hover'
+              color={''}
+              variant='body1'
+            >
+              <Typography> Siguiente &gt; </Typography>
+            </Link>
+
+          </Box>
+          
           <CurrentView materialId={materialId} />
-        </Box>
         <CommentSection material={materialData} />
-      </Box>
     </Container>
   )
 }

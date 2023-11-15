@@ -27,13 +27,9 @@ export default function VideoMaterial({ materialId }: { materialId: string }) {
     })
   }, [])
   return (
-    <Box
-      sx={{
-        width: 1,
-        height: '95%'
-      }}
-    >
+    <Box style={{ position: 'relative', paddingTop: '56.25%' /* 16:9 Aspect Ratio (divide 9 by 16 = 0.5625) */ }}>
       <ReactPlayer
+        style={{ position: 'absolute', top: 0, left: 0 }}
         width='100%'
         height='100%'
         controls
