@@ -194,7 +194,7 @@ function CourseCardList() {
                       </TableCell>
                       <TableCell align='left'>
                         <Typography variant='body2'>
-                          Compentente
+                          Competente
                         </Typography>
                       </TableCell>
                       <TableCell align='left'>

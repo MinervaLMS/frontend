@@ -9,7 +9,7 @@ import ListItemButton from '@mui/material/ListItemButton'
 
 // Import own components
 import CustomSnackbar from '@/components/common/CustomSnackbar'
-import CourseMaterial from '@/components/features/CourseMaterial'
+import CourseMaterialCard from '@/components/features/CourseMaterialCard'
 
 // Import constants
 import { AUTOHIDE_ALERT_DURATION } from '@/config/constants'
@@ -106,7 +106,7 @@ function CourseMaterialList({
     <List>
       {materialsList.map((material: API_MaterialObject) => (
         <ListItem key={material.id}>
-          <CourseMaterial
+          <CourseMaterialCard
             onSelected={() => handleGoToSelectedMaterial(material.id)}
             material={material}
           />

@@ -22,7 +22,7 @@ import SubjectIcon from '@mui/icons-material/Subject'
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 
 // Import styles
-import styles from '@/styles/CourseMaterial.module.css'
+import styles from '@/styles/CourseMaterialCard.module.css'
 
 // Import API
 import useMaterialAccess from '@/hooks/fetching/useMaterialAccess'
@@ -61,7 +61,7 @@ function TypeOfMaterialIcon(materialType: MATERIAL_TYPES = MATERIAL_TYPES.NONE):
   );
 }
 
-function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
+function CourseMaterialCard({ material, onSelected }: CourseMaterialProps) {
   console.log(material)
   // Redux states:
   const userTokens = useAppSelector(
@@ -308,4 +308,4 @@ function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
   )
 }
 
-export default CourseMaterial
+export default CourseMaterialCard

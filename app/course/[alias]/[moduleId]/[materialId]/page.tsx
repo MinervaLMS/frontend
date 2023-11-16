@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react'
 // Import MaterialUI Components
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { Button, ButtonGroup, Container, Link, Stack, Tooltip } from '@mui/material'
+import { Breadcrumbs, Button, ButtonGroup, Container, Link, Stack, Tooltip } from '@mui/material'
 
 // Import own components
 import CircularSpinner from '@/components/common/CircularSpinner'
@@ -17,7 +17,7 @@ import ExerciseMaterial from '@/components/materials/ExerciseMaterial'
 import CommentSection from '@/components/materials/CommentSection'
 
 // Import styles
-import styles from '@/styles/Course.module.css'
+import styles from '@/styles/CourseMaterial.module.css'
 
 // Import constants
 import { AUTOHIDE_ALERT_DURATION } from '@/config/constants'
@@ -36,6 +36,8 @@ import { MATERIAL_TYPES } from '@/config/enums'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import useCourseModule from '@/hooks/fetching/useCourseModule'
+import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 
 const views: any = {
   PDF: PdfMaterial,
@@ -127,32 +129,39 @@ function Materials() {
   }
 
   const CurrentView = views[materialData.material_type]
+  const maxWidthContainer = materialData.material_type === MATERIAL_TYPES.EXERCISE ? "xl" : "md";
 
-  // Render the principal container for the course page.
+  
+  // Render the principal container for the course material page.
   return (
-    <Container maxWidth="md">
+    <Container maxWidth={maxWidthContainer}>
       <Typography component='h1' variant='h4' gutterBottom>
         {materialData?.name}
       </Typography>
           
-      <Box id="materials_navigation" sx={{ paddingY: 2 }} display={"flex"} justifyContent={"space-between"}>
-        
-        <Typography color="text.secondary" sx={{paddingTop: 1 }}>
+      <Box id="materials_navigation" className={styles.materials_navigation_box}>
 
-        <Link
-          onClick={() => {
-            router.push(`/course/${alias}/${moduleId}`)
-          }}
-          sx={{ cursor: 'pointer' }}
-          color='inherit'
-          variant='body1'
-        >
-          Módulo {moduleId}{moduleName != "" ? ":" : ""} {moduleName}
-        </Link>
-          
-          &nbsp;/ Material {materialId}
+        <Breadcrumbs sx={{paddingTop: 1 }}>
+
+          <Link
+            onClick={() => {
+              router.push(`/course/${alias}/${moduleId}`)
+            }}
+            sx={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+            color='inherit'
+            variant='body1'
+          >
+            <KeyboardDoubleArrowLeftIcon sx={{ mr: 0.5 }}/>
+            Módulo {moduleId}{moduleName != "" ? ":" : ""} {moduleName}
+          </Link>
         
-        </Typography>
+          <Typography color="text.secondary">
+            
+            Material {materialData?.order + 1}
+          
+          </Typography>
+
+        </Breadcrumbs>
         
         {/* The next lines are for navigation through materials */}
         {/* The managing of this is not completed */}
