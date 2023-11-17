@@ -11,7 +11,7 @@ const BorderLinearProgress = styled(LinearProgress)(() => ({
 function ModuleProgressBar(
   props: LinearProgressProps & { 
     progress: number,
-    minProgress?: number,
+    minprogress?: number,
     width?: number }, 
 ) {
   let width = 200;
@@ -20,23 +20,23 @@ function ModuleProgressBar(
     width = props.width;
   }
 
-  if (typeof props.minProgress !== 'undefined') {
-    let progressDiff = props.minProgress - props.progress;
+  if (typeof props.minprogress !== 'undefined') {
+    let progressDiff = props.minprogress - props.progress;
 
     return (
       <>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <Box sx={{ minWidth: width*(props.minProgress/100) }}>
+        <Box sx={{ minWidth: width*(props.minprogress/100) }}>
           <BorderLinearProgress
             variant="determinate"
-            value={progressDiff > 0 ? props.progress/props.minProgress*100 : 100} 
+            value={progressDiff > 0 ? props.progress/props.minprogress*100 : 100} 
             color="error"
           />
         </Box>
-        <Box sx={{ minWidth: width*((100-props.minProgress)/100), mr: 1 }}>
+        <Box sx={{ minWidth: width*((100-props.minprogress)/100), mr: 1 }}>
           <BorderLinearProgress
             variant="determinate"
-            value={progressDiff > 0 ? 0 : (props.progress-props.minProgress)/(100-props.minProgress)*100}
+            value={progressDiff > 0 ? 0 : (props.progress-props.minprogress)/(100-props.minprogress)*100}
             {...props}
           />
         </Box>
@@ -47,7 +47,7 @@ function ModuleProgressBar(
         </Box>
       </Box>
       <Typography variant="body2" color="text.secondary" paragraph>
-        ({props.minProgress}% de progreso mínimo requerido)
+        ({props.minprogress}% de progreso mínimo requerido)
       </Typography>
       </>
     );

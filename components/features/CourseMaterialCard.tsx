@@ -9,25 +9,30 @@ import Typography from '@mui/material/Typography'
 
 // Import icons
 import PlayCircleOutlinedIcon from '@mui/icons-material/PlayCircleOutlined'
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+import DataObjectIcon from '@mui/icons-material/DataObject';
+import SubjectOutlinedIcon from '@mui/icons-material/SubjectOutlined';
+
 import TimerOutlinedIcon from '@mui/icons-material/TimerOutlined'
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined'
 import ThumbUpIcon from '@mui/icons-material/ThumbUp'
 import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined'
 import ThumbDownIcon from '@mui/icons-material/ThumbDown'
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined'
+import CheckBoxIcon from '@mui/icons-material/CheckBox'
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
+import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
+import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
+import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
-import CodeIcon from '@mui/icons-material/Code';
-import SubjectIcon from '@mui/icons-material/Subject'
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 
 // Import styles
 import styles from '@/styles/CourseMaterialCard.module.css'
 
 // Import API
-import useMaterialAccess from '@/hooks/fetching/useMaterialAccess'
-import { API_ENDPOINTS, API_STATUS_CODE } from '@/config/api-connections'
-import { API_MaterialObject } from '@/config/interfaces'
+import { API_ENDPOINTS } from '@/config/api-connections'
+import { API_AccessProgressObject, API_MaterialObject } from '@/config/interfaces'
 
 // Import redux
 import { useAppSelector } from '@/redux/hook'
@@ -40,16 +45,51 @@ interface CourseMaterialProps {
   onSelected: () => undefined
 }
 
-const MATERIAL_ICONS = {
-  [MATERIAL_TYPES.VIDEO]: PlayCircleOutlinedIcon,
-  [MATERIAL_TYPES.EXERCISE]: CodeIcon,
-  [MATERIAL_TYPES.PDF]: PictureAsPdfIcon,
-  [MATERIAL_TYPES.MARKDOWN]: SubjectIcon,
-  [MATERIAL_TYPES.NONE]: SubjectIcon,
-};  
+const infoByMaterialType = (materialData: API_MaterialObject) => {
+  switch (materialData.material_type) {
+    case MATERIAL_TYPES.EXERCISE:
+      return (
+        <>
+          <CheckCircleOutlinedIcon color='primary' />
+          <Typography color='primary' variant='body1'>
+            Aciertos: {materialData.access?.summary?.hits || 0}/
+            {materialData.access?.summary?.attempts || 0}
+          </Typography>
+        </>
+      )
+
+    case MATERIAL_TYPES.VIDEO:
+      return (
+        <>
+          <TimerOutlinedIcon color='primary' />
+          <Typography color='primary' variant='body1'> 8m, 45s </Typography>
+        </>
+      )
+
+    case MATERIAL_TYPES.PDF:
+      return (
+        <>
+          <ArticleOutlinedIcon color='primary' />
+          <Typography color='primary' variant='body1'>2 páginas</Typography>
+        </>
+      )
+
+    default:
+      return ( <> </> )
+  }
+}
+
+function CourseMaterialCard({ material, onSelected }: CourseMaterialProps) {
+  const MATERIAL_ICONS = {
+    [MATERIAL_TYPES.VIDEO]: PlayCircleOutlinedIcon,
+    [MATERIAL_TYPES.EXERCISE]: DataObjectIcon,
+    [MATERIAL_TYPES.PDF]: DescriptionOutlinedIcon,
+    [MATERIAL_TYPES.MARKDOWN]: SubjectOutlinedIcon,
+    [MATERIAL_TYPES.NONE]: MoreHorizOutlinedIcon,
+  };
 
 function TypeOfMaterialIcon(materialType: MATERIAL_TYPES = MATERIAL_TYPES.NONE): React.JSX.Element {
-  const Icon = MATERIAL_ICONS[materialType] || SubjectIcon;
+  const Icon = MATERIAL_ICONS[materialType] || MoreHorizOutlinedIcon;
   return (
     <Icon
       color='primary'
@@ -61,7 +101,6 @@ function TypeOfMaterialIcon(materialType: MATERIAL_TYPES = MATERIAL_TYPES.NONE):
   );
 }
 
-function CourseMaterialCard({ material, onSelected }: CourseMaterialProps) {
   console.log(material)
   // Redux states:
   const userTokens = useAppSelector(
@@ -72,31 +111,22 @@ function CourseMaterialCard({ material, onSelected }: CourseMaterialProps) {
     (state) => state.persistedReducer.userLoginState.id
   )
 
-  // States related to the API Fetch
-  /* QUEDA PENDIENTE REVISAR ESTE ENDPOINT PARA LA DATA SOCIAL... O QUITARLO SI YA NO ES NECESARIO
-  const { data: accessData, isLoading: accessIsLoading } = useMaterialAccess(
-    material.id,
-    userId,
-    userTokens.access
-  )
-  */
-
   const [materialData, setMaterialData] = useState(material)
-  const [reaction, setReaction] = useState<any>(null)
-  const [access, setAccess] = useState<any>(null)
-  const [loadingRequest, setLoadingRequest] = useState<boolean>(true)
+  const [access, setAccess] = useState(materialData?.access)
+  const [loadingRequest, setLoadingRequest] = useState<boolean>(false)
 
   const likeMaterial = async (materialId: number) => {
-    if (loadingRequest /*|| accessIsLoading*/) return
+    console.log('loadingRequest', loadingRequest)
+    if (loadingRequest) return
+
     console.log('Like material with id: ' + materialId)
     setLoadingRequest(true)
 
     // Update visual likes/dislikes counter
-    if (access.like == null) {
+    if (access.like === null) {
       // There was no previous reaction
       setMaterialData({ ...materialData, likes: materialData.likes + 1 })
       setAccess({ ...access, like: true })
-      setReaction(true)
     } else if (access.like == false) {
       // Previous reaction was dislike -> Delete dislike and add like
       setAccess({ ...access, like: true })
@@ -105,12 +135,10 @@ function CourseMaterialCard({ material, onSelected }: CourseMaterialProps) {
         likes: materialData.likes + 1,
         dislikes: materialData.dislikes - 1
       })
-      setReaction(true)
     } else {
       // Previous reaction was like -> Delete like
       setAccess({ ...access, like: null })
       setMaterialData({ ...materialData, likes: materialData.likes - 1 })
-      setReaction(null)
     }
 
     // Make api call to update likes
@@ -125,9 +153,7 @@ function CourseMaterialCard({ material, onSelected }: CourseMaterialProps) {
       }
 
       let response = await fetch(`${API_ENDPOINTS.ACCESS}update/like/`, config)
-
       setLoadingRequest(false)
-
       return true
     } catch (error) {
       setLoadingRequest(false)
@@ -137,7 +163,7 @@ function CourseMaterialCard({ material, onSelected }: CourseMaterialProps) {
   }
 
   const dislikeMaterial = async (materialId: number) => {
-    if (loadingRequest /*|| accessIsLoading*/) return
+    if (loadingRequest) return
     console.log('Dislike material with id: ' + materialId)
     setLoadingRequest(true)
 
@@ -146,7 +172,6 @@ function CourseMaterialCard({ material, onSelected }: CourseMaterialProps) {
       // There was no previous reaction
       setAccess({ ...access, like: false })
       setMaterialData({ ...materialData, dislikes: materialData.dislikes + 1 })
-      setReaction(false)
     } else if (access.like == true) {
       // Previous reaction was dislike -> Add dislike and delete like
       setAccess({ ...access, like: false })
@@ -155,12 +180,10 @@ function CourseMaterialCard({ material, onSelected }: CourseMaterialProps) {
         dislikes: materialData.dislikes + 1,
         likes: materialData.likes - 1
       })
-      setReaction(false)
     } else {
       // Previous reaction was dislike -> Delete dislike
       setAccess({ ...access, like: null })
       setMaterialData({ ...materialData, dislikes: materialData.dislikes - 1 })
-      setReaction(null)
     }
 
     // Make api call to update dislikes
@@ -174,11 +197,7 @@ function CourseMaterialCard({ material, onSelected }: CourseMaterialProps) {
         body: JSON.stringify({ material_id: material.id, user_id: userId })
       }
 
-      let response = await fetch(
-        `${API_ENDPOINTS.ACCESS}update/dislike/`,
-        config
-      )
-
+      let response = await fetch( `${API_ENDPOINTS.ACCESS}update/dislike/`, config )
       setLoadingRequest(false)
       return true
     } catch (error) {
@@ -187,8 +206,6 @@ function CourseMaterialCard({ material, onSelected }: CourseMaterialProps) {
       return false
     }
   }
-
-
 
   return (
     <Card
@@ -219,22 +236,10 @@ function CourseMaterialCard({ material, onSelected }: CourseMaterialProps) {
             </Box>
             <Box className={styles.materialDetails}>
               <Container
-                sx={{ display: 'flex', direction: 'wrap' }}
+                sx={{ display: 'flex', direction: 'wrap', gap: '0.25rem' }}
                 disableGutters
               >
-                {materialData.material_type === MATERIAL_TYPES.EXERCISE ? (
-                  <Typography variant='body1'>
-                    Aciertos: {materialData.access?.summary?.hits || 0}/
-                    {materialData.access?.summary?.attempts || 0}
-                  </Typography>
-                ) : (
-                  <>
-                    <TimerOutlinedIcon color='info' />
-                    <Typography variant='body1'>
-                      8m, 45s
-                    </Typography>
-                  </>
-                )}
+                {infoByMaterialType(materialData)}
               </Container>
               <Box className={styles.materialReactions}>
                 {/* Lo siguiente lo dejo con estilos inline porque de igual forma se va a tener que cambiar */}
@@ -267,11 +272,11 @@ function CourseMaterialCard({ material, onSelected }: CourseMaterialProps) {
                     likeMaterial(material.id)
                   }}
                 >
-                  {reaction == true ? (
-                    <ThumbUpIcon color='secondary' />
-                  ) : (
-                    <ThumbUpOutlinedIcon color='secondary' />
-                  )}
+                  {access.like
+                    ? <ThumbUpIcon color='secondary' />
+                    : <ThumbUpOutlinedIcon color='secondary' />
+                  }
+
                   <Typography variant='body1' color='secondary'>
                     {' '}
                     {materialData.likes}{' '}
@@ -289,11 +294,10 @@ function CourseMaterialCard({ material, onSelected }: CourseMaterialProps) {
                     dislikeMaterial(material.id)
                   }}
                 >
-                  {reaction == false ? (
-                    <ThumbDownIcon color='primary' />
-                  ) : (
-                    <ThumbDownOutlinedIcon color='primary' />
-                  )}
+                  {access.like === false
+                    ? <ThumbDownIcon color='primary' />
+                    : <ThumbDownOutlinedIcon color='primary' />
+                  }
                   <Typography variant='body1' color='primary'>
                     {' '}
                     {materialData.dislikes}{' '}
@@ -308,4 +312,5 @@ function CourseMaterialCard({ material, onSelected }: CourseMaterialProps) {
   )
 }
 
-export default CourseMaterialCard
+
+export default CourseMaterialCard;

@@ -17,10 +17,13 @@ import { AUTOHIDE_ALERT_DURATION } from '@/config/constants'
 // Import API
 import useMaterialList from '@/hooks/fetching/useMaterialList'
 import { API_STATUS_CODE } from '@/config/api-connections'
-import { API_MaterialObject } from '@/config/interfaces'
+import { API_AccessProgressObject, API_MaterialObject } from '@/config/interfaces'
 
 // Import router
 import { useRouter, usePathname } from 'next/navigation'
+import { useAppSelector } from '@/redux/hook'
+
+// Import custom hooks
 
 // This interface defines the types of the props object.
 interface CourseMaterialListProps {
@@ -29,25 +32,19 @@ interface CourseMaterialListProps {
   accessToken: string
 }
 
-function CourseMaterialList({
-  moduleId,
-  userId,
-  accessToken
-}: CourseMaterialListProps) {
+function CourseMaterialList({ moduleId, accessToken }: CourseMaterialListProps) {
   const router = useRouter()
   const currentPath: string = usePathname()
+
+  // Selectors
+  const userId = useAppSelector((state) => state.persistedReducer.userLoginState.id)
 
   // States related to the alert component
   const [alertOpen, setAlertOpen] = useState(false)
   const [alertConfig, setAlertConfig] = useState({ message: '', severity: '' })
 
   // API Fetch
-  console.log('token', accessToken)
-  const { data: materialsList, error } = useMaterialList(
-    userId,
-    moduleId,
-    accessToken
-  )
+  const { data: materialsList, error } = useMaterialList(Number(userId), moduleId, accessToken)
 
   // Event handlers
   const handleAlertOpen = (status: number) => {

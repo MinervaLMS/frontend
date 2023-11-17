@@ -199,10 +199,10 @@ function CourseHome({ params }: { params: { alias: string } }) {
                   <Stack direction="row" alignItems="center" spacing={2}>
                     <StarRateIcon sx={{color: (t) => t.palette.warning.main }} />
                     <Typography component="p" variant="body1">
-                      {`
-                        ${courseData?.average_stars != null ? courseData?.average_stars : "NaN"} 
-                        (${courseData?.appraisals} calificaciones)
-                      `}
+                      {courseData?.average_stars
+                        ? `${courseData?.average_stars} (${courseData?.appraisals} calificaciones)`
+                        : `${courseData?.appraisals} calificaciones`
+                      }
                     </Typography>
                   </Stack>
                   <Stack direction="row" alignItems="center" spacing={2}>

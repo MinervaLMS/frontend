@@ -101,7 +101,7 @@ const CourseModule = memo(
         <>
           <Box className={styles.titleSeparation}>
             <Grid container justifyContent='space-between' spacing={2}>
-              <Grid item sm={12} md={8}>
+              <Grid item sm={12} md={8} mt={1}>
                 <Typography component='h5' variant='h5'>
                   {moduleData?.name}
                 </Typography>
@@ -146,7 +146,7 @@ const CourseModule = memo(
                           ? progressData.module_assessment_progress
                           : 0
                       }
-                      minProgress={minAssessmentProgress}
+                      minprogress={minAssessmentProgress}
                     />
                   </Box>
                 </Box>

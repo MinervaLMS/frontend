@@ -13,7 +13,7 @@ import PdfMaterial from '@/components/materials/PdfMaterial'
 import VideoMaterial from '@/components/materials/VideoMaterial'
 import MarkDownMaterial from '@/components/materials/MarkDownMaterial'
 import ExerciseMaterial from '@/components/materials/ExerciseMaterial'
-import CommentSection from '@/components/materials/CommentSection'
+import CommentSection from '@/components/materials/Comments/CommentSection'
 
 // Import styles
 import styles from '@/styles/CourseMaterial.module.css'

@@ -62,7 +62,7 @@ export interface API_MaterialObject {
     views: number
     last_view: string
     completed: boolean | null
-    like: boolean
+    like: boolean | null
     material_id: number
     user_id: number
     summary: {
@@ -85,6 +85,7 @@ export interface API_CommentObject {
   fixed: number
   post_date: string
   user_name: string
+  user_id: number
   parent_comment_id: number
   replies: Array<API_CommentObject>
 }
@@ -95,6 +96,16 @@ export interface API_ModuleProgressObject {
   module_id: number
   module_instructional_progress: number
   module_assessment_progress: number
+}
+
+export interface API_AccessProgressObject {
+  id: number
+  views: number
+  last_view: string
+  completed: string
+  like: boolean | null
+  material_id: number
+  user_id: number
 }
 
 export interface API_ModuleListProgressObject {
