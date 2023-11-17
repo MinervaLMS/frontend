@@ -3,9 +3,8 @@
 import React, { useState, useEffect } from 'react'
 
 // Import MaterialUI Components
-import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { Breadcrumbs, Button, ButtonGroup, Container, Link, Stack, Tooltip } from '@mui/material'
+import { Container } from '@mui/material'
 
 // Import own components
 import CircularSpinner from '@/components/common/CircularSpinner'
@@ -33,11 +32,8 @@ import { API_STATUS_CODE } from '@/config/api-connections'
 import { API_MaterialObject, API_ModuleObject } from '@/config/interfaces'
 import { MATERIAL_TYPES } from '@/config/enums'
 
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
-import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import useCourseModule from '@/hooks/fetching/useCourseModule'
-import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
-import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
+import MaterialsNavigation from '@/components/materials/MaterialsNavigation'
 
 const views: any = {
   PDF: PdfMaterial,
@@ -138,50 +134,17 @@ function Materials() {
       <Typography component='h1' variant='h4' gutterBottom>
         {materialData?.name}
       </Typography>
-          
-      <Box id="materials_navigation" className={styles.materials_navigation_box}>
 
-        <Breadcrumbs sx={{paddingTop: 1 }}>
-
-          <Link
-            onClick={() => {
-              router.push(`/course/${alias}/${moduleId}`)
-            }}
-            sx={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
-            color='inherit'
-            variant='body1'
-          >
-            <KeyboardDoubleArrowLeftIcon sx={{ mr: 0.5 }}/>
-            Módulo {moduleId}{moduleName != "" ? ":" : ""} {moduleName}
-          </Link>
-        
-          <Typography color="text.secondary">
-            
-            Material {materialData?.order + 1}
-          
-          </Typography>
-
-        </Breadcrumbs>
-        
-        {/* The next lines are for navigation through materials */}
-        {/* The managing of this is not completed */}
-        <ButtonGroup aria-label='navigation through materials'>
-          
-          <Tooltip title="Anterior material">
-            <Button aria-label='back to previous material'>
-              <ChevronLeftIcon />
-            </Button>
-          </Tooltip>
-
-          <Tooltip title="Siguiente material">
-            <Button aria-label='go to next material'>
-              <ChevronRightIcon />
-            </Button>
-          </Tooltip>
-        
-        </ButtonGroup>
-
-      </Box>
+      <MaterialsNavigation materialNavigationInfo={
+          {
+            courseAlias: String(alias),
+            moduleId: Number(moduleId),
+            moduleOrder: moduleData?.order,
+            moduleName: moduleData?.name,
+            materialOrder: materialData?.order
+          }
+        }
+      />
           
       <CurrentView materialId={materialId} />
       
