@@ -26,6 +26,8 @@ import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
+import DoneIcon from '@mui/icons-material/Done';
 
 // Import styles
 import styles from '@/styles/CourseMaterialCard.module.css'
@@ -229,9 +231,9 @@ function TypeOfMaterialIcon(materialType: MATERIAL_TYPES = MATERIAL_TYPES.NONE):
                 {materialData.name}
               </Typography>
               {materialData?.access?.completed ? (
-                <CheckCircleIcon />
+                <DoneIcon color='success' fontSize='large'/>
               ) : (
-                <RadioButtonUncheckedIcon />
+                <></>
               )}
             </Box>
             <Box className={styles.materialDetails}>
@@ -273,11 +275,11 @@ function TypeOfMaterialIcon(materialType: MATERIAL_TYPES = MATERIAL_TYPES.NONE):
                   }}
                 >
                   {access.like
-                    ? <ThumbUpIcon color='secondary' />
-                    : <ThumbUpOutlinedIcon color='secondary' />
+                    ? <ThumbUpIcon color='success' />
+                    : <ThumbUpOutlinedIcon color='success'/>
                   }
 
-                  <Typography variant='body1' color='secondary'>
+                  <Typography variant='body1' color='success'>
                     {' '}
                     {materialData.likes}{' '}
                   </Typography>
