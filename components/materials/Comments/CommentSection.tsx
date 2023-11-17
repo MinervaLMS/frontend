@@ -1,4 +1,4 @@
-import { Box, Button, TextField } from '@mui/material'
+import { Box, Button, Container, TextField } from '@mui/material'
 import Typography from '@mui/material/Typography'
 import React, { useEffect, useState } from 'react'
 import { API_MaterialObject, API_CommentObject } from '@/config/interfaces'
@@ -100,7 +100,7 @@ export default function CommentSection({ material }: CommentSectionProps) {
   }
 
   return (
-    <>
+    <Container maxWidth="md">
       <CustomSnackbar
         message={alertConfig.message}
         severity={alertConfig.severity}
@@ -163,6 +163,6 @@ export default function CommentSection({ material }: CommentSectionProps) {
           </List>
         )}
       </Box>
-    </>
+    </Container>
   )
 }

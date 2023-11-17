@@ -4,7 +4,6 @@ import React, { MouseEvent, useState, useEffect } from 'react'
 import { Box } from '@mui/material'
 import Container from '@mui/material/Container'
 import Card from '@mui/material/Card/Card'
-import Checkbox from '@mui/material/Checkbox'
 import CardActionArea from '@mui/material/CardActionArea/CardActionArea'
 import Typography from '@mui/material/Typography'
 
@@ -25,10 +24,11 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 
 // Import styles
-import { common } from '@mui/material/colors'
-import styles from '@/styles/CourseMaterial.module.css'
+import styles from '@/styles/CourseMaterialCard.module.css'
 
 // Import API
 import { API_ENDPOINTS } from '@/config/api-connections'
@@ -43,14 +43,6 @@ import { MATERIAL_TYPES } from '@/config/enums'
 interface CourseMaterialProps {
   material: API_MaterialObject
   onSelected: () => undefined
-}
-
-const iconByMaterialType: {[key: string]: any} = {
-  [MATERIAL_TYPES.VIDEO]: <PlayCircleOutlinedIcon color='primary' sx={{ width: "95%", height: "95%" }}/>,
-  [MATERIAL_TYPES.PDF]: <DescriptionOutlinedIcon color='primary' sx={{ width: "95%", height: "95%" }}/>,
-  [MATERIAL_TYPES.MARKDOWN]: <SubjectOutlinedIcon color='primary' sx={{ width: "95%", height: "95%" }}/>,
-  [MATERIAL_TYPES.EXERCISE]: <DataObjectIcon color='primary' sx={{ width: "95%", height: "95%" }}/>,
-  default: <MoreHorizOutlinedIcon color='primary' sx={{ width: "95%", height: "95%" }}/>
 }
 
 const infoByMaterialType = (materialData: API_MaterialObject) => {
@@ -87,7 +79,29 @@ const infoByMaterialType = (materialData: API_MaterialObject) => {
   }
 }
 
-function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
+function CourseMaterialCard({ material, onSelected }: CourseMaterialProps) {
+  const MATERIAL_ICONS = {
+    [MATERIAL_TYPES.VIDEO]: PlayCircleOutlinedIcon,
+    [MATERIAL_TYPES.EXERCISE]: DataObjectIcon,
+    [MATERIAL_TYPES.PDF]: DescriptionOutlinedIcon,
+    [MATERIAL_TYPES.MARKDOWN]: SubjectOutlinedIcon,
+    [MATERIAL_TYPES.NONE]: MoreHorizOutlinedIcon,
+  };
+
+function TypeOfMaterialIcon(materialType: MATERIAL_TYPES = MATERIAL_TYPES.NONE): React.JSX.Element {
+  const Icon = MATERIAL_ICONS[materialType] || MoreHorizOutlinedIcon;
+  return (
+    <Icon
+      color='primary'
+      sx={{
+        width: '95%',
+        height: '95%'
+      }}
+    />
+  );
+}
+
+  console.log(material)
   // Redux states:
   const userTokens = useAppSelector(
     (state) => state.persistedReducer.userLoginState.tokens
@@ -198,18 +212,16 @@ function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
       sx={{
         width: '70%',
         height: '120px',
-        bgcolor: '#E6E6E6'
+        bgcolor: (theme) => theme.palette.background.surface1,
       }}
     >
       {/* <CircularSpinner openBackdrop={loadingRequest || accessIsLoading} /> */}
       <CardActionArea onClick={onSelected}>
         <Box className={styles.materialInformation}>
-          <Box className={styles.typeOfMaterial}>
-            {
-              materialData.material_type in iconByMaterialType
-                ? iconByMaterialType[materialData.material_type]
-                : iconByMaterialType.default
-            }
+          <Box className={styles.typeOfMaterial} 
+            sx={{ bgcolor: (theme) => theme.palette.background.default,
+          }}>
+            {TypeOfMaterialIcon(materialData.material_type)}
           </Box>
           <Container>
             <Box className={styles.materialName}>
@@ -217,9 +229,9 @@ function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
                 {materialData.name}
               </Typography>
               {materialData?.access?.completed ? (
-                <CheckBoxIcon />
+                <CheckCircleIcon />
               ) : (
-                <CheckBoxOutlineBlankIcon />
+                <RadioButtonUncheckedIcon />
               )}
             </Box>
             <Box className={styles.materialDetails}>
@@ -300,4 +312,5 @@ function CourseMaterial({ material, onSelected }: CourseMaterialProps) {
   )
 }
 
-export default CourseMaterial
+
+export default CourseMaterialCard;

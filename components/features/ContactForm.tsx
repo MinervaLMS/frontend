@@ -299,7 +299,7 @@ function ContactForm() {
           type="submit"
           fullWidth
           variant="contained"
-          color="secondary"
+          color="primary"
           sx={{ my: 2 }}
         >
           Enviar

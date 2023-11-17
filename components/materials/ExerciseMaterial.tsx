@@ -2,7 +2,7 @@
 
 import { API_STATUS_CODE, JUDGE_ENDPOINTS } from '@/config/api-connections'
 import { useAppSelector } from '@/redux/hook'
-import { Box, Button, TextField } from '@mui/material'
+import { Box, Button, Grid, TextField } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import CustomSnackbar from '../common/CustomSnackbar'
 import { AUTOHIDE_ALERT_DURATION } from '@/config/constants'
@@ -109,6 +109,7 @@ export default function ExerciseMaterial({
 
   return (
     <>
+      
       <CustomSnackbar
         message={alertConfig.message}
         severity={alertConfig.severity}
@@ -118,43 +119,60 @@ export default function ExerciseMaterial({
         open={alertOpen}
         onClose={handleAlertClose}
       />
+      
       <ExerciseModalResult
         open={openModal}
         CloseModal={handleCloseModal}
         result={submissionResult}
         materialId={materialId}
       />
-      <Box component='form' className={styles.IOCMaterial}>
-        <iframe
-          src='https://www.africau.edu/images/default/sample.pdf'
-          className={styles.IOCPDFColumn}
-        ></iframe>
-        <div className={styles.IOCodeColumn}>
-          <TextField
-            fullWidth
-            rows={15}
-            multiline
-            label='Escribe tu respuesta aquí...'
-            name='answerCode'
-            type='text'
-            size='small'
-            value={submissionCode}
-            onChange={(e) => setsubmissionCode(e.target.value)}
-          />
-          <Button
-            className='btn btn-primary'
-            type='submit'
-            variant='contained'
-            color='secondary'
-            sx={{ my: 2 }}
-            onClick={(e) => {
-              handleSubmit(e)
-            }}
-          >
-            Enviar
-          </Button>
-        </div>
-      </Box>
+
+      {/* alignItems="stretch" causes all child elements of the 
+          grid to stretch to occupy the same vertical space. 
+          This is being applied to a width greater than md */}
+      <Grid container spacing={3} alignItems="stretch">
+        
+        <Grid item xs={12} md={8} sx={{ height: { xs: '60vh', md: 'auto' } }}>
+          <iframe
+            src='https://www.africau.edu/images/default/sample.pdf'
+            width="100%"
+            height="100%"
+            id='IOPDF'
+          ></iframe>
+        </Grid>
+        
+        <Grid item xs={12} md={4}>
+          <div id="IOCode">
+            <TextField
+              fullWidth
+              rows={15}
+              multiline
+              label='Escribe tu respuesta aquí...'
+              name='answerCode'
+              type='text'
+              size='small'
+              value={submissionCode}
+              onChange={(e) => setsubmissionCode(e.target.value)}
+              inputProps={{ style: { fontFamily: 'monospace' } }}
+            />
+            <Button
+              fullWidth
+              className='btn btn-primary'
+              type='submit'
+              variant='contained'
+              color='secondary'
+              sx={{ mt: 2 , mb: 1 }}
+              onClick={(e) => {
+                handleSubmit(e)
+              }}
+            >
+              Enviar
+            </Button>
+          </div>
+        </Grid>
+      
+      </Grid>
+
     </>
   )
 }

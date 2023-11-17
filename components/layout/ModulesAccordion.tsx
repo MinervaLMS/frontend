@@ -71,13 +71,13 @@ function ModulesAccordion({
                 <Grid item xs={12} md={3}>
                   <Stack spacing={2}>
                     <Stack direction="row" alignItems="center" spacing={2}>
-                      <SubjectIcon style={{color: "#01579B"}} />
+                      <SubjectIcon sx={{color: (t) => t.palette.info.main }}  />
                       <Typography component="p" variant="body1">
                         {`${module.module_instructional_materials} materiales`}
                       </Typography>
                     </Stack>
                     <Stack direction="row" alignItems="center" spacing={2}>
-                      <FactCheckIcon style={{color: "#1B5E20"}} />
+                      <FactCheckIcon sx={{color: (t) => t.palette.success.main }}  />
                       <Typography component="p" variant="body1">
                         {`${module.module_assessment_materials} evaluaciones`}
                       </Typography>

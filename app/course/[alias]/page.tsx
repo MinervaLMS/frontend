@@ -36,6 +36,7 @@ import { useRouter } from "next/navigation";
 import useCourse from "@/hooks/fetching/useCourse";
 import useModulesList from "@/hooks/fetching/useModulesList";
 import { API_STATUS_CODE } from "@/config/api-connections";
+import { Container } from "@mui/material";
 
 function CourseHome({ params }: { params: { alias: string } }) {
 
@@ -140,7 +141,8 @@ function CourseHome({ params }: { params: { alias: string } }) {
   }
 
   return (
-    <>
+    <Container>
+      
       <CustomSnackbar
         message={modulesAlertConfig.message}
         severity={modulesAlertConfig.severity}
@@ -195,7 +197,7 @@ function CourseHome({ params }: { params: { alias: string } }) {
                 </Typography>
                 <Stack direction="row" alignItems="center" spacing={4} pt={2}>
                   <Stack direction="row" alignItems="center" spacing={2}>
-                    <StarRateIcon style={{color: "#FF9800"}} />
+                    <StarRateIcon sx={{color: (t) => t.palette.warning.main }} />
                     <Typography component="p" variant="body1">
                       {courseData?.average_stars
                         ? `${courseData?.average_stars} (${courseData?.appraisals} calificaciones)`
@@ -204,7 +206,7 @@ function CourseHome({ params }: { params: { alias: string } }) {
                     </Typography>
                   </Stack>
                   <Stack direction="row" alignItems="center" spacing={2}>
-                    <CommentIcon style={{color: "#01579B"}} />
+                    <CommentIcon sx={{color: (t) => t.palette.info.main }} />
                     <Typography component="p" variant="body1">
                       {`${courseData?.comments} comentarios`}
                     </Typography>
@@ -264,7 +266,8 @@ function CourseHome({ params }: { params: { alias: string } }) {
         </Typography>
         <ModulesAccordion courseAlias={params.alias} accessToken={userTokens.access} />
       </Box>
-    </>
+
+    </Container>
   );
 }
 

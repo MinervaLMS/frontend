@@ -115,3 +115,8 @@ export interface API_ModuleListProgressObject {
   module_assessment_progress: number
   order: number
 }
+
+export interface API_ProgressByCourseResponseObject {
+  course_min_advance: number;
+  module_progress: API_ModuleListProgressObject[];
+}

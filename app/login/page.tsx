@@ -8,11 +8,12 @@ import styles from '@/styles/RegisterLogin.module.css'
 import bg from '@/public/assets/images/register-bg.png'
 import Image from 'next/image'
 
-import { Paper, Typography } from '@mui/material'
+import { Divider, Paper, Typography } from '@mui/material'
 import { useAppSelector } from '@/redux/hook'
 import { useRouter } from 'next/navigation'
 
 export default function Login() {
+  
   const userLoginState = useAppSelector(
     (state) => state.persistedReducer.userLoginState.login
   )
@@ -32,13 +33,16 @@ export default function Login() {
       style={{ backgroundImage: `url(${bg.src})`, backgroundSize: 'cover' }}
       className={styles.mainContainer}
     >
-      <Image
-        src='/vercel.svg'
-        alt='Vercel Logo'
-        className={styles.logo}
-        width={100}
-        height={100}
-      />
+      <Link href='/'>
+        <Image
+          src='/vercel.svg'
+          alt='Vercel Logo'
+          className={styles.logo}
+          width={100}
+          height={100}
+        />
+      </Link>
+      
       <Paper
         elevation={3}
         className={styles.formBox}
@@ -50,10 +54,9 @@ export default function Login() {
           Bienvenido
         </Typography>
         <Typography component='p' align='center'>
-          Ingresa tus tus datos de inicio de sesión para acceder a tu cuenta.{' '}
-          <br />
-          ¡Estamos emocionados de verte de nuevo!
+          Ingresa tus datos de inicio de sesión para acceder a tu cuenta.
         </Typography>
+        
         <LoginForm />
 
         <Typography variant='body1'>
@@ -62,11 +65,16 @@ export default function Login() {
             Regístrate
           </Link>
         </Typography>
+
+        <Divider flexItem className={styles.helpDivider}/>
+
+        <Typography component='p'>
+          Si tienes alguna dificultad comunícate con nuestro{' '}
+          <Link href='/contact'>Centro de atención.</Link>
+        </Typography>
+
       </Paper>
-      <Typography component='p' sx={{ color: '#fff', marginTop: '2rem' }}>
-        Si tienes alguna dificultad comunícate con nuestro{' '}
-        <Link href='/contact'>Centro de atención.</Link>
-      </Typography>
+      
     </Box>
   )
 }

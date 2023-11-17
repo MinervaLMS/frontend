@@ -3,9 +3,8 @@
 import React, { useState, useEffect } from 'react'
 
 // Import MaterialUI Components
-import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { Link } from '@mui/material'
+import { Container, Stack } from '@mui/material'
 
 // Import own components
 import CircularSpinner from '@/components/common/CircularSpinner'
@@ -17,7 +16,7 @@ import ExerciseMaterial from '@/components/materials/ExerciseMaterial'
 import CommentSection from '@/components/materials/Comments/CommentSection'
 
 // Import styles
-import styles from '@/styles/Course.module.css'
+import styles from '@/styles/CourseMaterial.module.css'
 
 // Import constants
 import { AUTOHIDE_ALERT_DURATION } from '@/config/constants'
@@ -30,8 +29,11 @@ import { useRouter, useParams } from 'next/navigation'
 import useCourseMaterial from '@/hooks/fetching/useCourseMaterial'
 import useComments from '@/hooks/fetching/useComments'
 import { API_STATUS_CODE } from '@/config/api-connections'
-import { API_MaterialObject } from '@/config/interfaces'
+import { API_MaterialObject, API_ModuleObject } from '@/config/interfaces'
 import { MATERIAL_TYPES } from '@/config/enums'
+
+import useCourseModule from '@/hooks/fetching/useCourseModule'
+import MaterialsNavigation from '@/components/materials/MaterialsNavigation'
 
 const views: any = {
   PDF: PdfMaterial,
@@ -52,12 +54,28 @@ function Materials() {
 
   // States related to the API Fetch
   const { alias, moduleId, materialId } = useParams()
+  
   console.log(alias, moduleId, materialId)
+
   const {
     data: materialData,
     isLoading: materialIsLoading,
     error
   } = useCourseMaterial(String(materialId), userTokens.access)
+
+
+  {/* The next lines are for managing navigation through materials */}
+  const { data: moduleData, error: moduleError, isLoading: moduleIsLoading } = useCourseModule(
+    Number(moduleId),
+    userTokens.access
+  ) as { data: API_ModuleObject | null, error: any, isLoading: boolean}
+
+  {/* This is needed for not showing the "Next Material" button when is the final material */}
+  const moduleTotalMaterials = moduleData?.module_total_materials ? moduleData?.module_total_materials + 1 : 0;
+  const moduleName = moduleData?.name ? moduleData?.name : "";
+
+  console.log(moduleData)
+
 
   const { isLoading: commentsIsLoading } = useComments(
     String(materialId),
@@ -107,34 +125,37 @@ function Materials() {
   }
 
   const CurrentView = views[materialData.material_type]
+  const maxWidthContainer = materialData.material_type === MATERIAL_TYPES.EXERCISE ? "xl" : "md";
 
-  // Render the principal container for the course page.
+  
+  // Render the principal container for the course material page.
   return (
-    <Box component='section' style={{ height: 'calc(100vh - 130px)' }}>
-      <Box
-        sx={{
-          width: 1,
-          height: '90%'
-        }}
-      >
-        <Link
-          onClick={() => {
-            router.push(`/course/${alias}/${moduleId}`)
-          }}
-          sx={{ cursor: 'pointer' }}
-          underline='hover'
-          color={''}
-          variant='body1'
-        >
-          ← Volver
-        </Link>
-        <Typography component='h1' variant='h4'>
+    <>
+      <Container maxWidth={maxWidthContainer}>
+        
+        <Typography component='h1' variant='h4' gutterBottom>
           {materialData?.name}
         </Typography>
+
+        <MaterialsNavigation materialNavigationInfo={
+            {
+              courseAlias: String(alias),
+              moduleId: Number(moduleId),
+              moduleOrder: moduleData?.order,
+              moduleName: moduleData?.name,
+              materialOrder: materialData?.order
+            }
+          }
+        />
+            
         <CurrentView materialId={materialId} />
-      </Box>
+      
+      </Container>
+        
       <CommentSection material={materialData} />
-    </Box>
+    
+    </>
+    
   )
 }
 

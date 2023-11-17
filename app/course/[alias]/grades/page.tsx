@@ -8,7 +8,7 @@ import { DataGrid, GridColDef, GridColumnHeaderParams, GridValueFormatterParams,
 import { useAppSelector } from "@/redux/hook";
 import CustomSnackbar from "@/components/common/CustomSnackbar";
 import { AUTOHIDE_ALERT_DURATION } from "@/config/constants";
-import { API_ModuleProgressObject } from "@/config/interfaces";
+import { API_ModuleListProgressObject } from "@/config/interfaces";
 import { API_ENDPOINTS } from "@/config/api-connections";
 
 const columns: GridColDef[] = [
@@ -52,9 +52,9 @@ const columns: GridColDef[] = [
     }
   ];
 
-let rows: API_ModuleProgressObject[] = []
+let rows: API_ModuleListProgressObject[] = []
 
-function ModulesProgress() {
+function ModulesProgress({ params }: { params: { alias: string } }) {
     // Redux states:
     const userTokens = useAppSelector(
         (state) => state.persistedReducer.userLoginState.tokens
@@ -62,6 +62,8 @@ function ModulesProgress() {
     const userId = useAppSelector(
         (state) => state.persistedReducer.userLoginState.id
     );
+
+    const alias = params.alias;
 
     const [loading, setLoading] = useState(true)
     const [alertConfig, setAlertConfig] = useState({ message: '', severity: '' })
@@ -76,7 +78,7 @@ function ModulesProgress() {
         setAlertOpen(false)
     }
 
-    function getRowId(row: API_ModuleProgressObject) {
+    function getRowId(row: API_ModuleListProgressObject) {
         return row.module_id
     }
 
@@ -90,11 +92,9 @@ function ModulesProgress() {
                     "Content-Type": "application/json",
                 },
             };
-            let response = await fetch(`${API_ENDPOINTS.MODULE}progress/${userId}`, config)
-            rows = await response.json()
-            console.log(
-                rows
-            );
+            let response = await fetch(`${API_ENDPOINTS.MODULE}progress/${userId}/${alias}/`, config)
+            // let moduleProgressResponse: API_ProgressByCourseResponseObject = await response.json();
+            rows = await response.json();
             setLoading(false)
         } catch (error) {
             setAlertConfig({
@@ -111,7 +111,7 @@ function ModulesProgress() {
     }, [userId])
     return(
         <>
-            <MainAppBar />
+            {/* <MainAppBar /> */}
             <CustomSnackbar
                 message={alertConfig.message}
                 severity={alertConfig.severity}
@@ -124,13 +124,12 @@ function ModulesProgress() {
             <Box className={styles.contentContainer} >
                 <Box className={styles.titleContainer} >
                     <Typography component="h1" variant="h2" sx={{ fontWeight: 'bold' }} >
-                        Mis cursos
+                        Calificaciones
                     </Typography>
                 </Box>
                 <Box 
                     className={styles.tableContainer}
                     sx={{
-                        width: '100%',
                         '& .header-cells-color': {
                             backgroundColor: 'aliceblue;'
                         }

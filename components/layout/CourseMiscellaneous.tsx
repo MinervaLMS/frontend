@@ -15,6 +15,9 @@ import {
   Typography
 } from '@mui/material'
 
+// Import redux
+import { useAppSelector } from '@/redux/hook'
+
 // Import styles
 import styles from '@/styles/Course.module.css'
 
@@ -22,7 +25,19 @@ import { COURSE_OPTIONS } from '@/config/constants'
 
 import { useRouter } from 'next/navigation'
 
+// Import API
+import useCourse from "@/hooks/fetching/useCourse";
+
 function CourseMiscellaneous({ courseAlias }: { courseAlias: string }) {
+   // Redux states
+   const userTokens = useAppSelector(
+    (state) => state.persistedReducer.userLoginState.tokens
+  )
+
+  const { data: courseData } = useCourse(courseAlias, userTokens.access)
+  const courseId: number = courseData.id;
+  console.log(courseId);
+  
   const router = useRouter()
 
   const COURSE_OPTIONS_ICONS = [

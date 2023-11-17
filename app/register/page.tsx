@@ -7,7 +7,7 @@ import RegisterForm from '@/components/features/RegisterForm'
 import styles from '@/styles/RegisterLogin.module.css'
 import bg from '@/public/assets/images/register-bg.png'
 import Image from 'next/image'
-import { Paper } from '@mui/material'
+import { Divider, Paper } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import { useAppSelector } from '@/redux/hook'
 
@@ -35,13 +35,16 @@ export default function Register() {
       style={{ backgroundImage: `url(${bg.src})`, backgroundSize: 'cover' }}
       className={styles.mainContainer}
     >
-      <Image
-        src='/vercel.svg'
-        alt='Vercel Logo'
-        className={styles.logo}
-        width={100}
-        height={100}
-      />
+      <Link href='/'>
+        <Image
+          src='/vercel.svg'
+          alt='Vercel Logo'
+          className={styles.logo}
+          width={100}
+          height={100}
+        />
+      </Link>
+      
       <Paper
         elevation={3}
         className={styles.formBox}
@@ -53,16 +56,21 @@ export default function Register() {
           Regístrate
         </Typography>
         <Typography component='p' align='center'>
-          Completa el formulario a continuación para crear tu cuenta en nuestra
-          plataforma. <br /> ¡Es rápido y fácil! Solo necesitamos algunos
-          detalles para empezar.
+          Completa el formulario para crear tu cuenta en la plataforma. 
+          <br />
+          ¡Es rápido y fácil! Solo necesitamos algunos detalles para empezar.
         </Typography>
         <RegisterForm />
+
+        <Divider flexItem className={styles.helpDivider}/>
+
+        <Typography component='p'>
+          Si tienes alguna dificultad comunicate con nuestro{' '}
+          <Link href='/contact'>Centro de atención.</Link>
+        </Typography>
+
       </Paper>
-      <Typography component='p' sx={{ color: '#fff', marginTop: '2rem' }}>
-        Si tienes alguna dificultad comunicate con nuestro{' '}
-        <Link href='/contact'>Centro de atención.</Link>
-      </Typography>
+      
     </Box>
   )
 }

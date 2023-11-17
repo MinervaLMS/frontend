@@ -101,7 +101,9 @@ export default function Home() {
         <>
         <Box component='main'>
           <Box component='section' className={styles.coursesSection}>
-            <CourseCardList />
+            <Container>
+              <CourseCardList />
+            </Container>
           </Box>
         </Box>
         </>
@@ -114,13 +116,11 @@ export default function Home() {
           <Box
             component="section"
             id="main_hero"
-            sx = {{
-              backgroundColor: (t) => t.palette.background.surface1
-            }}
+            className={styles.main_hero_section}
+            sx = {{ backgroundColor: (t) => t.palette.background.surface1 }}
           >
 
             <Container
-              sx={{paddingY: { xs: "4rem", sm: "8rem"}}}
               className={styles.main_hero_container}
               id="main_hero_container"
             >
@@ -191,13 +191,9 @@ export default function Home() {
           <Box 
             component="section"
             id="features"
-            className={styles.hero}
+            className={styles.hero_section}
           >
-            <Container
-              sx={{paddingY: { xs: "2rem", sm: "4rem"}}}
-              className={styles.features_container}
-              id="features_container"
-            >
+            <Container id="features_container">
 
               <Grid container direction="row" spacing={4}>
                 {features.map((feature) => (
@@ -214,11 +210,8 @@ export default function Home() {
           <Box 
             component="section"
             id="help_hero"
-            className={styles.help_hero_container}
-            sx={{
-              paddingY: { xs: "2rem", sm: "4rem" },
-              backgroundColor: (t) => t.palette.background.surface1,
-            }}
+            className={`${styles.hero_section} ${styles.help_hero_section}`}
+            sx={{ backgroundColor: (t) => t.palette.background.surface1 }}
           >
               <Typography
                 component='h2'
@@ -243,7 +236,7 @@ export default function Home() {
 
         <Box component={"footer"} className={styles.footer} id="footer">
 
-          <Container sx={{paddingY: { xs: "2rem", sm: "4rem"}}}>
+          <Container>
             
             <Grid container rowSpacing={5} columnSpacing={2} justifyContent="space-evenly">
               
@@ -255,7 +248,7 @@ export default function Home() {
                   <img src="/assets/images/institution-image.png" alt="Logo Minerva" width={"200rem"}/>
                   <Typography component="p" variant="body1" gutterBottom>
                     {'Copyright © '}
-                    <Link color="inherit" href="/">
+                    <Link href="/" >
                       Minerva
                     </Link>{' '}
                     {new Date().getFullYear()}
@@ -272,7 +265,7 @@ export default function Home() {
                     </Typography>
                     {footer.elements.map((element) => (
                       <Typography component="p" variant="body1" textAlign="left">
-                        <a href={element.link}>{element.name}</a>
+                        <Link href={element.link}>{element.name}</Link>
                       </Typography>
                     ))}
                   </Stack>
