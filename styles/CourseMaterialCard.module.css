@@ -30,20 +30,3 @@
   display: flex;
   width: 70%;
 }
-
-.IOCMaterial {
-  height: 80%;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
-.IOCPDFColumn {
-  flex: 2 1 0%;
-  height: 100%;
-  margin-right: 1rem;
-}
-
-.IOCodeColumn {
-  flex: 1 1;
-}

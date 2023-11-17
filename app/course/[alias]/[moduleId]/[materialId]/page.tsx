@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 
 // Import MaterialUI Components
 import Typography from '@mui/material/Typography'
-import { Container } from '@mui/material'
+import { Container, Stack } from '@mui/material'
 
 // Import own components
 import CircularSpinner from '@/components/common/CircularSpinner'
@@ -130,27 +130,32 @@ function Materials() {
   
   // Render the principal container for the course material page.
   return (
-    <Container maxWidth={maxWidthContainer}>
-      <Typography component='h1' variant='h4' gutterBottom>
-        {materialData?.name}
-      </Typography>
+    <>
+      <Container maxWidth={maxWidthContainer}>
+        
+        <Typography component='h1' variant='h4' gutterBottom>
+          {materialData?.name}
+        </Typography>
 
-      <MaterialsNavigation materialNavigationInfo={
-          {
-            courseAlias: String(alias),
-            moduleId: Number(moduleId),
-            moduleOrder: moduleData?.order,
-            moduleName: moduleData?.name,
-            materialOrder: materialData?.order
+        <MaterialsNavigation materialNavigationInfo={
+            {
+              courseAlias: String(alias),
+              moduleId: Number(moduleId),
+              moduleOrder: moduleData?.order,
+              moduleName: moduleData?.name,
+              materialOrder: materialData?.order
+            }
           }
-        }
-      />
-          
-      <CurrentView materialId={materialId} />
+        />
+            
+        <CurrentView materialId={materialId} />
       
+      </Container>
+        
       <CommentSection material={materialData} />
     
-    </Container>
+    </>
+    
   )
 }
 

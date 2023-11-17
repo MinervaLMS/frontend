@@ -1,4 +1,4 @@
-import { Box } from '@mui/material'
+import { Box, Container } from '@mui/material'
 import Typography from '@mui/material/Typography'
 import React from 'react'
 import { API_MaterialObject, API_CommentObject } from '@/config/interfaces'
@@ -26,7 +26,7 @@ export default function CommentSection({ material }: CommentSectionProps) {
   )
 
   return (
-    <Box style={{ marginTop: '2rem' }}>
+    <Container maxWidth="md" style={{ marginTop: '2rem' }}>
       <Typography component='h2' variant='h5'>
         Comentarios
       </Typography>
@@ -40,6 +40,6 @@ export default function CommentSection({ material }: CommentSectionProps) {
           ))}
         </List>
       )}
-    </Box>
+    </Container>
   )
 }
