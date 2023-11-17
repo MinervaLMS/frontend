@@ -208,14 +208,14 @@ export default function MainAppBar() {
     <Box id='header'>
       <AppBar open={params.hasOwnProperty('alias') ? open : false}
         position={userLoginState ? "fixed" : "fixed"}
-        elevation={userLoginState ? 2 : 2}
+        elevation={userLoginState ? 2 : 3}
         sx = {{
           backgroundColor: (t) => 
             userLoginState
               ? isDarkMode
                 ? t.palette.background.surface1
                 : t.palette.primary.main
-              : t.palette.background.surface1,
+              : t.palette.background.paper,
         }}
       >
         <Toolbar className={styles.mainHeader}>
@@ -225,7 +225,7 @@ export default function MainAppBar() {
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
               <Image
                 className={styles.logo}
-                hidden={userLoginState} 
+                hidden={userLoginState}
                 src='vercel.svg'
                 alt='Vercel Logo'
                 width={80}

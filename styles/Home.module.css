@@ -1,14 +1,56 @@
+/* Unlogged user elements */
+
+.main_hero_section {
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+}
+
 .main_hero_container {
     justify-content: center;
     align-content: center;
 }
 
-.help_hero_container{
+.help_hero_section {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
+.hero_section {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+}
+
+.footer {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+}
+
+
+/* Responsive design rules */
+
+@media (max-width: 600px) {
+    
+    .main_hero_section {
+        padding-top: 4rem;
+        padding-bottom: 4rem;
+    }
+
+    .hero_section {
+      padding-top: 2rem;
+      padding-bottom: 2rem;
+    }
+    
+    .footer {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+    }
+  
+}
+
+
+/* Logged user elements */
+
 .coursesSection {
-    padding: 2rem 6rem;
+    padding: 2rem 0;
 }

@@ -10,12 +10,14 @@ import {
   CardMedia,
   IconButton,
   Paper,
+  Tab,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  Tabs,
   Typography
 } from '@mui/material'
 import { useRouter } from 'next/navigation'
@@ -23,8 +25,10 @@ import React, { useEffect, useState } from 'react'
 
 function CourseCardList() {
   const router = useRouter()
+  
   const [courses, setCourses] =
     useState<[{ name: string; alias: string; description: string }]>()
+  
   const [viewMode, setViewMode] = useState<LIST_VIEW_MODE>(LIST_VIEW_MODE.LIST)
 
   const userId = useAppSelector(
@@ -71,28 +75,57 @@ function CourseCardList() {
     console.log('User is logged in')
   }, [])
 
+
+  {/* Tabs management for course type */}
+  
+  {/* It needs to be completed for changing the view. Now its not functional. */}
+
+  const [tabValue, setTabValue] = React.useState("active");
+
+  const handleTabChange = (event: React.SyntheticEvent, newTabValue: string) => {
+    setTabValue(newTabValue);
+  };
+
+
   return (
     <>
-      <Box component='div' display='flex' justifyContent='space-between'>
-        <Typography component='h1' variant='h2' gutterBottom>
+      <Box component='div' display='flex' justifyContent='space-between' alignItems='center' sx={{mb: 3}}>
+        <Typography component='h1' variant='h2'>
           Mis Cursos
         </Typography>
-        {viewMode === LIST_VIEW_MODE.GRID ? (
-          <IconButton
-            aria-label='view grid'
-            onClick={() => handleChangeViewMode(LIST_VIEW_MODE.LIST)}
-          >
-            <ViewModule />
-          </IconButton>
-        ) : (
-          <IconButton
-            aria-label='view list'
-            onClick={() => handleChangeViewMode(LIST_VIEW_MODE.GRID)}
-          >
-            <ViewList />
-          </IconButton>
-        )}
+        <Box>
+          {viewMode === LIST_VIEW_MODE.GRID ? (
+            <IconButton
+              aria-label='view grid'
+              onClick={() => handleChangeViewMode(LIST_VIEW_MODE.LIST)}
+            >
+              <ViewList fontSize='large'/>
+            </IconButton>
+          ) : (
+            <IconButton
+              aria-label='view list'
+              onClick={() => handleChangeViewMode(LIST_VIEW_MODE.GRID)}
+            >
+              <ViewModule fontSize='large'/>
+            </IconButton>
+          )}
+        </Box>
       </Box>
+
+      <Box component='div' sx={{mb: 3}}>
+        <Tabs
+          value={tabValue}
+          onChange={handleTabChange}
+          textColor="primary"
+          indicatorColor="primary"
+          aria-label="course types tabs"
+        >
+          <Tab label="Activos" value="active" />
+          <Tab label="Finalizados" value="finished" />
+        </Tabs>
+
+      </Box>
+
       <Box component='div'>
         {viewMode === LIST_VIEW_MODE.GRID ? (
           courses &&
@@ -116,7 +149,7 @@ function CourseCardList() {
           ))
         ) : (
           <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label='simple table'>
+            <Table aria-label='simple table'>
               <TableHead>
                 <TableRow>
                   <TableCell>
@@ -126,7 +159,17 @@ function CourseCardList() {
                   </TableCell>
                   <TableCell align='left'>
                     <Typography variant='body2' fontWeight='bold'>
-                      Descripción
+                      Nivel
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant='body2' fontWeight='bold'>
+                      Puntos
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant='body2' fontWeight='bold'>
+                      Avance
                     </Typography>
                   </TableCell>
                 </TableRow>
@@ -151,7 +194,17 @@ function CourseCardList() {
                       </TableCell>
                       <TableCell align='left'>
                         <Typography variant='body2'>
-                          {course.description}
+                          Competente
+                        </Typography>
+                      </TableCell>
+                      <TableCell align='left'>
+                        <Typography variant='body2'>
+                          850
+                        </Typography>
+                      </TableCell>
+                      <TableCell align='left'>
+                        <Typography variant='body2'>
+                          30%
                         </Typography>
                       </TableCell>
                     </TableRow>

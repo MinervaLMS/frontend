@@ -49,6 +49,7 @@ const CourseModule = memo(
       moduleId,
       accessToken
     )
+    
     const { data: progressData } = useModuleProgress(
       moduleId,
       userId,

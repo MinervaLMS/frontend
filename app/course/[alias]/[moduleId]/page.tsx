@@ -27,6 +27,7 @@ import useCourseModule from '@/hooks/fetching/useCourseModule'
 import useModuleProgress from '@/hooks/fetching/useModuleProgress'
 import useMaterialList from '@/hooks/fetching/useMaterialList'
 import { API_STATUS_CODE } from '@/config/api-connections'
+import { Container } from '@mui/material'
 
 function Modules({ params }: { params: { alias: string; moduleId: number } }) {
   // Redux states:
@@ -125,17 +126,20 @@ function Modules({ params }: { params: { alias: string; moduleId: number } }) {
 
   // Render the principal container for the course page.
   return (
-    <Box component='section'>
-      <Typography component='h1' variant='h4'>
-        {courseData?.name}
-      </Typography>
-      <CourseModule
-        moduleId={params.moduleId}
-        userId={userId}
-        accessToken={userTokens.access}
-        minAssessmentProgress={courseData?.min_assessment_progress}
-      />
-    </Box>
+    <Container>
+      <Box component='section'>
+        <Typography component='h1' variant='h4'>
+          {courseData?.name}
+        </Typography>
+        <CourseModule
+          moduleId={params.moduleId}
+          userId={userId}
+          accessToken={userTokens.access}
+          minAssessmentProgress={courseData?.min_assessment_progress}
+        />
+      </Box>
+    </Container>
+    
   )
 }
 

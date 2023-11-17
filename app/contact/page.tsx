@@ -32,6 +32,9 @@ function page() {
         <Box
           component="div"
           className={`${styles.contactSection} ${styles.contactInfoSection}`}
+          sx={{
+            backgroundColor: (t) => t.palette.mode === "light" ? t.palette.primary.dark : t.palette.background.surface1,
+          }}
         >
           <Box component="div">
             <Typography component="h1" variant="h5" marginBottom={"1rem"}>

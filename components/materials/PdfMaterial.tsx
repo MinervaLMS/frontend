@@ -27,15 +27,10 @@ export default function PdfMaterial({ materialId }: { materialId: string }) {
   }, [])
 
   return (
-    <Box
-      sx={{
-        width: 1,
-        height: '95%'
-      }}
-    >
+    <Box>
       <iframe
         src='https://www.africau.edu/images/default/sample.pdf'
-        style={{ width: '100%', height: '100%' }}
+        style={{ width: '100%', height: "70vh" }}
       ></iframe>
     </Box>
   )

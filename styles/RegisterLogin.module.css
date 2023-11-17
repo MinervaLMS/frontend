@@ -10,7 +10,7 @@
 }
 
 .formBox {
-  padding: 1.5rem 3rem;
+  padding: 2rem 3rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -36,5 +36,11 @@
   box-shadow: 0px 0px 15px 2px rgba(0, 0, 0, 0.35);
 }
 
+hr.helpDivider{
+  margin: 1rem 0;
+}
 
-
+.logo {
+  width: 6rem;
+  height: 4rem;
+}
